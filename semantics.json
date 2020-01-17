@@ -5,4 +5,14 @@
     "type": "text",
     "description": "The reading text on which the questions are based."
   }
+,
+  {
+    "label": "Question",
+    "name": "question",
+    "type": "library",
+    "description": "Question based on the passage.",
+    "options": [
+      "H5P.Blanks 1.12"
+    ]
+  }
 ]

@@ -5,7 +5,7 @@
   "minorVersion": 0,
   "patchVersion": 0,
   "runnable": 1,
-  "author": "S. Rettig, Joubel, Eric DeMattos",
+  "author": "Eric DeMattos",
   "license": "MIT",
   "embedTypes": [
     "div"
@@ -20,6 +20,12 @@
       "path": "h5p-bsa.css"
     }
   ],
-  "preloadedDependencies": [],
+  "preloadedDependencies": [
+    {
+      "machineName": "H5P.Blanks",
+      "majorVersion": "1",
+      "minorVersion": "12"
+    }
+  ],
   "editorDependencies": []
 }
