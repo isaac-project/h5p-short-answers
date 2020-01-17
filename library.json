@@ -1,0 +1,25 @@
+{
+  "title": "Basic Short Answers",
+  "machineName": "H5P.BasicShortAnswers",
+  "majorVersion": 1,
+  "minorVersion": 0,
+  "patchVersion": 0,
+  "runnable": 1,
+  "author": "S. Rettig, Joubel, Eric DeMattos",
+  "license": "MIT",
+  "embedTypes": [
+    "div"
+  ],
+  "preloadedJs": [
+    {
+      "path": "h5p-bsa.js"
+    }
+  ],
+  "preloadedCss":  [
+    {
+      "path": "h5p-bsa.css"
+    }
+  ],
+  "preloadedDependencies": [],
+  "editorDependencies": []
+}

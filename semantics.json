@@ -1,0 +1,8 @@
+[
+  {
+    "label": "Passage",
+    "name": "passage",
+    "type": "text",
+    "description": "The reading text on which the questions are based."
+  }
+]
