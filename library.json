@@ -1,30 +1,36 @@
 {
-  "title": "Basic Short Answers",
-  "machineName": "H5P.BasicShortAnswers",
+  "title": "ISAAC",
+  "description": "Example H5P content type for getting started",
   "majorVersion": 1,
   "minorVersion": 0,
   "patchVersion": 0,
   "runnable": 1,
-  "author": "Eric DeMattos",
+  "author": "Joubel",
   "license": "MIT",
+  "machineName": "H5P.ISAAC",
   "embedTypes": [
-    "div"
+    "iframe"
   ],
   "preloadedJs": [
     {
-      "path": "h5p-bsa.js"
+      "path": "dist/h5p-isaac.js"
     }
   ],
-  "preloadedCss":  [
+  "preloadedCss": [
     {
-      "path": "h5p-bsa.css"
+      "path": "dist/h5p-isaac.css"
     }
   ],
   "preloadedDependencies": [
     {
-      "machineName": "H5P.Blanks",
-      "majorVersion": "1",
-      "minorVersion": "12"
+      "machineName": "H5P.Question",
+      "majorVersion": 1,
+      "minorVersion": 4
+    },
+    {
+      "machineName": "H5P.JoubelUI",
+      "majorVersion": 1,
+      "minorVersion": 3
     }
   ],
   "editorDependencies": []
