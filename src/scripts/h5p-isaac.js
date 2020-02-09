@@ -20,7 +20,7 @@ export default class ISAAC extends H5P.Question {
    * @param {object} [extras] Saved state, metadata, etc.
    */
   constructor(params, contentId, extras = {}) {
-    super('isaac'); // CSS class selector for content's iframe: h5p-hello-world
+    super('isaac'); // CSS class selector for content's iframe: h5p-isaac
 
     this.params = params;
     this.contentId = contentId;
@@ -29,8 +29,6 @@ export default class ISAAC extends H5P.Question {
     /*
      * this.params.behaviour.enableSolutionsButton and this.params.behaviour.enableRetry
      * are used by H5P's question type contract.
-     * @see {@link https://h5p.org/documentation/developers/contracts#guides-header-8}
-     * @see {@link https://h5p.org/documentation/developers/contracts#guides-header-9}
      */
 
     // Make sure all variables are set
@@ -54,9 +52,10 @@ export default class ISAAC extends H5P.Question {
      */
     this.registerDomElements = () => {
       const content = new ISAACContent(
-        params.textField, // Parameter from editor
-        H5PIntegration.user.name, // Try to retrieve user name from host system,
-        this.previousState.random // previous session state
+        this.params.task,
+        this.params.passage,
+        this.params.questions
+        //this.previousState.random // previous session state
       );
 
       // Register content with H5P.Question
@@ -283,6 +282,8 @@ export default class ISAAC extends H5P.Question {
       return {
         random: Math.random(100)
       };
+
+
     };
   }
 }
