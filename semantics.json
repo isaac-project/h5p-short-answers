@@ -12,7 +12,7 @@
     "label": "Passage",
     "name": "passage",
     "type": "text",
-    "widget": "textarea",
+    "widget": "html",
     "maxLength": 10000,
     "importance": "high",
     "description": "Max 10,000 characters.",
@@ -61,12 +61,22 @@
           "placeholder": "What is the meaning of life?"
         },
         {
-          "label": "Target answer",
-          "name": "target",
-          "type": "text",
+          "label": "Target answers",
+          "name": "targets",
+          "type": "list",
+          "entity": "text",
           "importance": "high",
           "description": "",
-          "placeholder": "Alternative answers are separated with a forward slash, ex: 42/forty-two"
+          "placeholder": "List of accepted answers",
+          "min": 1,
+          "field": {
+            "label": "Answer",
+            "name": "target",
+            "type": "text",
+            "importance": "high",
+            "description": "",
+            "placeholder": "42"
+          }
         }
       ]
     }
