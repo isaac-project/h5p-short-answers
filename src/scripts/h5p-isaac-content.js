@@ -7,31 +7,56 @@ export default class ISAACContent {
    * @param questions {array} List of pairs of question and target answer(s, delimited by /)
    */
   constructor(task, passage, questions) {
-    this.content = document.createElement('div');
-    this.content.setAttribute("id", "global");
+    /*
+     * Instructions/passage text/questions can be formatted (bold, italics, etc.)
+     * The entire item is returned as a <p> element, so in order to get safely get the
+     * innerHTML and place it in a new element we can modify (ex. node.setAttribute)
+     * we will use an HTML5 Template element as an intermediary
+     */
+    var template = document.createElement('template');
 
-    // task description/directions
-    var nodeT = document.createElement('p');
-    nodeT.setAttribute("id", "h5p-isaac-task");
-    nodeT.appendChild(document.createTextNode(task));
-    this.content.appendChild(nodeT);
+    this.content = document.createElement('div');
+    this.content.setAttribute("id", "h5p-isaac-global");
+
+    // instructions
+    template.innerHTML = task.trim();
+    var taskNode = document.createElement('p');
+    taskNode.setAttribute("id", "h5p-isaac-task");
+    taskNode.innerHTML = `${template.content.firstElementChild.innerHTML}`;
+    this.content.appendChild(taskNode);
 
     // passage text
-    var nodeP = document.createElement('p');
-    nodeP.setAttribute("id", "h5p-isaac-passage");
-    //nodeP.appendChild(document.createTextNode(passage));
-    nodeP.innerHTML = passage;
-    this.content.appendChild(nodeP);
+    if (passage.trim() !== '') {
+      template.innerHTML = passage.trim();
+      var passageNode = document.createElement("p");
+      passageNode.setAttribute("id", "h5p-isaac-passage");
+      passageNode.innerHTML = `${template.content.firstElementChild.innerHTML}`;
+      this.content.appendChild(passageNode);
+    }
 
-    // question & answer
+    // begin question & answer
     var nodeQ = document.createElement('p');
-    nodeQ.setAttribute("id", "h5p-isaac-question");
-    // begin numbered list
+    nodeQ.setAttribute("id", "h5p-isaac-questions");
     var ol = document.createElement('ol');
-    var nodeQ1 = document.createElement('li');
-    nodeQ1.appendChild(document.createTextNode(questions[0]["question"]));
-    ol.appendChild(nodeQ1);
-    ol.appendChild(document.createTextNode("(Target answer: " + questions[0]["target"] + ")"));
+    ol.setAttribute("id", "h5p-isaac-list");
+
+
+    for (var i = 0; i < questions.length; i++) {
+
+      template.innerHTML = questions[i]["question"].trim();
+      var nodeQA = document.createElement('li');
+      nodeQA.setAttribute("id", "h5p-isaac-question");
+      nodeQA.innerHTML = `${template.content.firstElementChild.innerHTML}`;
+      nodeQA.appendChild(document.createElement("br"));
+      var userInput = document.createElement("input");
+      userInput.setAttribute("id", "h5p-isaac-input");
+      userInput.setAttribute("name", i);
+      nodeQA.appendChild(userInput);
+      nodeQA.appendChild(document.createElement("br"));
+      nodeQA.appendChild(document.createElement("br"));
+      ol.appendChild(nodeQA);
+    }
+
     nodeQ.appendChild(ol);
     this.content.appendChild(nodeQ);
 

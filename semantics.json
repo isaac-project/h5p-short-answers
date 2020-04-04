@@ -3,10 +3,26 @@
     "label": "Task description",
     "name": "task",
     "type": "text",
+    "widget": "html",
     "maxLength": 1000,
     "importance": "high",
     "description": "A guide telling the user how to answer this task.",
-    "default": "Read the passage and answer the questions below."
+    "default": "Read the passage and answer the questions below.",
+    "enterMode": "p",
+    "tags": [
+      "strong",
+      "em",
+      "u",
+      "sub",
+      "sup",
+      "strike",
+      "ul",
+      "ol",
+      "blockquote",
+      "a",
+      "table",
+      "hr"
+    ]
   },
   {
     "label": "Passage",
@@ -17,26 +33,34 @@
     "importance": "high",
     "description": "Max 10,000 characters.",
     "default": "The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.",
-    "optional": true
+    "optional": true,
+    "enterMode": "p",
+    "tags": [
+      "strong",
+      "em",
+      "u",
+      "sub",
+      "sup",
+      "strike",
+      "ul",
+      "ol",
+      "blockquote",
+      "a",
+      "table",
+      "hr"
+    ]
   },
   {
     "label": "Media",
     "name": "media",
-    "type": "group",
+    "type": "library",
     "importance": "medium",
-    "fields": [
-      {
-        "name": "type",
-        "type": "library",
-        "label": "Type",
-        "options": [
-          "H5P.Image 1.1",
-          "H5P.Video 1.5"
-        ],
-        "optional": true,
-        "description": "Optional media to display above the questions."
-      }
-    ]
+    "options": [
+      "H5P.Image 1.1",
+      "H5P.Video 1.5"
+    ],
+    "optional": true,
+    "description": "Optional media to display above the questions."
   },
   {
     "label": "",
@@ -56,9 +80,25 @@
           "label": "Question",
           "name": "question",
           "type": "text",
+          "widget": "html",
           "importance": "high",
           "description": "",
-          "placeholder": "What is the meaning of life?"
+          "placeholder": "What is the meaning of life?",
+          "enterMode": "p",
+          "tags": [
+            "strong",
+            "em",
+            "u",
+            "sub",
+            "sup",
+            "strike",
+            "ul",
+            "ol",
+            "blockquote",
+            "a",
+            "table",
+            "hr"
+          ]
         },
         {
           "label": "Target answers",

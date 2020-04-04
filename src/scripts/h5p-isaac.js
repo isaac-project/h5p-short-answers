@@ -51,6 +51,22 @@ export default class ISAAC extends H5P.Question {
      * Register the DOM elements with H5P.Question
      */
     this.registerDomElements = () => {
+
+      // setImage and setVideo are H5P functions that seem to put media before all other content
+      if (this.params.media) { //  && media.type && media.type.library
+        var media = this.params.media;
+        var type = media.library.split(' ')[0];
+        if ((type === 'H5P.Image') && (media.params.file)) {
+          this.setImage(media.params.file.path, {
+            disableImageZooming: this.params.media.disableImageZooming || true,
+            alt: media.params.alt,
+            title: media.params.title
+          });
+        }
+        else if ((type === 'H5P.Video') && (media.params.sources)) {
+          this.setVideo(media);
+        }
+      }
       const content = new ISAACContent(
         this.params.task,
         this.params.passage,
@@ -74,34 +90,23 @@ export default class ISAAC extends H5P.Question {
      * Add all the buttons that shall be passed to H5P.Question.
      */
     this.addButtons = () => {
-      // Check answer button
+
       this.addButton('check-answer', this.params.l10n.checkAnswer, () => {
-        // TODO: Implement something useful to do on click
-        this.hideButton('check-answer');
 
-        if (this.params.behaviour.enableSolutionsButton) {
-          this.showButton('show-solution');
-        }
+        this.getScore();
 
-        if (this.params.behaviour.enableRetry) {
-          this.showButton('try-again');
-        }
       }, true, {}, {});
 
-      // Show solution button
       this.addButton('show-solution', this.params.l10n.showSolution, () => {
-        // TODO: Implement something useful to do on click
+
+        this.showSolutions();
+
       }, false, {}, {});
 
-      // Retry button
       this.addButton('try-again', this.params.l10n.tryAgain, () => {
-        this.showButton('check-answer');
-        this.hideButton('show-solution');
-        this.hideButton('try-again');
 
         this.resetTask();
 
-        this.trigger('resize');
       }, false, {}, {});
     };
 
@@ -119,7 +124,26 @@ export default class ISAAC extends H5P.Question {
      * @return {number} latest score.
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-2}
      */
-    this.getScore = () => 0; // TODO: Return real score here
+    this.getScore = () => {
+
+      console.log('"Check" button clicked!');
+
+      for (var i = 0; i < this.params.questions.length; i++) {
+        console.log(document.getElementsByName(i).item(0).value);
+      }
+
+      this.hideButton('check-answer');
+
+      if (this.params.behaviour.enableSolutionsButton) {
+        this.showButton('show-solution');
+      }
+
+      if (this.params.behaviour.enableRetry) {
+        this.showButton('try-again');
+      }
+
+      return 0;
+    };
 
     /**
      * Get maximum possible score.
@@ -135,7 +159,15 @@ export default class ISAAC extends H5P.Question {
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-4}
      */
     this.showSolutions = () => {
-      // TODO: Implement showing the solutions
+
+      console.log('"Show solution" button clicked!');
+
+      for (var i = 0; i < this.params.questions.length; i++) {
+        // certain characters are escaped (Character Entity References)
+        var answer = document.createElement("textarea");
+        answer.innerHTML = this.params.questions[i]["targets"][0];
+        document.getElementsByName(i).item(0).value = answer.value;
+      }
 
       this.trigger('resize');
     };
@@ -146,7 +178,18 @@ export default class ISAAC extends H5P.Question {
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
      */
     this.resetTask = () => {
-      // TODO: Reset what needs to be reset
+
+      console.log('"Retry" button clicked!');
+
+      this.showButton('check-answer');
+      this.hideButton('show-solution');
+      this.hideButton('try-again');
+
+      for (var i = 0; i < this.params.questions.length; i++) {
+        document.getElementsByName(i).item(0).value = '';
+      }
+
+      this.trigger('resize');
     };
 
     /**
