@@ -1,0 +1,179 @@
+[
+  {
+    "label": "Task description",
+    "name": "task",
+    "type": "text",
+    "widget": "html",
+    "maxLength": 1000,
+    "importance": "high",
+    "description": "A guide telling the user how to answer this task.",
+    "default": "Read the passage and answer the questions below.",
+    "enterMode": "p",
+    "tags": [
+      "strong",
+      "em",
+      "u",
+      "sub",
+      "sup",
+      "strike",
+      "ul",
+      "ol",
+      "blockquote",
+      "a",
+      "table",
+      "hr"
+    ]
+  },
+  {
+    "label": "Passage",
+    "name": "passage",
+    "type": "text",
+    "widget": "html",
+    "maxLength": 10000,
+    "importance": "high",
+    "description": "Max 10,000 characters.",
+    "default": "The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.",
+    "optional": true,
+    "enterMode": "p",
+    "tags": [
+      "strong",
+      "em",
+      "u",
+      "sub",
+      "sup",
+      "strike",
+      "ul",
+      "ol",
+      "blockquote",
+      "a",
+      "table",
+      "hr"
+    ]
+  },
+  {
+    "label": "Media",
+    "name": "media",
+    "type": "library",
+    "importance": "medium",
+    "options": [
+      "H5P.Image 1.1",
+      "H5P.Video 1.5"
+    ],
+    "optional": true,
+    "description": "Optional media to display above the questions."
+  },
+  {
+    "label": "",
+    "name": "questions",
+    "type": "list",
+    "importance": "high",
+    "entity": "text block",
+    "optional": true,
+    "min": 1,
+    "field": {
+      "label": "Q&A",
+      "name": "qa",
+      "type": "group",
+      "importance": "medium",
+      "fields": [
+        {
+          "label": "Question",
+          "name": "question",
+          "type": "text",
+          "widget": "html",
+          "importance": "high",
+          "description": "",
+          "placeholder": "What is the meaning of life?",
+          "enterMode": "p",
+          "tags": [
+            "strong",
+            "em",
+            "u",
+            "sub",
+            "sup",
+            "strike",
+            "ul",
+            "ol",
+            "blockquote",
+            "a",
+            "table",
+            "hr"
+          ]
+        },
+        {
+          "label": "Target answers",
+          "name": "targets",
+          "type": "list",
+          "entity": "text",
+          "importance": "high",
+          "description": "",
+          "placeholder": "List of accepted answers",
+          "min": 1,
+          "field": {
+            "label": "Answer",
+            "name": "target",
+            "type": "text",
+            "importance": "high",
+            "description": "",
+            "placeholder": "42"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "behaviour",
+    "type": "group",
+    "label": "Behavioural settings",
+    "importance": "low",
+    "description": "These options will let you control how the task behaves.",
+    "fields": [
+      {
+        "label": "Enable \"Retry\"",
+        "name": "enableRetry",
+        "type": "boolean",
+        "importance": "low",
+        "default": true,
+        "optional": true
+      },
+      {
+        "label": "Enable \"Solution\"",
+        "name": "enableSolutionsButton",
+        "type": "boolean",
+        "importance": "low",
+        "default": true,
+        "optional": true
+      }
+    ]
+  },
+  {
+    "name": "l10n",
+    "type": "group",
+    "common": true,
+    "label": "User interface",
+    "importance": "low",
+    "fields": [
+      {
+        "name": "checkAnswer",
+        "type": "text",
+        "label": "Text for \"Check\" button",
+        "importance": "low",
+        "default": "Check"
+      },
+      {
+        "name": "tryAgain",
+        "label": "Text for \"Retry\" button",
+        "type": "text",
+        "importance": "low",
+        "default": "Retry"
+      },
+      {
+        "name": "showSolution",
+        "type": "text",
+        "label": "Text for \"Show solution\" button",
+        "importance": "low",
+        "default": "Show solution"
+      }
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+.h5p-isaac {
+  color: black;
+}
+#h5p-isaac-task {
+  font-family: Palatino;
+  font-weight: bold;
+  font-size: 14pt;
+}
+#h5p-isaac-passage {
+  font-family: Palatino;
+  font-size: 12pt;
+  margin: 5%;
+}
+#h5p-isaac-question {
+  font-family: Palatino;
+  font-size: 12pt;
+}
+#h5p-isaac-input {
+  width: 90%;
+}
