@@ -70,7 +70,8 @@ export default class ISAAC extends H5P.Question {
       const content = new ISAACContent(
         this.params.task,
         this.params.passage,
-        this.params.questions
+        this.params.questions,
+        this.contentId
         //this.previousState.random // previous session state
       );
 

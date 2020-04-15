@@ -1,3 +1,5 @@
+import { ISAACFieldListener } from './h5p-isaac-interaction';
+
 /** Class representing the content */
 export default class ISAACContent {
   /**
@@ -6,7 +8,7 @@ export default class ISAACContent {
    * @param passage {string} Text upon which questions are based (max 10,000 chars)
    * @param questions {array} List of pairs of question and target answer(s, delimited by /)
    */
-  constructor(task, passage, questions) {
+  constructor(task, passage, questions, contentId) {
     /*
      * Instructions/passage text/questions can be formatted (bold, italics, etc.)
      * The entire item is returned as a <p> element, so in order to get safely get the
@@ -51,6 +53,9 @@ export default class ISAACContent {
       var userInput = document.createElement("input");
       userInput.setAttribute("id", "h5p-isaac-input");
       userInput.setAttribute("name", i);
+      // register input handler
+      let listener = new ISAACFieldListener(contentId, i);
+      userInput.addEventListener("change", listener);
       nodeQA.appendChild(userInput);
       nodeQA.appendChild(document.createElement("br"));
       nodeQA.appendChild(document.createElement("br"));
