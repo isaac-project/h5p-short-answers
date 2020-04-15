@@ -18,12 +18,12 @@ export default class ISAACContent {
     var template = document.createElement('template');
 
     this.content = document.createElement('div');
-    this.content.setAttribute("id", "h5p-isaac-global");
+    //this.content.setAttribute("id", "h5p-isaac-global");
 
     // instructions
     template.innerHTML = task.trim();
     var taskNode = document.createElement('p');
-    taskNode.setAttribute("id", "h5p-isaac-task");
+    taskNode.classList.add("h5p-isaac-task");
     taskNode.innerHTML = `${template.content.firstElementChild.innerHTML}`;
     this.content.appendChild(taskNode);
 
@@ -31,28 +31,28 @@ export default class ISAACContent {
     if (passage.trim() !== '') {
       template.innerHTML = passage.trim();
       var passageNode = document.createElement("p");
-      passageNode.setAttribute("id", "h5p-isaac-passage");
+      passageNode.classList.add("h5p-isaac-passage");
       passageNode.innerHTML = `${template.content.firstElementChild.innerHTML}`;
       this.content.appendChild(passageNode);
     }
 
     // begin question & answer
     var nodeQ = document.createElement('p');
-    nodeQ.setAttribute("id", "h5p-isaac-questions");
+    nodeQ.setAttribute("name", "h5p-isaac-questions");
     var ol = document.createElement('ol');
-    ol.setAttribute("id", "h5p-isaac-list");
+    ol.setAttribute("name", "h5p-isaac-list");
 
 
     for (var i = 0; i < questions.length; i++) {
 
       template.innerHTML = questions[i]["question"].trim();
       var nodeQA = document.createElement('li');
-      nodeQA.setAttribute("id", "h5p-isaac-question");
+      nodeQA.classList.add("h5p-isaac-question");
       nodeQA.innerHTML = `${template.content.firstElementChild.innerHTML}`;
       nodeQA.appendChild(document.createElement("br"));
       var userInput = document.createElement("input");
-      userInput.setAttribute("id", "h5p-isaac-input");
-      userInput.setAttribute("name", i);
+      userInput.classList.add("h5p-isaac-input");
+      userInput.setAttribute("id", contentId + "_" + i);
       // register input handler
       let listener = new ISAACFieldListener(contentId, i);
       userInput.addEventListener("change", listener);
