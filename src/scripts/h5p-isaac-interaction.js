@@ -10,3 +10,13 @@ export class ISAACFieldListener {
         console.log("User: " + H5PIntegration.user.name);
     }
 }
+
+export class ISAACTask {
+    constructor(baseUrl, contentId, title, library, jsonContent) {
+        this.server = baseUrl;
+        this.id = contentId;
+        this.title = title;
+        this.type = library;
+        this.content = JSON.parse(jsonContent);
+    }
+}
