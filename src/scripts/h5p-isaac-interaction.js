@@ -20,3 +20,22 @@ export class ISAACTask {
         this.content = JSON.parse(jsonContent);
     }
 }
+
+export function uploadTask(isaacTask) {
+    console.log("sending asynchronous request for task: " + isaacTask);
+    const hostName = "http://localhost:9090/isaac-webapp/tasks/";
+
+    fetch(hostName + isaacTask.id, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(isaacTask),
+    })
+        .then((response) => {
+            console.log('Success:', response);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
