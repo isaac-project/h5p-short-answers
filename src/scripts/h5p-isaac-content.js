@@ -1,6 +1,4 @@
-import { ISAACFieldListener, ISAACTask, uploadTask } from './h5p-isaac-interaction';
-
-const UPLOAD_TASK_DATA = false;
+import { ISAACFieldListener } from './h5p-isaac-interaction';
 
 /** Class representing the content */
 export default class ISAACContent {
@@ -12,18 +10,6 @@ export default class ISAACContent {
    */
   constructor(task, passage, questions, contentId) {
     
-    // upload task to server
-    if (UPLOAD_TASK_DATA) {
-      const serverTaskContent = H5PIntegration.contents["cid-" + contentId];
-      const isaacTask = new ISAACTask(H5PIntegration.baseUrl,
-        contentId,
-        serverTaskContent.metadata.title,
-        serverTaskContent.library,
-        serverTaskContent.jsonContent);
-      console.log("Created task: " + JSON.stringify(isaacTask));
-      uploadTask(isaacTask);
-    }
-
     /*
      * Instructions/passage text/questions can be formatted (bold, italics, etc.)
      * The entire item is returned as a <p> element, so in order to get safely get the

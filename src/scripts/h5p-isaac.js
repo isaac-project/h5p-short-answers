@@ -1,6 +1,9 @@
 // Import required classes
 import ISAACContent from './h5p-isaac-content';
 
+import { ISAACTask, uploadTask } from './h5p-isaac-interaction';
+
+const UPLOAD_TASK_DATA = true;
 /**
  * Class holding a full ISAAC example.
  *
@@ -21,6 +24,17 @@ export default class ISAAC extends H5P.Question {
    */
   constructor(params, contentId, extras = {}) {
     super('isaac'); // CSS class selector for content's iframe: h5p-isaac
+
+    // upload task to server
+    if (UPLOAD_TASK_DATA) {
+      const serverTaskContent = H5PIntegration.contents["cid-" + contentId];
+      const isaacTask = new ISAACTask(H5PIntegration.baseUrl,
+        contentId,
+        serverTaskContent.metadata.title,
+        serverTaskContent.library,
+        params);
+      uploadTask(isaacTask);
+    }
 
     this.params = params;
     this.contentId = contentId;

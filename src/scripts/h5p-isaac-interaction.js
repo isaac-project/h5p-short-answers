@@ -17,12 +17,11 @@ export class ISAACTask {
         this.id = contentId;
         this.title = title;
         this.type = library;
-        this.content = JSON.parse(jsonContent);
+        this.content = jsonContent;
     }
 }
 
 export function uploadTask(isaacTask) {
-    console.log("sending asynchronous request for task: " + isaacTask);
     const hostName = "http://localhost:9090/isaac-webapp/tasks/";
 
     fetch(hostName + isaacTask.id, {
