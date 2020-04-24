@@ -21,7 +21,6 @@
   "license": "MIT",
   "jshintConfig": {
     "esversion": 6,
-    "eqeqeq": true,
     "strict": true
   },
   "devDependencies": {
