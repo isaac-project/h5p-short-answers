@@ -22,6 +22,7 @@ export class ISAACTask {
 }
 
 export function uploadTask(isaacTask) {
+    "use strict";
     const hostName = "http://localhost:9090/isaac-webapp/tasks/";
 
     fetch(hostName + isaacTask.id, {

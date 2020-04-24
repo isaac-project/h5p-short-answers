@@ -46,7 +46,7 @@ export default class ISAACContent {
 
     for (var i = 0; i < questions.length; i++) {
 
-      template.innerHTML = questions[i]["question"].trim();
+      template.innerHTML = questions[i].question.trim();
       var nodeQA = document.createElement('li');
       nodeQA.classList.add("h5p-isaac-question");
       nodeQA.innerHTML = `${template.content.firstElementChild.innerHTML}`;

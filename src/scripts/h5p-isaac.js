@@ -180,7 +180,7 @@ export default class ISAAC extends H5P.Question {
       for (var i = 0; i < this.params.questions.length; i++) {
         // certain characters are escaped (Character Entity References)
         var answer = document.createElement("textarea");
-        answer.innerHTML = this.params.questions[i]["targets"][0];
+        answer.innerHTML = this.params.questions[i].targets[0];
         document.getElementsByName(i).item(0).value = answer.value;
       }
 
