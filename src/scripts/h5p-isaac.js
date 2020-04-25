@@ -68,8 +68,8 @@ export default class ISAAC extends H5P.Question {
 
       // setImage and setVideo are H5P functions that seem to put media before all other content
       if (this.params.media) { //  && media.type && media.type.library
-        var media = this.params.media;
-        var type = media.library.split(' ')[0];
+        const media = this.params.media;
+        const type = media.library.split(' ')[0];
         if ((type === 'H5P.Image') && (media.params.file)) {
           this.setImage(media.params.file.path, {
             disableImageZooming: this.params.media.disableImageZooming || true,
@@ -143,8 +143,8 @@ export default class ISAAC extends H5P.Question {
 
       console.log('"Check" button clicked!');
 
-      for (var i = 0; i < this.params.questions.length; i++) {
-        console.log(document.getElementsByName(i).item(0).value);
+      for (let i = 0; i < this.params.questions.length; i++) {
+        console.log(document.getElementById(contentId + "_" + i).value)
       }
 
       this.hideButton('check-answer');
@@ -177,11 +177,11 @@ export default class ISAAC extends H5P.Question {
 
       console.log('"Show solution" button clicked!');
 
-      for (var i = 0; i < this.params.questions.length; i++) {
+      for (let i = 0; i < this.params.questions.length; i++) {
         // certain characters are escaped (Character Entity References)
-        var answer = document.createElement("textarea");
+        let answer = document.createElement("textarea");
         answer.innerHTML = this.params.questions[i].targets[0];
-        document.getElementsByName(i).item(0).value = answer.value;
+        document.getElementById(contentId + "_" + i).value = answer.value;
       }
 
       this.trigger('resize');
@@ -200,8 +200,8 @@ export default class ISAAC extends H5P.Question {
       this.hideButton('show-solution');
       this.hideButton('try-again');
 
-      for (var i = 0; i < this.params.questions.length; i++) {
-        document.getElementsByName(i).item(0).value = '';
+      for (let i = 0; i < this.params.questions.length; i++) {
+        document.getElementById(contentId + "_" + i).value = '';
       }
 
       this.trigger('resize');
