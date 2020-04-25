@@ -16,7 +16,7 @@ npm run build
 ```
 
 To use JSHint for linting, you should first set `npm` log settings with `echo loglevel=silent >> .npmrc` 
-to avoid unnecessary error messages.
+to avoid unnecessary error messages. [Source](https://github.com/npm/npm/issues/6124#issuecomment-317198898).
 
 ```bash
 npm run lint
