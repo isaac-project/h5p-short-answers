@@ -15,11 +15,11 @@ Build the project.
 npm run build
 ```
 
-To use JSHint for linting, you should first set `npm` log settings with `echo loglevel=silent >> .npmrc` 
-to avoid unnecessary error messages. [Source](https://github.com/npm/npm/issues/6124#issuecomment-317198898).
+For linting with JSHint, use the silent flag to ignore irrelevant errors resulting from a 
+non-zero exit code.
 
 ```bash
-npm run lint
+npm run lint -s
 ```
 
 If you want to let everything be built continuously while you are making changes to the code, run:
