@@ -16,14 +16,14 @@ export default class ISAACContent {
      * innerHTML and place it in a new element we can modify (ex. node.setAttribute)
      * we will use an HTML5 Template element as an intermediary
      */
-    var template = document.createElement('template');
+    let template = document.createElement('template');
 
     this.content = document.createElement('div');
     //this.content.setAttribute("id", "h5p-isaac-global");
 
     // instructions
     template.innerHTML = task.trim();
-    var taskNode = document.createElement('p');
+    let taskNode = document.createElement('p');
     taskNode.classList.add("h5p-isaac-task");
     taskNode.innerHTML = `${template.content.firstElementChild.innerHTML}`;
     this.content.appendChild(taskNode);
@@ -31,27 +31,27 @@ export default class ISAACContent {
     // passage text
     if (passage.trim() !== '') {
       template.innerHTML = passage.trim();
-      var passageNode = document.createElement("p");
+      let passageNode = document.createElement("p");
       passageNode.classList.add("h5p-isaac-passage");
       passageNode.innerHTML = `${template.content.firstElementChild.innerHTML}`;
       this.content.appendChild(passageNode);
     }
 
     // begin question & answer
-    var nodeQ = document.createElement('p');
+    let nodeQ = document.createElement('p');
     nodeQ.setAttribute("name", "h5p-isaac-questions");
-    var ol = document.createElement('ol');
+    let ol = document.createElement('ol');
     ol.setAttribute("name", "h5p-isaac-list");
 
 
-    for (var i = 0; i < questions.length; i++) {
+    for (let i = 0; i < questions.length; i++) {
 
-      template.innerHTML = questions[i]["question"].trim();
-      var nodeQA = document.createElement('li');
+      template.innerHTML = questions[i].question.trim();
+      let nodeQA = document.createElement('li');
       nodeQA.classList.add("h5p-isaac-question");
       nodeQA.innerHTML = `${template.content.firstElementChild.innerHTML}`;
       nodeQA.appendChild(document.createElement("br"));
-      var userInput = document.createElement("input");
+      let userInput = document.createElement("input");
       userInput.classList.add("h5p-isaac-input");
       userInput.setAttribute("id", contentId + "_" + i);
       // register input handler

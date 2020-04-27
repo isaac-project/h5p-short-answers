@@ -1,3 +1,4 @@
+"use strict";
 const BACKEND = "http://localhost:9090/isaac-webapp/";
 
 export class ISAACFeedbackRequest {
