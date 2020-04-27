@@ -144,7 +144,7 @@ export default class ISAAC extends H5P.Question {
       console.log('"Check" button clicked!');
 
       for (let i = 0; i < this.params.questions.length; i++) {
-        console.log(document.getElementById(contentId + "_" + i).value)
+        console.log(document.getElementById(contentId + "_" + i).value);
       }
 
       this.hideButton('check-answer');

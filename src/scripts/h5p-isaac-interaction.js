@@ -1,4 +1,3 @@
-"use strict";
 const BACKEND = "http://localhost:9090/isaac-webapp/";
 
 export class ISAACFeedbackRequest {
@@ -64,7 +63,7 @@ export class ISAACTask {
 }
 
 export function uploadTask(isaacTask) {
-    
+    "use strict";    
     fetch(BACKEND + "tasks/" + isaacTask.id, {
         method: 'PUT',
         headers: {
