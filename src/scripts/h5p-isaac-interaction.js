@@ -1,3 +1,25 @@
+const BACKEND = "http://localhost:9090/isaac-webapp/";
+
+export class ISAACFeedbackRequest {
+    constructor(taskID, fieldID, learnerID, learnerAnswer) {
+        this.taskID = taskID;
+        this.fieldID = fieldID;
+        this.learnerID = learnerID;
+        this.learnerAnswer = learnerAnswer;       
+    }
+}
+
+export class ISAACFeedbackResponse {
+    constructor(request, feedbackCode, feedbackString,
+        highlightStart, highlightEnd) {
+            this.request = request;
+            this.feedbackCode = feedbackCode;
+            this.feedbackString = feedbackString;
+            this.highlightStart = highlightStart;
+            this.highlightEnd = highlightEnd;
+        }
+}
+
 export class ISAACFieldListener {
     constructor(taskID, fieldID) {
         this.taskID = taskID;
@@ -5,9 +27,28 @@ export class ISAACFieldListener {
     }
 
     handleEvent(e) {
-        console.log("Answer typed: " + e.currentTarget.value);
-        console.log("Listener: " + JSON.stringify(this));
-        console.log("User: " + H5PIntegration.user.name);
+        const feedbackReq = new ISAACFeedbackRequest(
+            this.taskID,
+            this.fieldID,
+            H5PIntegration.user.name,
+            e.currentTarget.value);
+
+        fetch(BACKEND + "feedback/get", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(feedbackReq),
+        })
+        .then((response) => response.json())
+        .then((feedbackResp) => {
+            console.log(feedbackResp.feedbackCode);
+            // TODO display feedback
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            // TODO display error
+        });
     }
 }
 
@@ -22,9 +63,8 @@ export class ISAACTask {
 }
 
 export function uploadTask(isaacTask) {
-    const hostName = "http://localhost:9090/isaac-webapp/tasks/";
-
-    fetch(hostName + isaacTask.id, {
+    
+    fetch(BACKEND + "tasks/" + isaacTask.id, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
