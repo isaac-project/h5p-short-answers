@@ -9,19 +9,23 @@ export default class ISAACContent {
    * @param questions {array} List of pairs of question and target answer(s, delimited by /)
    */
   constructor(task, passage, questions, contentId) {
-    
+
+    this.content = document.createElement('div');
+
     /*
-     * Instructions/passage text/questions can be formatted (bold, italics, etc.)
-     * The entire item is returned as a <p> element, so in order to get safely get the
-     * innerHTML and place it in a new element we can modify (ex. node.setAttribute)
+     * Instructions, passage text, and questions can be formatted (bold, italics, etc.)
+     * The entire item is returned as a <p> element, so in order to safely get the
+     * innerHTML and place it in a new element we can modify (ex. with node.setAttribute())
      * we will use an HTML5 Template element as an intermediary
      */
     let template = document.createElement('template');
 
-    this.content = document.createElement('div');
-    //this.content.setAttribute("id", "h5p-isaac-global");
+    // If task or passage defaults are not clicked, they won't be <p> elements
+    if (!task.startsWith("<p>"))
+      task = "<p>" + task + "</p>";
+    if (!passage.startsWith("<p>"))
+      passage = "<p>" + passage + "</p>";
 
-    // instructions
     template.innerHTML = task.trim();
     let taskNode = document.createElement('p');
     taskNode.classList.add("h5p-isaac-task");
@@ -42,7 +46,6 @@ export default class ISAACContent {
     nodeQ.setAttribute("name", "h5p-isaac-questions");
     let ol = document.createElement('ol');
     ol.setAttribute("name", "h5p-isaac-list");
-
 
     for (let i = 0; i < questions.length; i++) {
 
