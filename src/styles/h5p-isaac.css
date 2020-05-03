@@ -1,20 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap');
+
 .h5p-isaac {
   color: black;
 }
 .h5p-isaac-task {
-  font-family: Palatino;
-  font-weight: bold;
-  font-size: 14pt;
+  font-family: 'Source Sans Pro', 'Noto Sans', serif;
+  font-weight: 400;
+  font-size: 12pt;
 }
 .h5p-isaac-passage {
-  font-family: Palatino;
+  font-family: 'Source Serif Pro', 'Noto Serif', serif;
+  font-weight: 400;
   font-size: 12pt;
-  margin: 5%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 .h5p-isaac-question {
-  font-family: Palatino;
+  font-family: 'Source Sans Pro', 'Noto Sans', serif;
+  font-weight: 400;
   font-size: 12pt;
 }
 .h5p-isaac-input {
+  font-family: 'Source Sans Pro', 'Noto Sans', serif;
+  font-weight: 400;
+  font-size: 12pt;
   width: 90%;
+  border: none;
+  border-bottom: 2px solid lightgray;
+  transition: all 0.5s ease-out;
+}
+.h5p-isaac-input:focus {
+  color: #000;
+  border-bottom: 2px solid dimgray;
 }
