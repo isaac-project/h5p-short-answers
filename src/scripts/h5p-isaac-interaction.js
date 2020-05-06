@@ -1,10 +1,10 @@
 const BACKEND = "http://localhost:9090/isaac-webapp/";
 
 export class ISAACFeedbackRequest {
-    constructor(taskID, fieldID, learnerID, learnerAnswer) {
+    constructor(host, taskID, fieldID, learnerAnswer) {
+        this.host = host;
         this.taskID = taskID;
         this.fieldID = fieldID;
-        this.learnerID = learnerID;
         this.learnerAnswer = learnerAnswer;       
     }
 }
@@ -28,11 +28,12 @@ export class ISAACFieldListener {
 
     handleEvent(e) {
         const feedbackReq = new ISAACFeedbackRequest(
+            location.hostname,
             this.taskID,
             this.fieldID,
-            H5PIntegration.user.name,
             e.currentTarget.value);
-
+        console.log(feedbackReq);
+        
         fetch(BACKEND + "feedback/get", {
             method: 'POST',
             headers: {
