@@ -54,7 +54,7 @@ export class ISAACFieldListener {
 
 export class ISAACTask {
     constructor(baseUrl, contentId, title, library, jsonContent) {
-        this.server = baseUrl;
+        this.host = baseUrl;
         this.id = contentId;
         this.title = title;
         this.type = library;
@@ -64,7 +64,7 @@ export class ISAACTask {
 
 export function uploadTask(isaacTask) {
     "use strict";    
-    fetch(BACKEND + "tasks/" + isaacTask.id, {
+    fetch(BACKEND + "tasks/" + isaacTask.host + "/" + isaacTask.id, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

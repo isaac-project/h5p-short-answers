@@ -28,7 +28,7 @@ export default class ISAAC extends H5P.Question {
     // upload task to server
     if (UPLOAD_TASK_DATA) {
       const serverTaskContent = H5PIntegration.contents["cid-" + contentId];
-      const isaacTask = new ISAACTask(H5PIntegration.baseUrl,
+      const isaacTask = new ISAACTask(location.hostname,
         contentId,
         serverTaskContent.metadata.title,
         serverTaskContent.library,
