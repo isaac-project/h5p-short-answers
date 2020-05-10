@@ -1,29 +1,23 @@
-// Import required classes
 import ISAACContent from './h5p-isaac-content';
-
 import { ISAACTask, uploadTask } from './h5p-isaac-interaction';
-
 const UPLOAD_TASK_DATA = true;
+
 /**
- * Class holding a full ISAAC example.
- *
  * - Extends H5P.Question which offers functions for setting the DOM
  * - Implements the question type contract necessary for reporting and for
  *   making the content type usable in compound content types like Question Set
  *   Cpm. https://h5p.org/documentation/developers/contracts
  * - Implements getCurrentState to allow continuing a user's previous session
- * - Uses a separate content class to organitze files
  */
 export default class ISAAC extends H5P.Question {
   /**
    * @constructor
-   *
    * @param {object} params Parameters passed by the editor.
    * @param {number} contentId Content's id.
    * @param {object} [extras] Saved state, metadata, etc.
    */
   constructor(params, contentId, extras = {}) {
-    super('isaac'); // CSS class selector for content's iframe: h5p-isaac
+    super('isaac');
 
     // upload task to server
     if (UPLOAD_TASK_DATA) {
@@ -40,13 +34,10 @@ export default class ISAAC extends H5P.Question {
     this.contentId = contentId;
     this.extras = extras;
 
-    /*
-     * this.params.behaviour.enableSolutionsButton and this.params.behaviour.enableRetry
-     * are used by H5P's question type contract.
-     */
-
-    // Make sure all variables are set
+    // make sure all variables are set (used by H5P's question type)
     this.params = extend({
+      overallFeedback: [],
+      scoreBarLabel: 'You got :num out of :total points',
       behaviour: {
         enableSolutionsButton: true,
         enableRetry: true
@@ -94,118 +85,186 @@ export default class ISAAC extends H5P.Question {
 
       // Register Buttons
       this.addButtons();
-
-      /*
-       * H5P.Question also offers some more functions that could be used.
-       * Consult https://github.com/h5p/h5p-question for details
-       */
     };
 
     /**
      * Add all the buttons that shall be passed to H5P.Question.
      */
     this.addButtons = () => {
+      this.addButton('check-answer', this.params.l10n.checkAnswer, () => this.showEvaluation(), true, {}, {});
+      this.addButton('show-solution', this.params.l10n.showSolution, () => this.showSolutions(), false, {}, {});
+      this.addButton('try-again', this.params.l10n.tryAgain, () => this.showEvaluation(), false, {}, {});
+    };
 
-      this.addButton('check-answer', this.params.l10n.checkAnswer, () => {
+    /**
+     * Display results
+     */
+    this.showEvaluation = function () {
 
-        this.getScore();
+      // require all blanks to be filled
+      if (!this.getAnswerGiven()) return;
 
-      }, true, {}, {});
-
-      this.addButton('show-solution', this.params.l10n.showSolution, () => {
-
-        this.showSolutions();
-
-      }, false, {}, {});
-
-      this.addButton('try-again', this.params.l10n.tryAgain, () => {
-
-        this.resetTask();
-
-      }, false, {}, {});
+      const maxScore = this.getMaxScore();
+      const score = this.getScore();
+      const scoreText = H5P.Question.determineOverallFeedback(this.params.overallFeedback, score / maxScore)
+          .replace('@score', score).replace('@total', maxScore);
+      this.setFeedback(scoreText, score, maxScore, this.params.scoreBarLabel);
     };
 
     /**
      * Check if result has been submitted or input has been given.
-     *
      * @return {boolean} True, if answer was given.
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-1}
      */
-    this.getAnswerGiven = () => false; // TODO: Return your value here
+    this.getAnswerGiven = () => {
+
+      let answered = true;
+      for (let i = 0; i < this.params.questions.length; i++) {
+        const input = document.getElementById(contentId + "_" + i);
+        if (input.value.trim() === "") {
+
+          // TODO: pop-up/text box - "must attempt all questions" (?)
+
+          // highlight empty blanks
+          if (input.className === 'h5p-isaac-input')
+            input.classList.toggle("h5p-isaac-incorrect");
+
+          // remove highlight when user has returned to blank
+          input.addEventListener('focus', function() {
+              input.setAttribute("class", "h5p-isaac-input");
+          }, false);
+
+          answered = false;
+        }
+      }
+      return answered;
+    };
 
     /**
      * Get latest score.
-     *
      * @return {number} latest score.
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-2}
      */
     this.getScore = () => {
 
-      console.log('"Check" button clicked!');
-
-      for (let i = 0; i < this.params.questions.length; i++) {
-        console.log(document.getElementById(contentId + "_" + i).value);
-      }
-
       this.hideButton('check-answer');
+      let num_correct = 0;
 
-      if (this.params.behaviour.enableSolutionsButton) {
-        this.showButton('show-solution');
+      // iterate over all questions
+      const questions = this.params.questions;
+      for (let i = 0; i < questions.length; i++) {
+        const input = document.getElementById(contentId + "_" + i);
+
+        if (input.className === 'h5p-isaac-input h5p-isaac-correct') {
+          num_correct++;
+          continue;
+        }
+
+        // iterate over all target answer possibilities
+        const targets = questions[i].targets;
+        let correct = false;
+        for (let j = 0; j < targets.length; j++) {
+          if (input.value.trim() === targets[j]) {
+            input.classList.toggle("h5p-isaac-correct");  // update style
+            correct = true;
+            num_correct++;
+            break;
+          }
+        }
+
+        // reject further changes if retry button disabled by content author
+        if ((correct) || (!this.params.behaviour.enableRetry))
+          H5P.jQuery(input).attr('disabled', true);
+
+        // highlight incorrect answers
+        if ((!correct) && (input.className !== "h5p-isaac-input h5p-isaac-incorrect")) {
+          input.classList.toggle("h5p-isaac-incorrect");
+          input.addEventListener('focus', function() {
+            input.setAttribute("class", "h5p-isaac-input");
+          }, false);
+
+          // TODO: highlight start/end indices (is this even possible in input text box?)
+        }
       }
 
-      if (this.params.behaviour.enableRetry) {
-        this.showButton('try-again');
+      if (num_correct !== this.getMaxScore()) { // don't display buttons if score = 100%
+        if (this.params.behaviour.enableSolutionsButton) this.showButton('show-solution');
+        if (this.params.behaviour.enableRetry) this.showButton('try-again');
+      } else {
+        this.hideButton('show-solution');
+        this.hideButton('try-again');
       }
-
-      return 0;
+      return num_correct;
     };
 
     /**
      * Get maximum possible score.
-     *
      * @return {number} Score necessary for mastering.
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-3}
      */
-    this.getMaxScore = () => 0; // TODO: Return real maximum score here
+    this.getMaxScore = () => this.params.questions.length;
 
     /**
      * Show solutions.
-     *
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-4}
      */
     this.showSolutions = () => {
-
-      console.log('"Show solution" button clicked!');
 
       for (let i = 0; i < this.params.questions.length; i++) {
         // certain characters are escaped (Character Entity References)
         let answer = document.createElement("textarea");
         answer.innerHTML = this.params.questions[i].targets[0];
-        document.getElementById(contentId + "_" + i).value = answer.value;
+
+        // get text box input
+        let input = document.getElementById(contentId + "_" + i);
+        input.value = answer.value;
+
+        // reject further changes since answers have been revealed
+        H5P.jQuery(input).attr('disabled', true);
       }
 
+      // disable buttons since answers have been revealed
+      this.hideButton('show-solution');
+      this.hideButton('try-again');
       this.trigger('resize');
     };
 
     /**
      * Reset task.
-     *
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
      */
     this.resetTask = () => {
 
-      console.log('"Retry" button clicked!');
+      // reset all incorrect input fields
+      const questions = this.params.questions;
+      for (let i = 0; i < questions.length; i++) {
+        const answer = document.getElementById(contentId + "_" + i).value;
+
+        // iterate over all target answer possibilities
+        const targets = questions[i].targets;
+        for (let j = 0; j < targets.length; j++) {
+
+          let input = document.getElementById(contentId + "_" + i);
+
+          if (answer.trim() !== targets[j]) {
+            input.value = '';
+          }
+
+          input.setAttribute("class", "h5p-isaac-input");
+        }
+      }
 
       this.showButton('check-answer');
       this.hideButton('show-solution');
       this.hideButton('try-again');
-
-      for (let i = 0; i < this.params.questions.length; i++) {
-        document.getElementById(contentId + "_" + i).value = '';
-      }
+      this.removeFeedback();  // remove score bar
 
       this.trigger('resize');
     };
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Get xAPI data.

@@ -15,10 +15,7 @@
   font-family: 'Source Serif Pro', 'Noto Serif', serif;
   font-weight: 400;
   font-size: 12pt;
-  margin-top: 5%;
-  margin-bottom: 5%;
-  margin-left: 10%;
-  margin-right: 10%;
+  margin: 5% 10%;
 }
 .h5p-isaac-question {
   font-family: 'Source Sans Pro', 'Noto Sans', serif;
@@ -27,6 +24,7 @@
 }
 .h5p-isaac-input {
   font-family: 'Source Sans Pro', 'Noto Sans', serif;
+  color: #000;
   font-weight: 400;
   font-size: 12pt;
   width: 90%;
@@ -35,6 +33,15 @@
   transition: all 0.5s ease-out;
 }
 .h5p-isaac-input:focus {
-  color: #000;
   border-bottom: 2px solid dimgray;
+}
+.h5p-isaac-input:disabled {
+  color: dimgray;
+  background-color: #fff;
+}
+.h5p-isaac-correct {
+  border-bottom: 2px solid #48b57e;
+}
+.h5p-isaac-incorrect {
+  border-bottom: 2px solid #dc143c;
 }

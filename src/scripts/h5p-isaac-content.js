@@ -1,12 +1,12 @@
 import { ISAACFieldListener } from './h5p-isaac-interaction';
 
-/** Class representing the content */
 export default class ISAACContent {
   /**
    * @constructor
    * @param task {string} Brief description of how to complete the task
    * @param passage {string} Text upon which questions are based (max 10,000 chars)
    * @param questions {array} List of pairs of question and target answer(s, delimited by /)
+   * @param contentId {number} Integer representing the content ID
    */
   constructor(task, passage, questions, contentId) {
 
@@ -20,11 +20,9 @@ export default class ISAACContent {
      */
     let template = document.createElement('template');
 
-    // If task or passage defaults are not clicked, they won't be <p> elements
-    if (!task.startsWith("<p>"))
-      task = "<p>" + task + "</p>";
-    if (!passage.startsWith("<p>"))
-      passage = "<p>" + passage + "</p>";
+    // if task or passage are not clicked, they won't be <p> elements
+    if (!task.startsWith("<p>")) task = `<p>${task}</p>`;
+    if (!passage.startsWith("<p>")) passage = `<p>${passage}</p>`;
 
     template.innerHTML = task.trim();
     let taskNode = document.createElement('p');
@@ -41,7 +39,7 @@ export default class ISAACContent {
       this.content.appendChild(passageNode);
     }
 
-    // begin question & answer
+    // begin Q&A section
     let nodeQ = document.createElement('p');
     nodeQ.setAttribute("name", "h5p-isaac-questions");
     let ol = document.createElement('ol');
@@ -49,29 +47,35 @@ export default class ISAACContent {
 
     for (let i = 0; i < questions.length; i++) {
 
+      // question text
       template.innerHTML = questions[i].question.trim();
       let nodeQA = document.createElement('li');
       nodeQA.classList.add("h5p-isaac-question");
       nodeQA.innerHTML = `${template.content.firstElementChild.innerHTML}`;
       nodeQA.appendChild(document.createElement("br"));
+
+      // create input text box
       let userInput = document.createElement("input");
       userInput.classList.add("h5p-isaac-input");
       userInput.setAttribute("id", contentId + "_" + i);
+
       // register input handler
       let listener = new ISAACFieldListener(contentId, i);
       userInput.addEventListener("change", listener);
+
+      // add question and text box to Q&A section
       nodeQA.appendChild(userInput);
       nodeQA.appendChild(document.createElement("br"));
       nodeQA.appendChild(document.createElement("br"));
       ol.appendChild(nodeQA);
     }
 
+    // add Q&A section to DOM
     nodeQ.appendChild(ol);
     this.content.appendChild(nodeQ);
 
     /**
      * Return the DOM for this class.
-     *
      * @return {HTMLElement} DOM for this class.
      */
     this.getDOM = () => {
