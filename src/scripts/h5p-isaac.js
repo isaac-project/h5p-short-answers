@@ -99,7 +99,7 @@ export default class ISAAC extends H5P.Question {
     /**
      * Display results
      */
-    this.showEvaluation = function () {
+    this.showEvaluation = () => {
 
       // require all blanks to be filled
       if (!this.getAnswerGiven()) return;
@@ -130,9 +130,8 @@ export default class ISAAC extends H5P.Question {
             input.classList.toggle("h5p-isaac-incorrect");
 
           // remove highlight when user has returned to blank
-          input.addEventListener('focus', function() {
-              input.setAttribute("class", "h5p-isaac-input");
-          }, false);
+          input.addEventListener('focus',
+              () => input.setAttribute("class", "h5p-isaac-input"), false);
 
           answered = false;
         }
@@ -179,9 +178,8 @@ export default class ISAAC extends H5P.Question {
         // highlight incorrect answers
         if ((!correct) && (input.className !== "h5p-isaac-input h5p-isaac-incorrect")) {
           input.classList.toggle("h5p-isaac-incorrect");
-          input.addEventListener('focus', function() {
-            input.setAttribute("class", "h5p-isaac-input");
-          }, false);
+          input.addEventListener('focus',
+              () => input.setAttribute("class", "h5p-isaac-input"), false);
 
           // TODO: highlight start/end indices (is this even possible in input text box?)
         }
@@ -212,11 +210,11 @@ export default class ISAAC extends H5P.Question {
 
       for (let i = 0; i < this.params.questions.length; i++) {
         // certain characters are escaped (Character Entity References)
-        let answer = document.createElement("textarea");
+        const answer = document.createElement("textarea");
         answer.innerHTML = this.params.questions[i].targets[0];
 
         // get text box input
-        let input = document.getElementById(contentId + "_" + i);
+        const input = document.getElementById(contentId + "_" + i);
         input.value = answer.value;
 
         // reject further changes since answers have been revealed
@@ -244,7 +242,7 @@ export default class ISAAC extends H5P.Question {
         const targets = questions[i].targets;
         for (let j = 0; j < targets.length; j++) {
 
-          let input = document.getElementById(contentId + "_" + i);
+          const input = document.getElementById(contentId + "_" + i);
 
           if (answer.trim() !== targets[j]) {
             input.value = '';

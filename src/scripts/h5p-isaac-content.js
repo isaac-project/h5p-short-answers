@@ -18,14 +18,14 @@ export default class ISAACContent {
      * innerHTML and place it in a new element we can modify (ex. with node.setAttribute())
      * we will use an HTML5 Template element as an intermediary
      */
-    let template = document.createElement('template');
+    const template = document.createElement('template');
 
     // if task or passage are not clicked, they won't be <p> elements
     if (!task.startsWith("<p>")) task = `<p>${task}</p>`;
     if (!passage.startsWith("<p>")) passage = `<p>${passage}</p>`;
 
     template.innerHTML = task.trim();
-    let taskNode = document.createElement('p');
+    const taskNode = document.createElement('p');
     taskNode.classList.add("h5p-isaac-task");
     taskNode.innerHTML = `${template.content.firstElementChild.innerHTML}`;
     this.content.appendChild(taskNode);
@@ -33,29 +33,29 @@ export default class ISAACContent {
     // passage text
     if (passage.trim() !== '') {
       template.innerHTML = passage.trim();
-      let passageNode = document.createElement("p");
+      const passageNode = document.createElement("p");
       passageNode.classList.add("h5p-isaac-passage");
       passageNode.innerHTML = `${template.content.firstElementChild.innerHTML}`;
       this.content.appendChild(passageNode);
     }
 
     // begin Q&A section
-    let nodeQ = document.createElement('p');
+    const nodeQ = document.createElement('p');
     nodeQ.setAttribute("name", "h5p-isaac-questions");
-    let ol = document.createElement('ol');
+    const ol = document.createElement('ol');
     ol.setAttribute("name", "h5p-isaac-list");
 
     for (let i = 0; i < questions.length; i++) {
 
       // question text
       template.innerHTML = questions[i].question.trim();
-      let nodeQA = document.createElement('li');
+      const nodeQA = document.createElement('li');
       nodeQA.classList.add("h5p-isaac-question");
       nodeQA.innerHTML = `${template.content.firstElementChild.innerHTML}`;
       nodeQA.appendChild(document.createElement("br"));
 
       // create input text box
-      let userInput = document.createElement("input");
+      const userInput = document.createElement("input");
       userInput.classList.add("h5p-isaac-input");
       userInput.setAttribute("id", contentId + "_" + i);
 
