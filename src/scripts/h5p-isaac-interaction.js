@@ -1,10 +1,10 @@
 const BACKEND = "http://localhost:9090/isaac-webapp/";
 
 export class ISAACFeedbackRequest {
-    constructor(taskID, fieldID, learnerID, learnerAnswer) {
+    constructor(host, taskID, fieldID, learnerAnswer) {
+        this.host = host;
         this.taskID = taskID;
         this.fieldID = fieldID;
-        this.learnerID = learnerID;
         this.learnerAnswer = learnerAnswer;       
     }
 }
@@ -28,11 +28,12 @@ export class ISAACFieldListener {
 
     handleEvent(e) {
         const feedbackReq = new ISAACFeedbackRequest(
+            location.hostname,
             this.taskID,
             this.fieldID,
-            H5PIntegration.user.name,
             e.currentTarget.value);
-
+        console.log(feedbackReq);
+        
         fetch(BACKEND + "feedback/get", {
             method: 'POST',
             headers: {
@@ -54,7 +55,7 @@ export class ISAACFieldListener {
 
 export class ISAACTask {
     constructor(baseUrl, contentId, title, library, jsonContent) {
-        this.server = baseUrl;
+        this.host = baseUrl;
         this.id = contentId;
         this.title = title;
         this.type = library;
@@ -64,7 +65,7 @@ export class ISAACTask {
 
 export function uploadTask(isaacTask) {
     "use strict";    
-    fetch(BACKEND + "tasks/" + isaacTask.id, {
+    fetch(BACKEND + "tasks/" + isaacTask.host + "/" + isaacTask.id, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
