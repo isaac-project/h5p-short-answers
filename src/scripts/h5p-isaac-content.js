@@ -60,7 +60,7 @@ export default class ISAACContent {
       userInput.setAttribute("id", contentId + "_" + i);
 
       // register input handler
-      let listener = new ISAACFieldListener(contentId, i);
+      const listener = new ISAACFieldListener(contentId, i);
       userInput.addEventListener("change", listener);
 
       // add question and text box to Q&A section
