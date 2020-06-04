@@ -21,6 +21,7 @@
   font-family: 'Source Sans Pro', 'Noto Sans', serif;
   font-weight: 400;
   font-size: 12pt;
+  position: relative;
 }
 .h5p-isaac-input {
   font-family: 'Source Sans Pro', 'Noto Sans', serif;
@@ -45,4 +46,51 @@
 }
 .h5p-isaac-incorrect {
   border-bottom: 2px solid #dc143c;
+}
+.modal {
+  display: none; /* hidden by default */
+  position: absolute;
+  z-index: 1; /* overlay */
+  right: 10%;
+  top: 0;
+  width: 75%; /* Full width */
+  height: 50%; /* Full height */
+  /*padding-left: 10px;*/
+  /*overflow: auto; !* Enable scroll if needed *!*/
+  /*background-color: rgb(0,0,0); !* Fallback color *!*/
+  /*background-color: rgba(0,0,0,0.4); !* Black w/ opacity *!*/
+}
+.modal-content {
+  font-size: 10pt;
+  background-color: #FFFACD;
+  border: none;
+  width: 25%; /* Could be more or less, depending on screen size */
+  position: absolute;
+  right: 0;
+  padding-left: 5px;
+  padding-right: 20px; /* accommodate x button */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  animation-name: animate;
+  animation-duration: 1s
+}
+.close {
+  color: #aaa;
+  position: absolute;
+  right: 6px;
+  top: -5px;
+  /*float: right;*/
+  font-size: 20px;
+  font-weight: bold;
+  /*margin-right: 5px;*/
+}
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  /*margin-right: 2px;*/
+}
+@keyframes animate {
+  from {right: -10%; opacity: 0}
+  to {right: 0; opacity: 1}
 }

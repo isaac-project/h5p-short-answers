@@ -185,12 +185,29 @@ export default class ISAAC extends H5P.Question {
         }
       }
 
-      if (num_correct !== this.getMaxScore()) { // don't display buttons if score = 100%
+      if (num_correct !== this.getMaxScore()) {
         if (this.params.behaviour.enableSolutionsButton) this.showButton('show-solution');
         if (this.params.behaviour.enableRetry) this.showButton('try-again');
-      } else {
+
+        // retrieve and display pop-up
+        const popup = document.getElementById(contentId + "_modal");
+        popup.style.display = "block";
+
+        // close when user clicks x
+        const x = popup.firstChild;
+        x.onclick = () => popup.style.display = "none";
+
+        // close when user clicks outside
+        // window.onclick = function(event) {
+        //   if (event.target === popup)
+        //     popup.style.display = "none";
+        // }
+
+      } else { // don't display buttons if score = 100%
         this.hideButton('show-solution');
         this.hideButton('try-again');
+        const popup = document.getElementById(contentId + "_modal");
+        popup.style.display = "none";
       }
       return num_correct;
     };

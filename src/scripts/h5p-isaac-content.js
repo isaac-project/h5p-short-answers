@@ -21,13 +21,15 @@ export default class ISAACContent {
     const template = document.createElement('template');
 
     // if task or passage are not clicked, they won't be <p> elements
-    if (!task.startsWith("<p>")) task = `<p>${task}</p>`;
-    if (!passage.startsWith("<p>")) passage = `<p>${passage}</p>`;
+    if (!task.startsWith("<p>"))
+      task = `<p>${task}</p>`;
+    if (!passage.startsWith("<p>"))
+      passage = `<p>${passage}</p>`;
 
     template.innerHTML = task.trim();
     const taskNode = document.createElement('p');
     taskNode.classList.add("h5p-isaac-task");
-    taskNode.innerHTML = `${template.content.firstElementChild.innerHTML}`;
+    taskNode.innerHTML = `${template.innerHTML}`;
     this.content.appendChild(taskNode);
 
     // passage text
@@ -35,7 +37,7 @@ export default class ISAACContent {
       template.innerHTML = passage.trim();
       const passageNode = document.createElement("p");
       passageNode.classList.add("h5p-isaac-passage");
-      passageNode.innerHTML = `${template.content.firstElementChild.innerHTML}`;
+      passageNode.innerHTML = `${template.innerHTML}`;
       this.content.appendChild(passageNode);
     }
 
@@ -47,12 +49,16 @@ export default class ISAACContent {
 
     for (let i = 0; i < questions.length; i++) {
 
+      let question = questions[i].question;
+      if (!question.startsWith("<p>")) {
+        question = `<p>${question}</p>`;
+      }
+
       // question text
-      template.innerHTML = questions[i].question.trim();
+      template.innerHTML = question.trim();
       const nodeQA = document.createElement('li');
       nodeQA.classList.add("h5p-isaac-question");
-      nodeQA.innerHTML = `${template.content.firstElementChild.innerHTML}`;
-      nodeQA.appendChild(document.createElement("br"));
+      nodeQA.innerHTML = `${template.innerHTML}`;
 
       // create input text box
       const userInput = document.createElement("input");
@@ -67,6 +73,25 @@ export default class ISAACContent {
       nodeQA.appendChild(userInput);
       nodeQA.appendChild(document.createElement("br"));
       nodeQA.appendChild(document.createElement("br"));
+
+      // pop-up container
+      const modal = document.createElement('div');
+      modal.setAttribute('class', 'modal');
+      modal.setAttribute("id", contentId + "_modal");
+
+      // upper-right close button
+      const x = document.createElement('span');
+      x.setAttribute('class', 'close');
+      x.innerHTML = '&times;';
+
+      // pop-up text content
+      const modal_content = document.createElement('p');
+      modal_content.setAttribute('class', 'modal-content');
+      modal_content.innerText = "Error.";
+      modal_content.appendChild(x);
+      modal.appendChild(modal_content);
+      nodeQA.appendChild(modal);
+
       ol.appendChild(nodeQA);
     }
 
