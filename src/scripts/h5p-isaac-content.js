@@ -77,19 +77,10 @@ export default class ISAACContent {
       // pop-up container
       const modal = document.createElement('div');
       modal.setAttribute('class', 'modal');
-      modal.setAttribute("id", contentId + "_modal");
+      modal.setAttribute("id", i + "_modal");
 
-      // upper-right close button
-      const x = document.createElement('span');
-      x.setAttribute('class', 'close');
-      x.innerHTML = '&times;';
-
-      // pop-up text content
-      const modal_content = document.createElement('p');
-      modal_content.setAttribute('class', 'modal-content');
-      modal_content.innerText = "Error.";
-      modal_content.appendChild(x);
-      modal.appendChild(modal_content);
+      
+      
       nodeQA.appendChild(modal);
 
       ol.appendChild(nodeQA);
@@ -107,4 +98,25 @@ export default class ISAACContent {
       return this.content;
     };
   }
+}
+
+export function populateAndShowPopup(fieldID, content) {
+  // retrieve and display pop-up
+  const popup = document.getElementById(fieldID + "_modal");
+  // pop-up text content
+  popup.innerHTML = '';
+  const modal_content = document.createElement('p');
+  modal_content.setAttribute('class', 'modal-content');
+  modal_content.innerText = content;
+  // upper-right close button
+  const x = document.createElement('span');
+  x.setAttribute('class', 'close');
+  x.innerHTML = '&times;';
+  modal_content.appendChild(x);
+  popup.appendChild(modal_content);
+  popup.style.display = "block";
+
+  // close when user clicks x
+  //const x = popup.firstChild;
+  x.onclick = () => popup.style.display = "none";
 }

@@ -1,3 +1,5 @@
+import { populateAndShowPopup } from './h5p-isaac-content';
+
 const BACKEND = "http://localhost:9090/isaac-webapp/";
 
 export class ISAACFeedbackRequest {
@@ -44,7 +46,8 @@ export class ISAACFieldListener {
         .then((response) => response.json())
         .then((feedbackResp) => {
             console.log(feedbackResp.feedbackCode);
-            // TODO display feedback
+            // display feedback
+            populateAndShowPopup(this.fieldID, feedbackResp.feedbackString);
         })
         .catch((error) => {
             console.error('Error:', error);
