@@ -1,4 +1,4 @@
-# ISAAC
+# H5P Short Answers
 
 Built on [H5P-Question boilerplate](https://github.com/h5p/h5p-boilerplate/tree/question-type).
 
