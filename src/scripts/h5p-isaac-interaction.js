@@ -1,4 +1,4 @@
-import { populateAndShowPopup } from './h5p-isaac-content';
+import { highlightIncorrect, populateAndShowPopup, displayCorrect } from './h5p-isaac-content';
 
 const BACKEND = "http://localhost:9090/isaac-webapp/";
 
@@ -23,9 +23,10 @@ export class ISAACFeedbackResponse {
 }
 
 export class ISAACFieldListener {
-    constructor(taskID, fieldID) {
+    constructor(taskID, fieldID, solutions) {
         this.taskID = taskID;
         this.fieldID = fieldID;
+        this.solutions = solutions;
     }
 
     handleEvent(e) {
@@ -46,8 +47,27 @@ export class ISAACFieldListener {
         .then((response) => response.json())
         .then((feedbackResp) => {
             console.log(feedbackResp.feedbackCode);
-            // display feedback
-            populateAndShowPopup(this.fieldID, feedbackResp.feedbackString);
+
+            // behavior for correct answer
+            for (let i = 0; i < this.solutions.length; i++) {
+                if (feedbackReq.learnerAnswer.trim() === this.solutions[i].trim()) {
+                    displayCorrect(this.taskID, this.fieldID);
+                    return;
+                }
+            }
+
+            // temp, delete when feedback/indices are being returned properly
+            feedbackResp.highlightStart = 0;
+            feedbackResp.highlightEnd = 10;
+
+            // highlight incorrect input fields and relevant passage text TODO: verify indices are within span of text?
+            highlightIncorrect(this.taskID, this.fieldID, feedbackResp);
+
+            // display feedback for incorrect answer
+            populateAndShowPopup(this.taskID, this.fieldID, feedbackResp);
+
+            // TODO behavior for incorrect answer when no feedback is available? (should there always be a pop-up?)
+
         })
         .catch((error) => {
             console.error('Error:', error);

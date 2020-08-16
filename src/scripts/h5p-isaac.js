@@ -84,7 +84,7 @@ export default class ISAAC extends H5P.Question {
       this.setContent(content.getDOM());
 
       // Register Buttons
-      this.addButtons();
+      // this.addButtons();
     };
 
     /**
@@ -153,36 +153,8 @@ export default class ISAAC extends H5P.Question {
       const questions = this.params.questions;
       for (let i = 0; i < questions.length; i++) {
         const input = document.getElementById(contentId + "_" + i);
-
-        if (input.className === 'h5p-isaac-input h5p-isaac-correct') {
+        if (input !== null && input.classList.contains("h5p-isaac-correct"))
           num_correct++;
-          continue;
-        }
-
-        // iterate over all target answer possibilities
-        const targets = questions[i].targets;
-        let correct = false;
-        for (let j = 0; j < targets.length; j++) {
-          if (input.value.trim() === targets[j]) {
-            input.classList.toggle("h5p-isaac-correct");  // update style
-            correct = true;
-            num_correct++;
-            break;
-          }
-        }
-
-        // reject further changes if retry button disabled by content author
-        if ((correct) || (!this.params.behaviour.enableRetry))
-          H5P.jQuery(input).attr('disabled', true);
-
-        // highlight incorrect answers
-        if ((!correct) && (input.className !== "h5p-isaac-input h5p-isaac-incorrect")) {
-          input.classList.toggle("h5p-isaac-incorrect");
-          input.addEventListener('focus',
-              () => input.setAttribute("class", "h5p-isaac-input"), false);
-
-          // TODO: highlight start/end indices (is this even possible in input text box?)
-        }
       }
 
       if (num_correct !== this.getMaxScore()) {

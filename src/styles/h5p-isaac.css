@@ -42,23 +42,27 @@
   background-color: #fff;
 }
 .h5p-isaac-correct {
-  border-bottom: 2px solid #48b57e;
+  border-bottom: 2px solid #48b57e !important;
 }
 .h5p-isaac-incorrect {
-  border-bottom: 2px solid #dc143c;
+  border-bottom: 2px solid #dc143c !important;
 }
 .modal {
   display: none; /* hidden by default */
   position: absolute;
   z-index: 1; /* overlay */
   right: 10%;
-  top: 0;
-  width: 75%; /* Full width */
-  height: 50%; /* Full height */
+  top: 27%;
+  width: 50%; /* Full width */
+  height: 25%; /* Full height */
   /*padding-left: 10px;*/
   /*overflow: auto; !* Enable scroll if needed *!*/
   /*background-color: rgb(0,0,0); !* Fallback color *!*/
   /*background-color: rgba(0,0,0,0.4); !* Black w/ opacity *!*/
+}
+.modal-fadeout {
+  animation-name: fadeout;
+  animation-duration: 1s
 }
 .modal-content {
   font-size: 10pt;
@@ -90,7 +94,14 @@
   cursor: pointer;
   /*margin-right: 2px;*/
 }
+mark {
+  background-color: #fff2a8;
+}
 @keyframes animate {
   from {right: -10%; opacity: 0}
   to {right: 0; opacity: 1}
+}
+@keyframes fadeout {
+  from {opacity: 1}
+  to {opacity: 0}
 }
