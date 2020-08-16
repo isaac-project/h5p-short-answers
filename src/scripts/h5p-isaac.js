@@ -13,17 +13,17 @@ export default class ISAAC extends H5P.Question {
   /**
    * @constructor
    * @param {object} params Parameters passed by the editor.
-   * @param {number} contentId Content's id.
+   * @param {number} contentID Content's id.
    * @param {object} [extras] Saved state, metadata, etc.
    */
-  constructor(params, contentId, extras = {}) {
+  constructor(params, contentID, extras = {}) {
     super('isaac');
 
     // upload task to server
     if (UPLOAD_TASK_DATA) {
-      const serverTaskContent = H5PIntegration.contents["cid-" + contentId];
+      const serverTaskContent = H5PIntegration.contents["cid-" + contentID];
       const isaacTask = new ISAACTask(location.hostname,
-        contentId,
+        contentID,
         serverTaskContent.metadata.title,
         serverTaskContent.library,
         params);
@@ -31,7 +31,7 @@ export default class ISAAC extends H5P.Question {
     }
 
     this.params = params;
-    this.contentId = contentId;
+    this.contentID = contentID;
     this.extras = extras;
 
     // make sure all variables are set (used by H5P's question type)
@@ -76,7 +76,7 @@ export default class ISAAC extends H5P.Question {
         this.params.task,
         this.params.passage,
         this.params.questions,
-        this.contentId
+        this.contentID
         //this.previousState.random // previous session state
       );
 
@@ -120,7 +120,7 @@ export default class ISAAC extends H5P.Question {
 
       let answered = true;
       for (let i = 0; i < this.params.questions.length; i++) {
-        const input = document.getElementById(contentId + "_" + i);
+        const input = document.getElementById(contentID + "_" + i);
         if (input.value.trim() === "") {
 
           // TODO: pop-up/text box - "must attempt all questions" (?)
@@ -152,7 +152,7 @@ export default class ISAAC extends H5P.Question {
       // iterate over all questions
       const questions = this.params.questions;
       for (let i = 0; i < questions.length; i++) {
-        const input = document.getElementById(contentId + "_" + i);
+        const input = document.getElementById(contentID + "_" + i);
         if (input !== null && input.classList.contains("h5p-isaac-correct"))
           num_correct++;
       }
@@ -186,7 +186,7 @@ export default class ISAAC extends H5P.Question {
         answer.innerHTML = this.params.questions[i].targets[0];
 
         // get text box input
-        const input = document.getElementById(contentId + "_" + i);
+        const input = document.getElementById(contentID + "_" + i);
         input.value = answer.value;
 
         // reject further changes since answers have been revealed
@@ -208,13 +208,13 @@ export default class ISAAC extends H5P.Question {
       // reset all incorrect input fields
       const questions = this.params.questions;
       for (let i = 0; i < questions.length; i++) {
-        const answer = document.getElementById(contentId + "_" + i).value;
+        const answer = document.getElementById(contentID + "_" + i).value;
 
         // iterate over all target answer possibilities
         const targets = questions[i].targets;
         for (let j = 0; j < targets.length; j++) {
 
-          const input = document.getElementById(contentId + "_" + i);
+          const input = document.getElementById(contentID + "_" + i);
 
           if (answer.trim() !== targets[j]) {
             input.value = '';

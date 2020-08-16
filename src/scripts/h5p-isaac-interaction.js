@@ -77,9 +77,9 @@ export class ISAACFieldListener {
 }
 
 export class ISAACTask {
-    constructor(baseUrl, contentId, title, library, jsonContent) {
+    constructor(baseUrl, contentID, title, library, jsonContent) {
         this.host = baseUrl;
-        this.id = contentId;
+        this.id = contentID;
         this.title = title;
         this.type = library;
         this.content = jsonContent;

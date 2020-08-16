@@ -6,9 +6,9 @@ export default class ISAACContent {
    * @param task {string} Brief description of how to complete the task
    * @param passage {string} Text upon which questions are based (max 10,000 chars)
    * @param questions {array} List of pairs of question and target answer(s, delimited by /)
-   * @param contentId {number} Integer representing the content ID
+   * @param contentID {number} Integer representing the content ID
    */
-  constructor(task, passage, questions, contentId) {
+  constructor(task, passage, questions, contentID) {
 
     this.content = document.createElement('div');
 
@@ -37,7 +37,7 @@ export default class ISAACContent {
     if (passage.trim() !== '') {
       template.innerHTML = passage.trim();
       const passageNode = document.createElement("p");
-      passageNode.setAttribute("id", contentId + "_passage");
+      passageNode.setAttribute("id", contentID + "_passage");
       passageNode.classList.add("h5p-isaac-passage");
       passageNode.innerHTML = `${template.innerHTML}`;
       this.content.appendChild(passageNode);
@@ -65,10 +65,10 @@ export default class ISAACContent {
       // create input text box
       const userInput = document.createElement("input");
       userInput.classList.add("h5p-isaac-input");
-      userInput.setAttribute("id", contentId + "_" + i);
+      userInput.setAttribute("id", contentID + "_" + i);
 
       // register input handler
-      const listener = new ISAACFieldListener(contentId, i, questions[i].targets);
+      const listener = new ISAACFieldListener(contentID, i, questions[i].targets);
       userInput.addEventListener("change", listener);
 
       // add question and text box to Q&A section
@@ -79,7 +79,7 @@ export default class ISAACContent {
       // pop-up container
       const modal = document.createElement('div');
       modal.setAttribute('class', 'modal');
-      modal.setAttribute("id", contentId + "_" + i + "_modal");
+      modal.setAttribute("id", contentID + "_" + i + "_modal");
       nodeQA.appendChild(modal);
       ol.appendChild(nodeQA);
     }
@@ -99,6 +99,7 @@ export default class ISAACContent {
 }
 
 export function populateAndShowPopup(contentID, fieldID, feedback) {
+  "use strict";
   // retrieve pop-up container
   const popup = document.getElementById(contentID + "_" + fieldID + "_modal");
 
@@ -123,6 +124,7 @@ export function populateAndShowPopup(contentID, fieldID, feedback) {
 }
 
 export function highlightIncorrect(contentID, fieldID, feedback) {
+  "use strict";
   // highlight incorrect input fields
   const input = document.getElementById(contentID + "_" + fieldID);
   input.classList.remove("h5p-isaac-correct"); // answer has been changed; remove correct label
@@ -140,12 +142,12 @@ export function highlightIncorrect(contentID, fieldID, feedback) {
     let start = passage.innerText.substring(0, feedback.highlightStart);
     let mark = passage.innerText.substring(feedback.highlightStart, feedback.highlightEnd);
     let end = passage.innerText.substring(feedback.highlightEnd, passage.innerText.length);
-    passage.innerHTML = `<p>${start}<mark>${mark}</mark>${end}</p>`
+    passage.innerHTML = `<p>${start}<mark>${mark}</mark>${end}</p>`;
   }
 }
 
 export function displayCorrect(contentID, fieldID) {
-
+  "use strict";
   // remove passage highlight (if present)
   const passage = document.getElementById(contentID + "_passage");
   passage.innerHTML = passage.innerHTML.replace(/<\/?mark>/gi, '');
@@ -156,11 +158,11 @@ export function displayCorrect(contentID, fieldID) {
 
   // hide feedback popup
   const popup = document.getElementById(contentID + "_" + fieldID + "_modal");
-  popup.classList.add('modal-fadeout')
+  popup.classList.add('modal-fadeout');
   setTimeout(()=>{
     popup.style.display = "none";
-    popup.classList.remove('modal-fadeout')
-  },1000) // milliseconds = 1 second
+    popup.classList.remove('modal-fadeout');
+  },1000); // milliseconds = 1 second
 
   // disable input field when answer is correct
   // H5P.jQuery(input).attr('disabled', true);
