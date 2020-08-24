@@ -122,6 +122,15 @@
     }
   },
   {
+    "label": "Backend server",
+    "name": "backend",
+    "type": "text",
+    "maxLength": 1000,
+    "importance": "low",
+    "optional": true,
+    "default": "http://localhost:9090/isaac-webapp/"
+  },
+  {
     "name": "behaviour",
     "type": "group",
     "label": "Behavioural settings",

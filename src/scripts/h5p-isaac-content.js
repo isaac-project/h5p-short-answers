@@ -5,10 +5,11 @@ export default class ISAACContent {
    * @constructor
    * @param task {string} Brief description of how to complete the task
    * @param passage {string} Text upon which questions are based (max 10,000 chars)
-   * @param questions {array} List of pairs of question and target answer(s, delimited by /)
+   * @param questions {array} List of pairs of question and target answer(s)
    * @param contentID {number} Integer representing the content ID
+   * @param backend {string}
    */
-  constructor(task, passage, questions, contentID) {
+  constructor(task, passage, questions, contentID, backend) {
 
     this.content = document.createElement('div');
 
@@ -39,7 +40,7 @@ export default class ISAACContent {
       const passageNode = document.createElement("p");
       passageNode.setAttribute("id", contentID + "_passage");
       passageNode.classList.add("h5p-isaac-passage");
-      const replacement = `<mark id='${contentID}_mark_$1' class='h5p-isaac-highlight h5p-isaac-hidden'>$2</mark>`;
+      const replacement = `<span id='${contentID}_mark_$1' class='h5p-isaac-highlight h5p-isaac-hidden'>$2</span>`;
       passageNode.innerHTML = `${template.innerHTML.replace(/(\d+)\*\*(.*?)\*\*/gi, replacement)}`;
       this.content.appendChild(passageNode);
     }
@@ -73,7 +74,7 @@ export default class ISAACContent {
       userInput.classList.add("h5p-isaac-input");
 
       // register input handler
-      const listener = new ISAACFieldListener(contentID, i, questions[i].targets);
+      const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend);
       userInput.addEventListener("keydown", function (e) {
         if (e.key === 'Enter')
           listener.handleEvent(e);
@@ -89,7 +90,7 @@ export default class ISAACContent {
           target.scrollIntoView({ // may not be supported by Safari and iOS (?)
             behavior: 'smooth',
             block: 'center'
-          })
+          });
         }
       });
 
@@ -202,6 +203,7 @@ export function displayCorrect(contentID, fieldID) {
 }
 
 export function resetHighlights(contentID, targets) {
+  "use strict";
   // remove existing highlight (if present)
   for (let i = 0; i < targets.length; i++) {
     const passageHighlights = document.getElementById(`${contentID}_mark_${i + 1}`);

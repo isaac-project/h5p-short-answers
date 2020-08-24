@@ -27,7 +27,7 @@ export default class ISAAC extends H5P.Question {
         serverTaskContent.metadata.title,
         serverTaskContent.library,
         params);
-      uploadTask(isaacTask);
+      uploadTask(isaacTask, params.backend);
     }
 
     this.params = params;
@@ -76,7 +76,8 @@ export default class ISAAC extends H5P.Question {
         this.params.task,
         this.params.passage,
         this.params.questions,
-        this.contentID
+        this.contentID,
+        this.params.backend
         //this.previousState.random // previous session state
       );
 

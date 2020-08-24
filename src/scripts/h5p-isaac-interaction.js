@@ -1,32 +1,34 @@
 import { resetHighlights, displayIncorrect, displayCorrect } from './h5p-isaac-content';
 
-const BACKEND = "http://localhost:9090/isaac-webapp/";
-
 export class ISAACFeedbackRequest {
     constructor(host, taskID, fieldID, learnerAnswer) {
         this.host = host;
         this.taskID = taskID;
         this.fieldID = fieldID;
-        this.learnerAnswer = learnerAnswer;       
+        this.learnerAnswer = learnerAnswer;
     }
 }
 
 export class ISAACFeedbackResponse {
     constructor(request, feedbackCode, feedbackString,
-        highlightStart, highlightEnd) {             // remove(?)
-            this.request = request;
-            this.feedbackCode = feedbackCode;
-            this.feedbackString = feedbackString;
-            this.highlightStart = highlightStart;   // remove(?)
-            this.highlightEnd = highlightEnd;       // remove(?)
-        }
+                questionHighlightStart, questionHighlightEnd,
+                inputHighlightStart, inputHighlightEnd) {
+        this.request = request;
+        this.feedbackCode = feedbackCode;
+        this.feedbackString = feedbackString;
+        this.questionHighlightStart = questionHighlightStart;
+        this.questionHhighlightEnd = questionHighlightEnd;
+        this.inputHighlightStart = inputHighlightStart;
+        this.inputHighlightEnd = inputHighlightEnd;
+    }
 }
 
 export class ISAACFieldListener {
-    constructor(taskID, fieldID, solutions) {
+    constructor(taskID, fieldID, solutions, backend) {
         this.taskID = taskID;
         this.fieldID = fieldID;
         this.solutions = solutions;
+        this.backend = backend;
     }
 
     handleEvent(e) {
@@ -35,8 +37,8 @@ export class ISAACFieldListener {
             this.taskID,
             this.fieldID,
             e.currentTarget.value);
-        
-        fetch(BACKEND + "feedback/get", {
+
+        fetch(this.backend + "feedback/get", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,9 +77,9 @@ export class ISAACTask {
     }
 }
 
-export function uploadTask(isaacTask) {
-    "use strict";    
-    fetch(BACKEND + "tasks/" + isaacTask.host + "/" + isaacTask.id, {
+export function uploadTask(isaacTask, backend) {
+    "use strict";
+    fetch(backend + "tasks/" + isaacTask.host + "/" + isaacTask.id, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
