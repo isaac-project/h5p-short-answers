@@ -97,12 +97,12 @@ export default class ISAAC extends H5P.Question {
     };
 
     /**
-     * Display results
+     * Display/update animated score bar
      */
     this.showEvaluation = () => {
 
       // require all blanks to be filled
-      if (!this.getAnswerGiven()) return;
+      // if (!this.getAnswerGiven()) return;
 
       const maxScore = this.getMaxScore();
       const score = this.getScore();
@@ -157,13 +157,13 @@ export default class ISAAC extends H5P.Question {
           num_correct++;
       }
 
-      if (num_correct !== this.getMaxScore()) {
-        if (this.params.behaviour.enableSolutionsButton) this.showButton('show-solution');
-        if (this.params.behaviour.enableRetry) this.showButton('try-again');
-      } else { // don't display buttons if score = 100%
-        this.hideButton('show-solution');
-        this.hideButton('try-again');
-      }
+      // if (num_correct !== this.getMaxScore()) {
+      //   if (this.params.behaviour.enableSolutionsButton) this.showButton('show-solution');
+      //   if (this.params.behaviour.enableRetry) this.showButton('try-again');
+      // } else { // don't display buttons if score = 100%
+      //   this.hideButton('show-solution');
+      //   this.hideButton('try-again');
+      // }
       return num_correct;
     };
 

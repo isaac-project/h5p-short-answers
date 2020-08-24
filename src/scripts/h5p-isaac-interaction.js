@@ -1,4 +1,4 @@
-import { highlightIncorrect, populateAndShowPopup, displayCorrect } from './h5p-isaac-content';
+import { resetHighlights, displayIncorrect, displayCorrect } from './h5p-isaac-content';
 
 const BACKEND = "http://localhost:9090/isaac-webapp/";
 
@@ -13,12 +13,12 @@ export class ISAACFeedbackRequest {
 
 export class ISAACFeedbackResponse {
     constructor(request, feedbackCode, feedbackString,
-        highlightStart, highlightEnd) {
+        highlightStart, highlightEnd) {             // remove(?)
             this.request = request;
             this.feedbackCode = feedbackCode;
             this.feedbackString = feedbackString;
-            this.highlightStart = highlightStart;
-            this.highlightEnd = highlightEnd;
+            this.highlightStart = highlightStart;   // remove(?)
+            this.highlightEnd = highlightEnd;       // remove(?)
         }
 }
 
@@ -35,7 +35,6 @@ export class ISAACFieldListener {
             this.taskID,
             this.fieldID,
             e.currentTarget.value);
-        console.log(feedbackReq);
         
         fetch(BACKEND + "feedback/get", {
             method: 'POST',
@@ -46,27 +45,17 @@ export class ISAACFieldListener {
         })
         .then((response) => response.json())
         .then((feedbackResp) => {
-            console.log(feedbackResp.feedbackCode);
 
-            // behavior for correct answer
-            for (let i = 0; i < this.solutions.length; i++) {
-                if (feedbackReq.learnerAnswer.trim() === this.solutions[i].trim()) {
-                    displayCorrect(this.taskID, this.fieldID);
-                    return;
-                }
+            // TODO compare existing correct/incorrect class with current
+            // TODO and compare feedback response strings, for feedback/display update
+            resetHighlights(this.taskID, this.solutions);
+
+            if (feedbackResp.feedbackCode.localeCompare(1) === 0) {
+                displayCorrect(this.taskID, this.fieldID);
+            } else {
+                displayIncorrect(this.taskID, this.fieldID, feedbackResp);
+                // TODO behavior for incorrect answer when no feedback is available? (should there always be a pop-up?)
             }
-
-            // temp, delete when feedback/indices are being returned properly
-            feedbackResp.highlightStart = 0;
-            feedbackResp.highlightEnd = 10;
-
-            // highlight incorrect input fields and relevant passage text TODO: verify indices are within span of text?
-            highlightIncorrect(this.taskID, this.fieldID, feedbackResp);
-
-            // display feedback for incorrect answer
-            populateAndShowPopup(this.taskID, this.fieldID, feedbackResp);
-
-            // TODO behavior for incorrect answer when no feedback is available? (should there always be a pop-up?)
 
         })
         .catch((error) => {

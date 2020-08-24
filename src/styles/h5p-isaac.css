@@ -41,19 +41,79 @@
   color: dimgray;
   background-color: #fff;
 }
+/*.h5p-input-wrapper:after {*/
+/*  font-family: 'H5PFontAwesome4';*/
+/*  display: inline;*/
+/*  position: absolute;*/
+/*  right: 55px;*/
+/*  font-size: 20px;*/
+/*  content: '\f14d'; rotated share icon, looks like return key symbol*/
+/*  color: lightgray;*/
+/*  transform: rotate(180deg);*/
+/*}*/
+.h5p-isaac-info:after {
+  font-family: 'H5PFontAwesome4';
+  display: inline;
+  visibility: hidden;
+  position: absolute;
+  right: 25px;
+  font-size: 20px;
+  /*content: '\f10e'; !* quotes *!*/
+  content: '\f05a'; /* i symbol */
+  color: lightgray;
+}
+.h5p-isaac-info-show:after {
+  visibility: visible !important;
+}
+.h5p-isaac-info:hover:after {
+  color: #000;
+  cursor: pointer;
+}
 .h5p-isaac-correct {
   border-bottom: 2px solid #48b57e !important;
 }
+.h5p-input-correct:after {
+  font-family: 'H5PFontAwesome4';
+  display: inline;
+  position: absolute;
+  right: 55px;
+  /*top: -5px;*/
+  /*float: right;*/
+  font-size: 20px;
+  /*margin-right: 5px;*/
+  content: '\f00c';
+  color: #48b57e;
+  /*transform: rotate(0deg) !important; !* reverse from "enter" button *!*/
+}
 .h5p-isaac-incorrect {
   border-bottom: 2px solid #dc143c !important;
+}
+.h5p-input-incorrect:after {
+  font-family: 'H5PFontAwesome4';
+  display: inline;
+  position: absolute;
+  right: 55px;
+  /*top: -5px;*/
+  /*float: right;*/
+  font-size: 20px;
+  /*margin-right: 5px;*/
+  content: '\f00d';
+  color: #dc143c;
+}
+.h5p-isaac-highlight {
+  background-color: #fff2a8;
+}
+.h5p-isaac-hidden {
+  background-color: transparent;
 }
 .modal {
   display: none; /* hidden by default */
   position: absolute;
   z-index: 1; /* overlay */
   right: 10%;
-  top: 27%;
-  width: 50%; /* Full width */
+  /*top: 27%;*/
+  top: 75%;
+  width: 100%; /* Full width */
   height: 25%; /* Full height */
   /*padding-left: 10px;*/
   /*overflow: auto; !* Enable scroll if needed *!*/
@@ -94,8 +154,22 @@
   cursor: pointer;
   /*margin-right: 2px;*/
 }
-mark {
-  background-color: #fff2a8;
+hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
+  margin: 2em auto;
+}
+table {
+  font-family: 'Source Sans Pro', 'Noto Sans', serif !important;
+}
+tr, th, td {
+  padding: 10px !important;
+  background-color: transparent !important;
+}
+th {
+  color: #000 !important;
+  background-color: #e8e8e8 !important;
 }
 @keyframes animate {
   from {right: -10%; opacity: 0}
