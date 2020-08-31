@@ -18,27 +18,25 @@
 }
 .h5p-isaac-input:disabled {
     color: dimgray;
-    background-color: #fff;
 }
 .h5p-isaac-correct {
     border-bottom: 2px solid #48b57e !important;
 }
-.h5p-input-correct:after {
-    font-family: 'H5PFontAwesome4';
-    display: inline-block;
-    position: absolute;
-    right: 150px;
-    top: 25px;
-    /*float: right;*/
-    font-size: 3em;
-    /*margin-right: 5px;*/
-    content: '\f00c';
-    color: #48b57e;
-    /*transform: rotate(0deg) !important; !* reverse from "enter" button *!*/
-}
 .h5p-isaac-incorrect {
     border-bottom: 2px solid #dc143c !important;
 }
+/*.h5p-input-correct:after {*/
+/*    font-family: 'H5PFontAwesome4';*/
+/*    position: relative;*/
+/*    right: 15%;*/
+    /*bottom: -10px;*/
+    /*float: right;*/
+    /*font-size: 2em;*/
+    /*margin-right: 5px;*/
+    /*content: '\f00c';*/
+    /*color: #48b57e;*/
+    /*transform: rotate(0deg) !important; !* reverse from "enter" button *!*/
+/*}*/
 /*.h5p-input-incorrect:after {*/
 /*    font-family: 'H5PFontAwesome4';*/
 /*    display: inline;*/

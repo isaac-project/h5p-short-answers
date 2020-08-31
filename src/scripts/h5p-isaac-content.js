@@ -12,6 +12,7 @@ export default class ISAACContent {
   constructor(task, passage, questions, contentID, backend) {
 
     this.content = document.createElement('div');
+    this.content.classList.add("h5p-isaac");
 
     /*
      * Instructions, passage text, and questions can be formatted (bold, italics, etc.)
@@ -28,41 +29,36 @@ export default class ISAACContent {
       passage = `<p>${passage}</p>`;
 
     // task instructions
-    template.innerHTML = task.trim();
     const taskNode = document.createElement('p');
-    taskNode.classList.add("h5p-isaac-task");
-    taskNode.innerHTML = `${template.innerHTML}`;
-    this.content.appendChild(taskNode);
+    taskNode.innerHTML = task.trim();
+    taskNode.firstElementChild.classList.add("h5p-isaac-task");
+    this.content.appendChild(taskNode.firstElementChild);
 
     // passage text
     if (passage.trim() !== '') {
-      template.innerHTML = passage.trim();
       const passageNode = document.createElement("p");
-      passageNode.setAttribute("id", contentID + "_passage");
-      passageNode.classList.add("h5p-isaac-passage");
+      passageNode.innerHTML = passage.trim();
+      passageNode.firstElementChild.classList.add("h5p-isaac-passage");
+      passageNode.firstElementChild.setAttribute("id", contentID + "_passage");
       const replacement = `<span id='${contentID}_mark_$1' class='h5p-isaac-highlight h5p-isaac-hidden'>$2</span>`;
-      passageNode.innerHTML = `${template.innerHTML.replace(/(\d+)\*\*(.*?)\*\*/gi, replacement)}`;
-      this.content.appendChild(passageNode);
+      passageNode.innerHTML = `${passageNode.innerHTML.replace(/(\d+)\*\*(.*?)\*\*/gi, replacement)}`;
+      this.content.appendChild(passageNode.firstElementChild);
     }
 
     // begin Q&A section
-    const nodeQ = document.createElement('p');
-    nodeQ.setAttribute("name", "h5p-isaac-questions");
     const ol = document.createElement('ol');
     ol.setAttribute("name", "h5p-isaac-list");
 
     for (let i = 0; i < questions.length; i++) {
 
-      let question = questions[i].question;
-
-      if (!question.startsWith("<p>"))
-        question = `<p>${question}</p>`;
-
       // question text
+      let question = questions[i].question;
+      if (!question.startsWith("<p>")) { question = `<p>${question}</p>`; }
       template.innerHTML = question.trim();
       const nodeQA = document.createElement('li');
-      nodeQA.classList.add("h5p-isaac-question");
+      nodeQA.classList.add("h5p-isaac-question-wrapper");
       nodeQA.innerHTML = `${template.innerHTML}`;
+      nodeQA.firstElementChild.classList.add('h5p-isaac-question');
 
       // wrapper for input field and icons
       const wrapper = document.createElement('span');
@@ -75,13 +71,13 @@ export default class ISAACContent {
       userInput.classList.add("h5p-isaac-input");
 
       // create input button
-      const button = document.createElement('button');
-      button.classList.add('h5p-isaac-button', 'h5p-isaac-check', 'tooltip');
-      button.setAttribute('id', `${contentID}_${i}_submit`)
+      const enterButton = document.createElement('button');
+      enterButton.classList.add('h5p-isaac-button', 'h5p-isaac-enter', 'tooltip');
+      enterButton.setAttribute('id', `${contentID}_${i}_submit`)
       const buttonTooltipText = document.createElement('span');
       buttonTooltipText.classList.add('tooltiptext');
-      buttonTooltipText.innerText = 'Evaluate.';
-      button.appendChild(buttonTooltipText);
+      buttonTooltipText.innerText = 'Evaluate'; // TODO: get localized text from semantics
+      enterButton.appendChild(buttonTooltipText);
 
       // register input handler
       userInput.addEventListener("keydown", function (e) {
@@ -91,17 +87,17 @@ export default class ISAACContent {
           listener.handleEvent(answer.value);
         }
       });
-      button.addEventListener("click", function (e) {
+      enterButton.addEventListener("click", function (e) {
         const answer = document.getElementById(`${contentID}_input_${i}`);
         const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer.value);
         listener.handleEvent(answer.value);
       });
 
       // information bubble
-      const info = document.createElement('button');
-      info.setAttribute('id', contentID + "_" + i + "_info");
-      info.classList.add('h5p-isaac-button', 'h5p-isaac-info', 'tooltip');
-      info.addEventListener("click", function (e) {
+      const infoButton = document.createElement('button');
+      infoButton.setAttribute('id', contentID + "_" + i + "_info");
+      infoButton.classList.add('h5p-isaac-button', 'h5p-isaac-info', 'h5p-isaac-info-hidden', 'tooltip');
+      infoButton.addEventListener("click", function (e) {
         const target = document.getElementById(`${contentID}_mark_${i + 1}`);
         if (target !== null) {
           target.scrollIntoView({ // may not be supported by Safari and iOS (?)
@@ -113,29 +109,25 @@ export default class ISAACContent {
 
       const infoTooltipText = document.createElement('span');
       infoTooltipText.classList.add('tooltiptext');
-      infoTooltipText.innerText = 'Show context.';
-      info.appendChild(infoTooltipText);
+      infoTooltipText.innerText = 'Show context'; // TODO: get localized text from semantics
+      infoButton.appendChild(infoTooltipText);
 
-      // add question and text box to Q&A section
+      // add question, input field, and buttons
       wrapper.appendChild(userInput);
-      wrapper.appendChild(button);
-      wrapper.appendChild(info);
+      wrapper.appendChild(enterButton);
+      wrapper.appendChild(infoButton);
       nodeQA.appendChild(wrapper);
 
-      // pop-up container
+      // pop-up feedback
       const modal = document.createElement('div');
       modal.setAttribute('class', 'modal');
       modal.setAttribute("id", contentID + "_" + i + "_modal");
       nodeQA.appendChild(modal);
-
-      nodeQA.appendChild(document.createElement("br"));
-      nodeQA.appendChild(document.createElement("br"));
       ol.appendChild(nodeQA);
     }
 
     // add Q&A section to DOM
-    nodeQ.appendChild(ol);
-    this.content.appendChild(nodeQ);
+    this.content.appendChild(ol);
 
     /**
      * Return the DOM for this class.

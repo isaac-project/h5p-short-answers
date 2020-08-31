@@ -22,10 +22,14 @@
   margin: 5% 10%;
 }
 .h5p-isaac-question {
+  margin-bottom: 0;
+}
+.h5p-isaac-question-wrapper {
   font-family: 'Source Sans Pro', 'Noto Sans', serif;
   font-weight: 400;
   font-size: 12pt;
   position: relative;
+  margin-bottom: 50px;
 }
 .h5p-isaac-highlight { /* passage text highlight */
   background-color: #fff2a8;

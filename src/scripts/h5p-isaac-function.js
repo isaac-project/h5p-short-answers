@@ -2,12 +2,11 @@ export function displayIncorrect(contentID, fieldID, feedback) {
     "use strict";
     // underline incorrect input fields
     const wrapper = document.getElementById(contentID + "_" + fieldID);
-    wrapper.classList.remove("h5p-input-correct");
-    wrapper.classList.add("h5p-input-incorrect");
     const input = wrapper.firstElementChild;
-    input.classList.remove("h5p-isaac-correct"); // answer has been changed; remove correct label
-    input.classList.add("h5p-isaac-incorrect"); // highlight with red underline
-    // input.addEventListener('focus', () => input.classList.remove("h5p-isaac-incorrect"), false);
+    input.classList.remove("h5p-isaac-correct");    // answer has been changed; remove correct label
+    wrapper.classList.remove("h5p-input-correct");
+    input.classList.add("h5p-isaac-incorrect");           // highlight with red underline
+    wrapper.classList.add("h5p-input-incorrect");
 
     // highlight relevant text in passage
     const highlight = document.getElementById(`${contentID}_mark_${fieldID + 1}`);
@@ -25,19 +24,17 @@ export function displayIncorrect(contentID, fieldID, feedback) {
 
     // text content
     popup.innerHTML = '';
-    const modal_content = document.createElement('p');
-    modal_content.setAttribute('class', 'modal-content');
-    modal_content.innerText = feedback.feedbackString;
+    popup.innerText = feedback.feedbackString;
 
     // upper-right close button
     const x = document.createElement('span');
-    x.setAttribute('class', 'close');
+    x.setAttribute('class', 'modal-close');
     x.innerHTML = '&times;';
-    modal_content.appendChild(x);
+    popup.appendChild(x);
 
     // display pop-up
-    popup.appendChild(modal_content);
-    popup.style.display = "block";
+    popup.classList.remove('modal-fadeout');
+    popup.classList.add('modal-fadein');
 
     // document.addEventListener("keydown", function (e) {
     //   if (e.key === "Escape")
@@ -45,7 +42,13 @@ export function displayIncorrect(contentID, fieldID, feedback) {
     // });
 
     // close when user clicks x
-    x.onclick = () => popup.style.display = "none";
+    x.onclick = () => {
+        popup.classList.add('modal-fadeout');
+        setTimeout(()=> {
+            popup.classList.remove('modal-fadeout')
+            popup.classList.remove('modal-fadein');
+        },1250); // milliseconds = 1.25 second
+    }
 }
 
 export function displayCorrect(contentID, fieldID) {
@@ -66,9 +69,9 @@ export function displayCorrect(contentID, fieldID) {
     const popup = document.getElementById(contentID + "_" + fieldID + "_modal");
     popup.classList.add('modal-fadeout');
     setTimeout(()=>{
-        popup.style.display = "none";
         popup.classList.remove('modal-fadeout');
-    },250); // milliseconds = 0.25 second
+        popup.classList.remove('modal-fadein');
+    },1250); // milliseconds = 1.25 second
 
     // disable input field when answer is correct
     // H5P.jQuery(input).attr('disabled', true);

@@ -1,45 +1,36 @@
 .modal {
-    display: none; /* hidden by default */
-    position: absolute;
-    z-index: 1; /* overlay */
-    width: 75%;
-    /*overflow: auto; !* Enable scroll if needed *!*/
-    /*background-color: rgba(0,0,0,0.4); !* Black w/ opacity *!*/
-}
-.modal-fadeout {
-    animation-name: fadeout;
-    animation-duration: 0.25s
-}
-.modal-content {
     font-size: 10pt;
     background-color: #ffc0cb;
     border: none;
-    width: 100%;
-    position: absolute;
-    padding: 4px;
-    /*box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);*/
-    animation-name: animate;
-    animation-duration: 0.25s
+    position: relative;
+    width: 71%;
+    margin: 0;
+    max-height: 0;
+    padding: 0 29px 0 4px;
+    overflow: hidden;
 }
-.close {
-    color: #dc143c;
-    position: absolute;
-    right: 7px;
-    top: -11px;
-    /*float: right;*/
+.modal-fadein {
+    padding: 4px 29px 4px 4px;
+    max-height: 200px;
+    transition: max-height 1.5s ease-out;
+}
+.modal-fadeout {
+    background-color: #ACEFC7;
+    max-height: 0;
+    transition: max-height 1.5s ease-out;
+}
+.modal-close {
+    /*color: #dc143c;*/
+    color: #000;
     font-size: 30px;
+    line-height: 12pt;
     font-weight: bold;
+    position: absolute;
+    right: 5px;
+    top: 5px;
 }
-.close:hover,
-.close:focus {
+.modal-close:hover,
+.modal-close:focus {
     text-decoration: none;
     cursor: pointer;
-}
-@keyframes animate {
-    from {top: -10%; opacity: 0}
-    to {top: 0; opacity: 1}
-}
-@keyframes fadeout {
-    from {opacity: 1}
-    to {opacity: 0}
 }

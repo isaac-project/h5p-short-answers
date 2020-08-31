@@ -26,7 +26,7 @@
     outline: none;
     color: gray;
 }
-.h5p-isaac-check:before {
+.h5p-isaac-enter:before {
     font-family: "H5PFontAwesome4";
     font-size: 3em;
     content: "\f149";
