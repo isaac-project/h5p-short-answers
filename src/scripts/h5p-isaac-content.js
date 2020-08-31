@@ -67,23 +67,40 @@ export default class ISAACContent {
       // wrapper for input field and icons
       const wrapper = document.createElement('span');
       wrapper.setAttribute("id", contentID + "_" + i);
-      wrapper.setAttribute('class', 'h5p-input-wrapper');
+      wrapper.setAttribute('class', 'h5p-isaac-input-wrapper');
 
       // create input text box
       const userInput = document.createElement("input");
+      userInput.setAttribute('id', `${contentID}_input_${i}`);
       userInput.classList.add("h5p-isaac-input");
 
+      // create input button
+      const button = document.createElement('button');
+      button.classList.add('h5p-isaac-button', 'h5p-isaac-check', 'tooltip');
+      button.setAttribute('id', `${contentID}_${i}_submit`)
+      const buttonTooltipText = document.createElement('span');
+      buttonTooltipText.classList.add('tooltiptext');
+      buttonTooltipText.innerText = 'Evaluate.';
+      button.appendChild(buttonTooltipText);
+
       // register input handler
-      const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend);
       userInput.addEventListener("keydown", function (e) {
-        if (e.key === 'Enter')
-          listener.handleEvent(e);
+        if (e.key === 'Enter') {
+          const answer = document.getElementById(`${contentID}_input_${i}`);
+          const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer.value);
+          listener.handleEvent(answer.value);
+        }
+      });
+      button.addEventListener("click", function (e) {
+        const answer = document.getElementById(`${contentID}_input_${i}`);
+        const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer.value);
+        listener.handleEvent(answer.value);
       });
 
       // information bubble
-      const info = document.createElement('span');
+      const info = document.createElement('button');
       info.setAttribute('id', contentID + "_" + i + "_info");
-      info.setAttribute('class', 'h5p-isaac-info');
+      info.classList.add('h5p-isaac-button', 'h5p-isaac-info', 'tooltip');
       info.addEventListener("click", function (e) {
         const target = document.getElementById(`${contentID}_mark_${i + 1}`);
         if (target !== null) {
@@ -94,18 +111,25 @@ export default class ISAACContent {
         }
       });
 
+      const infoTooltipText = document.createElement('span');
+      infoTooltipText.classList.add('tooltiptext');
+      infoTooltipText.innerText = 'Show context.';
+      info.appendChild(infoTooltipText);
+
       // add question and text box to Q&A section
       wrapper.appendChild(userInput);
+      wrapper.appendChild(button);
+      wrapper.appendChild(info);
       nodeQA.appendChild(wrapper);
-      nodeQA.appendChild(info);
-      nodeQA.appendChild(document.createElement("br"));
-      nodeQA.appendChild(document.createElement("br"));
 
       // pop-up container
       const modal = document.createElement('div');
       modal.setAttribute('class', 'modal');
       modal.setAttribute("id", contentID + "_" + i + "_modal");
       nodeQA.appendChild(modal);
+
+      nodeQA.appendChild(document.createElement("br"));
+      nodeQA.appendChild(document.createElement("br"));
       ol.appendChild(nodeQA);
     }
 
@@ -120,95 +144,5 @@ export default class ISAACContent {
     this.getDOM = () => {
       return this.content;
     };
-  }
-}
-
-export function displayIncorrect(contentID, fieldID, feedback) {
-  "use strict";
-
-  // automatically scroll to highlight only if outside viewport
-  // const target = document.getElementById(`${contentID}_mark_${fieldID + 1}`);
-  // if (target !== null && target.getBoundingClientRect().top < 0 && target.getBoundingClientRect().bottom < 0) {
-  //   target.scrollIntoView({ // may not be supported by Safari and iOS (?)
-  //     behavior: 'smooth',
-  //     block: 'center'
-  //   })
-  // }
-
-  // underline incorrect input fields
-  const wrapper = document.getElementById(contentID + "_" + fieldID);
-  wrapper.classList.remove("h5p-input-correct");
-  wrapper.classList.add("h5p-input-incorrect");
-  const input = wrapper.firstElementChild;
-  input.classList.remove("h5p-isaac-correct"); // answer has been changed; remove correct label
-  input.classList.add("h5p-isaac-incorrect"); // highlight with red underline
-  // input.addEventListener('focus', () => input.classList.remove("h5p-isaac-incorrect"), false);
-
-  // highlight relevant text in passage
-  const highlight = document.getElementById(`${contentID}_mark_${fieldID + 1}`);
-  if (highlight !== null) {
-    highlight.classList.remove("h5p-isaac-hidden");
-  }
-
-  // display info bubble
-  const info = document.getElementById(`${contentID}_${fieldID}_info`);
-  info.classList.add('h5p-isaac-info-show');
-
-  // retrieve pop-up container
-  const popup = document.getElementById(contentID + "_" + fieldID + "_modal");
-
-  // text content
-  popup.innerHTML = '';
-  const modal_content = document.createElement('p');
-  modal_content.setAttribute('class', 'modal-content');
-  modal_content.innerText = feedback.feedbackString;
-
-  // upper-right close button
-  const x = document.createElement('span');
-  x.setAttribute('class', 'close');
-  x.innerHTML = '&times;';
-  modal_content.appendChild(x);
-
-  // display pop-up
-  popup.appendChild(modal_content);
-  popup.style.display = "block";
-
-  // close when user clicks x
-  x.onclick = () => popup.style.display = "none";
-}
-
-export function displayCorrect(contentID, fieldID) {
-  "use strict";
-  const wrapper = document.getElementById(contentID + "_" + fieldID);
-  wrapper.classList.remove("h5p-input-incorrect");
-  wrapper.classList.add("h5p-input-correct");
-  const input = wrapper.firstElementChild;
-  input.classList.remove("h5p-isaac-incorrect"); // remove red underline (if present)
-  input.classList.add("h5p-isaac-correct"); // highlight with green underline
-
-  // hide info bubble
-  const info = document.getElementById(`${contentID}_${fieldID}_info`);
-  info.classList.remove('h5p-isaac-info-show');
-
-  // hide feedback popup
-  const popup = document.getElementById(contentID + "_" + fieldID + "_modal");
-  popup.classList.add('modal-fadeout');
-  setTimeout(()=>{
-    popup.style.display = "none";
-    popup.classList.remove('modal-fadeout');
-  },1000); // milliseconds = 1 second
-
-  // disable input field when answer is correct
-  // H5P.jQuery(input).attr('disabled', true);
-}
-
-export function resetHighlights(contentID, targets) {
-  "use strict";
-  // remove existing highlight (if present)
-  for (let i = 0; i < targets.length; i++) {
-    const passageHighlights = document.getElementById(`${contentID}_mark_${i + 1}`);
-    if (passageHighlights !== null) {
-      passageHighlights.classList.add("h5p-isaac-hidden");
-    }
   }
 }
