@@ -1,0 +1,53 @@
+.h5p-isaac-input {
+    font-family: 'Source Sans Pro', 'Noto Sans', serif;
+    color: #000;
+    font-weight: 400;
+    font-size: 12pt;
+    width: 75%;
+    border: none;
+    border-radius: 0;
+    border-bottom: 2px solid lightgray;
+    transition: all 0.5s ease-out;
+    background-color: transparent;
+    /*padding-right: 3em;*/
+    margin-bottom: 0;
+}
+.h5p-isaac-input:focus {
+    border-bottom: 2px solid dimgray;
+    outline: none;
+}
+.h5p-isaac-input:disabled {
+    color: dimgray;
+    background-color: #fff;
+}
+.h5p-isaac-correct {
+    border-bottom: 2px solid #48b57e !important;
+}
+.h5p-input-correct:after {
+    font-family: 'H5PFontAwesome4';
+    display: inline-block;
+    position: absolute;
+    right: 150px;
+    top: 25px;
+    /*float: right;*/
+    font-size: 3em;
+    /*margin-right: 5px;*/
+    content: '\f00c';
+    color: #48b57e;
+    /*transform: rotate(0deg) !important; !* reverse from "enter" button *!*/
+}
+.h5p-isaac-incorrect {
+    border-bottom: 2px solid #dc143c !important;
+}
+/*.h5p-input-incorrect:after {*/
+/*    font-family: 'H5PFontAwesome4';*/
+/*    display: inline;*/
+/*    position: absolute;*/
+/*    right: 150px;*/
+    /*top: -5px;*/
+    /*float: right;*/
+    /*font-size: 20px;*/
+    /*margin-right: 5px;*/
+    /*content: '\f00d';*/
+    /*color: #dc143c;*/
+/*}*/

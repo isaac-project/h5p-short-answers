@@ -1,0 +1,58 @@
+.h5p-isaac-button {
+    color: lightgray;
+    /*line-height: 0.25;*/
+    background-color: transparent;
+    border: none;
+    /*border-radius: 0.5em;*/
+    /*padding: 0.5em 1.25em;*/
+    /*margin-left: 10px;*/
+    /*text-align: center;*/
+    /*text-decoration: none;*/
+    /*display: inline-block;*/
+}
+.h5p-isaac-button:hover {
+    color: darkgray;
+    cursor: pointer;
+}
+.h5p-isaac-button:focus {
+    color: darkgray;
+    outline: none;
+    /*outline: 5px solid white;*/
+    /*outline-style: solid;*/
+    /*outline-offset: -5px;*/
+}
+.h5p-isaac-button:active {
+    border: none;
+    outline: none;
+    color: gray;
+}
+.h5p-isaac-check:before {
+    font-family: "H5PFontAwesome4";
+    font-size: 3em;
+    content: "\f149";
+    display: inline-block;
+    transform: rotate(90deg);
+    /*position: absolute;*/
+    /*right: 115px;*/
+    /*bottom: 25px;*/
+    /*padding-right: 0.5em;*/
+}
+.h5p-isaac-info:before {
+    font-family: "H5PFontAwesome4";
+    content: '\f05a';
+    font-size: 3em;
+    display: inline-block;
+}
+.h5p-isaac-info:focus:after {
+    color: dimgray;
+}
+.h5p-isaac-info-show:after {
+    visibility: visible !important;
+}
+.h5p-isaac-info-hidden {
+    display: none !important;
+}
+.h5p-isaac-info:hover:after {
+    color: dimgray;
+    cursor: pointer;
+}
