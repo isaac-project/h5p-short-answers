@@ -2,10 +2,10 @@
     font-size: 10pt;
     border: none;
     position: relative;
-    width: 71%;
-    margin: 0 -35px 0 0;
+    width: 78%;
+    margin: 0;
     max-height: 0;
-    padding: 0 65px 0 4px;
+    padding: 0 22px 0 4px;
     overflow: hidden;
 }
 .h5p-isaac-feedback-correct {

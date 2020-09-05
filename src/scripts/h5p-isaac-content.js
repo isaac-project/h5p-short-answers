@@ -14,19 +14,9 @@ export default class ISAACContent {
     this.content = document.createElement('div');
     this.content.classList.add("h5p-isaac");
 
-    /*
-     * Instructions, passage text, and questions can be formatted (bold, italics, etc.)
-     * The entire item is returned as a <p> element, so in order to safely get the
-     * innerHTML and place it in a new element we can modify (ex. with node.setAttribute())
-     * we will use an HTML5 Template element as an intermediary
-     */
-    const template = document.createElement('template');
-
     // if task or passage are not modified/clicked on during setup, they won't be <p> elements
-    if (!task.startsWith("<p>"))
-      task = `<p>${task}</p>`;
-    if (!passage.startsWith("<p>"))
-      passage = `<p>${passage}</p>`;
+    if (!task.startsWith("<p>")) { task = `<p>${task}</p>`; }
+    if (!passage.startsWith("<p>")) { passage = `<p>${passage}</p>`; }
 
     // task instructions
     const taskNode = document.createElement('p');
@@ -54,10 +44,10 @@ export default class ISAACContent {
       // question text
       let question = questions[i].question;
       if (!question.startsWith("<p>")) { question = `<p>${question}</p>`; }
-      template.innerHTML = question.trim();
       const nodeQA = document.createElement('li');
       nodeQA.classList.add("h5p-isaac-question-wrapper");
-      nodeQA.innerHTML = `${template.innerHTML}`;
+      nodeQA.innerHTML = question.trim();
+      nodeQA.firstElementChild.setAttribute("id", `${contentID}_prompt_${i + 1}`);
       nodeQA.firstElementChild.classList.add('h5p-isaac-question');
 
       // wrapper for input field and icons
@@ -73,7 +63,7 @@ export default class ISAACContent {
       // create input button
       const enterButton = document.createElement('button');
       enterButton.classList.add('h5p-isaac-button', 'h5p-isaac-enter', 'tooltip');
-      enterButton.setAttribute('id', `${contentID}_${i}_submit`)
+      enterButton.setAttribute('id', `${contentID}_${i}_submit`);
       const buttonTooltipText = document.createElement('span');
       buttonTooltipText.classList.add('tooltiptext');
       buttonTooltipText.innerText = 'Submit'; // TODO: get localized text from semantics
@@ -82,15 +72,15 @@ export default class ISAACContent {
       // register input handler
       userInput.addEventListener("keydown", function (e) {
         if (e.key === 'Enter') {
-          const answer = document.getElementById(`${contentID}_input_${i}`);
-          const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer.value);
-          listener.handleEvent(answer.value);
+          const answer = document.getElementById(`${contentID}_input_${i}`).value;
+          const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer);
+          listener.handleEvent(answer);
         }
       });
       enterButton.addEventListener("click", function (e) {
-        const answer = document.getElementById(`${contentID}_input_${i}`);
-        const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer.value);
-        listener.handleEvent(answer.value);
+        const answer = document.getElementById(`${contentID}_input_${i}`).value;
+        const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer);
+        listener.handleEvent(answer);
       });
 
       // information bubble
