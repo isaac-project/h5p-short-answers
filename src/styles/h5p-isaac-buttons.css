@@ -37,16 +37,28 @@
     /*bottom: 25px;*/
     /*padding-right: 0.5em;*/
 }
+/*.h5p-isaac-check:before {*/
+/*    font-family: "H5PFontAwesome4";*/
+/*    font-size: 3em;*/
+/*    content: "\f00c";*/
+/*    color: #48b57e;*/
+/*    display: inline-block;*/
+/*}*/
 .h5p-isaac-info:before {
     font-family: "H5PFontAwesome4";
     content: '\f05a';
     font-size: 3em;
     display: inline-block;
+    margin-left: 25px;
+    animation-name: fadein;
+    animation-duration: 2s;
 }
 .h5p-isaac-info:focus:after {
     color: dimgray;
 }
 .h5p-isaac-info-show:after {
+    animation-name: fadeout;
+    animation-duration: 2s;
     visibility: visible !important;
 }
 .h5p-isaac-info-hidden {
@@ -55,4 +67,12 @@
 .h5p-isaac-info:hover:after {
     color: dimgray;
     cursor: pointer;
+}
+@keyframes fadein {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+@keyframes fadeout {
+    from {opacity: 1}
+    to {opacity: 0}
 }

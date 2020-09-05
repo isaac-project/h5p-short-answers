@@ -61,7 +61,7 @@ export default class ISAACContent {
       nodeQA.firstElementChild.classList.add('h5p-isaac-question');
 
       // wrapper for input field and icons
-      const wrapper = document.createElement('span');
+      const wrapper = document.createElement('div');
       wrapper.setAttribute("id", contentID + "_" + i);
       wrapper.setAttribute('class', 'h5p-isaac-input-wrapper');
 
@@ -76,7 +76,7 @@ export default class ISAACContent {
       enterButton.setAttribute('id', `${contentID}_${i}_submit`)
       const buttonTooltipText = document.createElement('span');
       buttonTooltipText.classList.add('tooltiptext');
-      buttonTooltipText.innerText = 'Evaluate'; // TODO: get localized text from semantics
+      buttonTooltipText.innerText = 'Submit'; // TODO: get localized text from semantics
       enterButton.appendChild(buttonTooltipText);
 
       // register input handler
@@ -119,10 +119,10 @@ export default class ISAACContent {
       nodeQA.appendChild(wrapper);
 
       // pop-up feedback
-      const modal = document.createElement('div');
-      modal.setAttribute('class', 'modal');
-      modal.setAttribute("id", contentID + "_" + i + "_modal");
-      nodeQA.appendChild(modal);
+      const popup = document.createElement('div');
+      popup.setAttribute('class', 'h5p-isaac-feedback');
+      popup.setAttribute("id", contentID + "_" + i + "_popup");
+      nodeQA.appendChild(popup);
       ol.appendChild(nodeQA);
     }
 

@@ -1,36 +1,38 @@
-.modal {
+.h5p-isaac-feedback {
     font-size: 10pt;
-    background-color: #ffc0cb;
     border: none;
     position: relative;
     width: 71%;
-    margin: 0;
+    margin: 0 -35px 0 0;
     max-height: 0;
-    padding: 0 29px 0 4px;
+    padding: 0 65px 0 4px;
     overflow: hidden;
 }
-.modal-fadein {
-    padding: 4px 29px 4px 4px;
-    max-height: 200px;
-    transition: max-height 1.5s ease-out;
-}
-.modal-fadeout {
+.h5p-isaac-feedback-correct {
     background-color: #ACEFC7;
-    max-height: 0;
-    transition: max-height 1.5s ease-out;
 }
-.modal-close {
-    /*color: #dc143c;*/
+.h5p-isaac-feedback-incorrect {
+    background-color: #ffc0cb;
+}
+.h5p-isaac-feedback-expand {
+    max-height: 200px;
+    transition: max-height 1.5s cubic-bezier(.75,.25,.25,.75);
+}
+.h5p-isaac-feedback-shrink {
+    max-height: 0;
+    transition: max-height 1.5s cubic-bezier(.75,.25,.25,.75);
+}
+.h5p-isaac-feedback-close {
     color: #000;
     font-size: 30px;
     line-height: 12pt;
     font-weight: bold;
     position: absolute;
-    right: 5px;
-    top: 5px;
+    right: 1px;
+    top: 1px;
 }
-.modal-close:hover,
-.modal-close:focus {
+.h5p-isaac-feedback-close:hover,
+.h5p-isaac-feedback-close:focus {
     text-decoration: none;
     cursor: pointer;
 }
