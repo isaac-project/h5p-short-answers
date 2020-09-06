@@ -30,6 +30,7 @@
     font-family: "H5PFontAwesome4";
     font-size: 3em;
     content: "\f149";
+    /*content: "\f1d8"; !* paper airplane *!*/
     display: inline-block;
     transform: rotate(90deg);
     /*position: absolute;*/

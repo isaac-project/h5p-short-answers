@@ -28,11 +28,11 @@ export default class ISAACContent {
     if (passage.trim() !== '') {
       const passageNode = document.createElement("p");
       passageNode.innerHTML = passage.trim();
-      passageNode.firstElementChild.classList.add("h5p-isaac-passage");
-      passageNode.firstElementChild.setAttribute("id", contentID + "_passage");
+      passageNode.classList.add("h5p-isaac-passage");
+      passageNode.setAttribute("id", contentID + "_passage");
       const replacement = `<span id='${contentID}_mark_$1' class='h5p-isaac-highlight h5p-isaac-hidden'>$2</span>`;
       passageNode.innerHTML = `${passageNode.innerHTML.replace(/(\d+)\*\*(.*?)\*\*/gi, replacement)}`;
-      this.content.appendChild(passageNode.firstElementChild);
+      this.content.appendChild(passageNode);
     }
 
     // begin Q&A section
@@ -58,6 +58,7 @@ export default class ISAACContent {
       // create input text box
       const userInput = document.createElement("input");
       userInput.setAttribute('id', `${contentID}_input_${i}`);
+      userInput.setAttribute('autocomplete', "disabled"); // "off" for browsers other than Chrome?
       userInput.classList.add("h5p-isaac-input");
 
       // create input button

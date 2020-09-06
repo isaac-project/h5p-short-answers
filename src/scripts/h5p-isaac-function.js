@@ -27,22 +27,26 @@ export function displayCorrect(contentID, fieldID) {
     popup.classList.add('h5p-isaac-feedback-shrink', 'h5p-isaac-feedback-correct');
 
     // remove question highlight
-    const questionHighlights = document.getElementById(`${contentID}_prompt_${fieldID + 1}`);
-    if (questionHighlights !== null) {
-        const highlightPattern = /<span class="h5p-isaac-highlight">|<\/span>/gi;
-        questionHighlights.innerHTML = `${questionHighlights.innerHTML.replace(highlightPattern, '')}`;
-    }
+    resetQuestionHighlights(contentID, fieldID);
 
     // disable input field when answer is correct
     // H5P.jQuery(input).attr('disabled', true);
 }
 
-export function resetHighlights(contentID, targets) {
+export function resetPassageHighlights(contentID, targets) {
     "use strict";
     // remove existing highlight (if present)
     for (let i = 0; i < targets.length; i++) {
         const passageHighlights = document.getElementById(`${contentID}_mark_${i + 1}`);
         if (passageHighlights !== null) { passageHighlights.classList.add("h5p-isaac-hidden"); }
+    }
+}
+
+export function resetQuestionHighlights(contentID, fieldID) {
+    const questionHighlights = document.getElementById(`${contentID}_prompt_${fieldID + 1}`);
+    if (questionHighlights !== null) {
+        const highlightPattern = /<span class="h5p-isaac-highlight">|<\/span>/gi;
+        questionHighlights.innerHTML = `${questionHighlights.innerHTML.replace(highlightPattern, '')}`;
     }
 }
 

@@ -1,4 +1,4 @@
-import { resetHighlights, displayCorrect, displayIncorrect } from "./h5p-isaac-function";
+import { resetPassageHighlights, displayCorrect, displayIncorrect } from "./h5p-isaac-function";
 
 export class ISAACFeedbackRequest {
     constructor(host, taskID, fieldID, learnerAnswer) {
@@ -46,7 +46,7 @@ export class ISAACFieldListener {
 
             // TODO compare existing correct/incorrect class with current
             // TODO and compare feedback response strings, for feedback/display update
-            resetHighlights(this.taskID, this.solutions);
+            resetPassageHighlights(this.taskID, this.solutions);
 
             if (feedbackResp.feedbackCode.localeCompare(1) === 0) {
                 displayCorrect(this.taskID, this.fieldID);

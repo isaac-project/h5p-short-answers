@@ -1,5 +1,7 @@
 import ISAACContent from './h5p-isaac-content';
 import { ISAACTask, uploadTask } from './h5p-isaac-interaction';
+import { resetPassageHighlights, resetQuestionHighlights } from "./h5p-isaac-function";
+
 const UPLOAD_TASK_DATA = true;
 
 /**
@@ -77,8 +79,8 @@ export default class ISAAC extends H5P.Question {
         this.params.passage,
         this.params.questions,
         this.contentID,
-        this.params.backend
-        //this.previousState.random // previous session state
+        this.params.backend,
+        this.previousState
       );
 
       // Register content with H5P.Question
@@ -209,12 +211,17 @@ export default class ISAAC extends H5P.Question {
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
      */
     this.resetTask = () => {
+      resetPassageHighlights(contentID, this.params.questions);
       for (let i = 0; i < this.params.questions.length; i++) {
-        const inputWrapper = document.getElementById(contentID + "_" + i);
-        const inputField = inputWrapper.firstElementChild;
-        inputField.value = '';
-        inputWrapper.classList.remove("h5p-input-incorrect");
-        inputField.classList.remove("h5p-isaac-incorrect");
+        const input = document.getElementById(contentID + "_input_" + i);
+        input.value = '';
+        input.classList.remove("h5p-isaac-input-incorrect");
+        const infoButton = document.getElementById(contentID + "_" + i + "_info");
+        infoButton.classList.remove('h5p-isaac-info-show');
+        infoButton.classList.add('h5p-isaac-info-hidden');
+        const popup = document.getElementById(contentID + "_" + i + "_popup");
+        popup.classList.remove("h5p-isaac-feedback-incorrect", "h5p-isaac-feedback-expand");
+        resetQuestionHighlights(contentID, i);
       }
 
       this.showButton('check-answer');
@@ -359,15 +366,12 @@ export default class ISAAC extends H5P.Question {
      * @return {object} Current state.
      */
     this.getCurrentState = () => {
-      /*
-       * TODO: Return any data object that will indicate the state that should
-       * be loaded on start, here it's a random number
-       */
-      return {
-        random: Math.random(100)
-      };
-
-
+      const responses = [];
+      for (let i = 0; i < this.params.questions.length; i++) {
+        const input = document.getElementById(contentID + "_" + i);
+        responses.push(input.firstElementChild.value);
+      }
+      return { responses: responses };
     };
   }
 }
