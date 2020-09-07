@@ -1,12 +1,11 @@
-export function displayIncorrect(contentID, fieldID, feedback,
-                                 highlightStart, highlightEnd) { // TODO remove when feedback object is fixed
+export function displayIncorrect(contentID, fieldID, feedback) {
     "use strict";
     const input = document.getElementById(contentID + "_" + fieldID).firstElementChild;
     input.classList.add("h5p-isaac-input-incorrect");
     input.classList.remove("h5p-isaac-input-correct");
 
     displayPopup(contentID, fieldID, feedback);
-    displayHighlight(contentID, fieldID, feedback, highlightStart, highlightEnd);
+    displayHighlight(contentID, fieldID, feedback);
     displayInfoButton(contentID, fieldID);
 }
 
@@ -73,18 +72,20 @@ function displayPopup(contentID, fieldID, feedback) {
     popup.classList.add('h5p-isaac-feedback-incorrect', 'h5p-isaac-feedback-expand');
 }
 
-function displayHighlight(contentID, fieldID, feedback, highlightStart, highlightEnd) {
+function displayHighlight(contentID, fieldID, feedback) {
     "use strict";
     // highlight relevant text in passage
     const passageHighlight = document.getElementById(`${contentID}_mark_${fieldID + 1}`);
     if (passageHighlight !== null) { passageHighlight.classList.remove("h5p-isaac-hidden"); }
 
     // highlight prompt // TODO preserve existing HTML markup
-    const promptHighlight = document.getElementById(`${contentID}_prompt_${fieldID + 1}`);
-    let start = promptHighlight.innerText.substring(0, highlightStart);
-    let mark = promptHighlight.innerText.substring(highlightStart, highlightEnd);
-    let end = promptHighlight.innerText.substring(highlightEnd, promptHighlight.innerText.length);
-    promptHighlight.innerHTML = `${start}<span class='h5p-isaac-highlight'>${mark}</span>${end}`;
+    if (feedback.questionHighlightStart && feedback.questionHighlightEnd) {
+        const promptHighlight = document.getElementById(`${contentID}_prompt_${fieldID + 1}`);
+        let start = promptHighlight.innerText.substring(0, feedback.questionHighlightStart);
+        let mark = promptHighlight.innerText.substring(feedback.questionHighlightStart, feedback.questionHighlightEnd);
+        let end = promptHighlight.innerText.substring(feedback.questionHighlightEnd, promptHighlight.innerText.length);
+        promptHighlight.innerHTML = `${start}<span class='h5p-isaac-highlight'>${mark}</span>${end}`;
+    }
 }
 
 function displayInfoButton(contentID, fieldID) {

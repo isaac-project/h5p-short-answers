@@ -51,12 +51,7 @@ export class ISAACFieldListener {
             if (feedbackResp.feedbackCode.localeCompare(1) === 0) {
                 displayCorrect(this.taskID, this.fieldID);
             } else {
-                const questionHighlightStart = 0;   // TODO remove when feedbackResp object is fixed
-                const questionHighlightEnd = 5;     // TODO remove when feedbackResp object is fixed
-
-                displayIncorrect(this.taskID, this.fieldID, feedbackResp,
-                    questionHighlightStart, questionHighlightEnd); // TODO remove when feedbackResp object is fixed
-
+                displayIncorrect(this.taskID, this.fieldID, feedbackResp);
                 // TODO behavior for incorrect answer when no feedback is available? (should there always be a pop-up?)
             }
 

@@ -7,9 +7,10 @@ export default class ISAACContent {
    * @param passage {string} Text upon which questions are based (max 10,000 chars)
    * @param questions {array} List of pairs of question and target answer(s)
    * @param contentID {number} Integer representing the content ID
-   * @param backend {string}
+   * @param backend {string} Address of backend server
+   * @param prev {object} Contains array of user input values
    */
-  constructor(task, passage, questions, contentID, backend) {
+  constructor(task, passage, questions, contentID, backend, prev) {
 
     this.content = document.createElement('div');
     this.content.classList.add("h5p-isaac");
@@ -60,6 +61,7 @@ export default class ISAACContent {
       userInput.setAttribute('id', `${contentID}_input_${i}`);
       userInput.setAttribute('autocomplete', "disabled"); // "off" for browsers other than Chrome?
       userInput.classList.add("h5p-isaac-input");
+      userInput.value = prev.responses[i];
 
       // create input button
       const enterButton = document.createElement('button');
