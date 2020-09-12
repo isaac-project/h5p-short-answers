@@ -57,11 +57,16 @@ export default class ISAACContent {
       wrapper.setAttribute('class', 'h5p-isaac-input-wrapper');
 
       // create input text box
-      const userInput = document.createElement("input");
+      const userInput = document.createElement("div");
       userInput.setAttribute('id', `${contentID}_input_${i}`);
       userInput.setAttribute('autocomplete', "disabled"); // "off" for browsers other than Chrome?
+      userInput.setAttribute('spellcheck', 'false');
+      userInput.setAttribute('contenteditable', 'true'); // requires workaround to disable rich text
+      // userInput.setAttribute('contenteditable', 'plaintext-only'); // ideal but not widely supported (sept 2020)
       userInput.classList.add("h5p-isaac-input");
-      userInput.value = prev.responses[i];
+
+      // set input with previously saved content state, if applicable
+      userInput.textContent = prev.responses ? prev.responses[i] : "";
 
       // create input button
       const enterButton = document.createElement('button');
@@ -75,13 +80,33 @@ export default class ISAACContent {
       // register input handler
       userInput.addEventListener("keydown", function (e) {
         if (e.key === 'Enter') {
-          const answer = document.getElementById(`${contentID}_input_${i}`).value;
+          e.preventDefault();
+          const answer = document.getElementById(`${contentID}_input_${i}`).textContent;
           const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer);
           listener.handleEvent(answer);
         }
       });
+      userInput.addEventListener("paste", function (e) {
+        // hacky way to remove rich text formatting when pasting formatted text;
+        // remove this listener when contenteditable="plaintext-only" is widely supported
+        // https://caniuse.com/?search=contenteditable%3D%22plaintext-only%22
+        e.preventDefault();
+        const index = window.getSelection().getRangeAt(0).startOffset;
+        const start = userInput.textContent.substr(0, index);
+        const end = userInput.textContent.substr(index, userInput.textContent.length);
+        const clipboardText = e.clipboardData.getData("text/plain");
+        userInput.textContent = `${start}${clipboardText}${end}`;
+        // reposition cursor after pasting (default behavior positions cursor at index 0)
+        const setpos = document.createRange();
+        const set = window.getSelection();
+        setpos.setStart(userInput.childNodes[0], index + clipboardText.length);
+        setpos.collapse(true);
+        set.removeAllRanges();
+        set.addRange(setpos);
+        userInput.focus();
+      });
       enterButton.addEventListener("click", function (e) {
-        const answer = document.getElementById(`${contentID}_input_${i}`).value;
+        const answer = document.getElementById(`${contentID}_input_${i}`).textContent;
         const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer);
         listener.handleEvent(answer);
       });
@@ -105,17 +130,17 @@ export default class ISAACContent {
       infoTooltipText.innerText = 'Show context'; // TODO: get localized text from semantics
       infoButton.appendChild(infoTooltipText);
 
-      // add question, input field, and buttons
-      wrapper.appendChild(userInput);
-      wrapper.appendChild(enterButton);
-      wrapper.appendChild(infoButton);
-      nodeQA.appendChild(wrapper);
-
       // pop-up feedback
       const popup = document.createElement('div');
       popup.setAttribute('class', 'h5p-isaac-feedback');
       popup.setAttribute("id", contentID + "_" + i + "_popup");
-      nodeQA.appendChild(popup);
+
+      // add question, input field, buttons, and popup
+      wrapper.appendChild(userInput);
+      wrapper.appendChild(enterButton);
+      wrapper.appendChild(infoButton);
+      wrapper.appendChild(popup);
+      nodeQA.appendChild(wrapper);
       ol.appendChild(nodeQA);
     }
 

@@ -44,8 +44,7 @@ export class ISAACFieldListener {
         .then((response) => response.json())
         .then((feedbackResp) => {
 
-            // TODO compare existing correct/incorrect class with current
-            // TODO and compare feedback response strings, for feedback/display update
+            // TODO behavior for different feedback, when feedback is already on screen
             resetPassageHighlights(this.taskID, this.solutions);
 
             if (feedbackResp.feedbackCode.localeCompare(1) === 0) {

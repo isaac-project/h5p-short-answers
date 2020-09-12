@@ -9,9 +9,13 @@
     border-bottom: 2px solid lightgray;
     transition: all 0.5s ease-out;
     background-color: transparent;
-    padding-right: 40px;
-    margin-right: -35px;
+    padding: 4px 0;
     margin-bottom: 0;
+    display: inline-block !important;
+    outline: none;
+    user-select: text;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 .h5p-isaac-input:focus {
     border-bottom: 2px solid dimgray;
@@ -25,4 +29,11 @@
 }
 .h5p-isaac-input-incorrect {
     border-bottom: 2px solid #dc143c !important;
+}
+[contenteditable] {
+    -webkit-user-select: text;
+    user-select: text;
+}
+[contenteditable]:before {
+    content: "\feff";
 }

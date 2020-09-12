@@ -368,7 +368,8 @@ export default class ISAAC extends H5P.Question {
     this.getCurrentState = () => {
       const responses = [];
       for (let i = 0; i < this.params.questions.length; i++) {
-        responses.push(document.getElementById(contentID + "_" + i).firstElementChild.value);
+        responses.push(document.getElementById(contentID + "_" + i).firstElementChild.textContent);
+        // TODO also include underline color, text/prompt highlight, feedback popup if open?
       }
       return { responses: responses };
     };

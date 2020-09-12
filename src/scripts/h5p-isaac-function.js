@@ -78,13 +78,24 @@ function displayHighlight(contentID, fieldID, feedback) {
     const passageHighlight = document.getElementById(`${contentID}_mark_${fieldID + 1}`);
     if (passageHighlight !== null) { passageHighlight.classList.remove("h5p-isaac-hidden"); }
 
-    // highlight prompt // TODO preserve existing HTML markup
+    // highlight prompt
     if (feedback.questionHighlightStart && feedback.questionHighlightEnd) {
         const promptHighlight = document.getElementById(`${contentID}_prompt_${fieldID + 1}`);
         let start = promptHighlight.innerText.substring(0, feedback.questionHighlightStart);
         let mark = promptHighlight.innerText.substring(feedback.questionHighlightStart, feedback.questionHighlightEnd);
         let end = promptHighlight.innerText.substring(feedback.questionHighlightEnd, promptHighlight.innerText.length);
         promptHighlight.innerHTML = `${start}<span class='h5p-isaac-highlight'>${mark}</span>${end}`;
+        // TODO preserve existing HTML markup
+    }
+
+    // highlight input
+    if (feedback.inputHighlightStart && feedback.inputHighlightEnd) {
+        const inputHighlight = document.getElementById(`${contentID}_input_${fieldID}`);
+        let start = inputHighlight.innerText.substring(0, feedback.inputHighlightStart);
+        let mark = inputHighlight.innerText.substring(feedback.inputHighlightStart, feedback.inputHighlightEnd);
+        let end = inputHighlight.innerText.substring(feedback.inputHighlightEnd, inputHighlight.innerText.length);
+        inputHighlight.innerHTML = `${start}<span class='h5p-isaac-highlight'>${mark}</span>${end}`;
+        // TODO reset highlight when input returns to focus?
     }
 }
 
