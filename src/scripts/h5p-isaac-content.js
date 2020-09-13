@@ -38,10 +38,9 @@ export default class ISAACContent {
 
     // begin Q&A section
     const ol = document.createElement('ol');
-    ol.setAttribute("name", "h5p-isaac-list");
+    ol.setAttribute("class", "h5p-isaac-questions");
 
     for (let i = 0; i < questions.length; i++) {
-
       // question text
       let question = questions[i].question;
       if (!question.startsWith("<p>")) { question = `<p>${question}</p>`; }
@@ -60,6 +59,7 @@ export default class ISAACContent {
       const userInput = document.createElement("div");
       userInput.setAttribute('id', `${contentID}_input_${i}`);
       userInput.setAttribute('autocomplete', "disabled"); // "off" for browsers other than Chrome?
+      userInput.setAttribute('autocorrect', 'off');
       userInput.setAttribute('spellcheck', 'false');
       userInput.setAttribute('contenteditable', 'true'); // requires workaround to disable rich text
       // userInput.setAttribute('contenteditable', 'plaintext-only'); // ideal but not widely supported (sept 2020)
@@ -68,16 +68,13 @@ export default class ISAACContent {
       // set input with previously saved content state, if applicable
       userInput.textContent = prev.responses ? prev.responses[i] : "";
 
-      // create input button
-      const enterButton = document.createElement('button');
-      enterButton.classList.add('h5p-isaac-button', 'h5p-isaac-enter', 'tooltip');
-      enterButton.setAttribute('id', `${contentID}_${i}_submit`);
-      const buttonTooltipText = document.createElement('span');
-      buttonTooltipText.classList.add('tooltiptext');
-      buttonTooltipText.innerText = 'Submit'; // TODO: get localized text from semantics
-      enterButton.appendChild(buttonTooltipText);
-
-      // register input handler
+      // register input handlers
+      userInput.addEventListener("focus", function (e) {
+        userInput.parentElement.classList.add('h5p-isaac-input-wrapper-focus');
+      });
+      userInput.addEventListener("blur", function (e) {
+        userInput.parentElement.classList.remove('h5p-isaac-input-wrapper-focus');
+      });
       userInput.addEventListener("keydown", function (e) {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -87,8 +84,8 @@ export default class ISAACContent {
         }
       });
       userInput.addEventListener("paste", function (e) {
-        // hacky way to remove rich text formatting when pasting formatted text;
-        // remove this listener when contenteditable="plaintext-only" is widely supported
+        // remove rich text formatting when pasting formatted text;
+        // replace this listener with contenteditable="plaintext-only" when it is more widely supported
         // https://caniuse.com/?search=contenteditable%3D%22plaintext-only%22
         e.preventDefault();
         const index = window.getSelection().getRangeAt(0).startOffset;
@@ -104,7 +101,17 @@ export default class ISAACContent {
         set.removeAllRanges();
         set.addRange(setpos);
         userInput.focus();
+        // TODO does not overwrite selected text;
       });
+
+      // create input button
+      const enterButton = document.createElement('button');
+      enterButton.classList.add('h5p-isaac-button', 'h5p-isaac-enter', 'tooltip');
+      enterButton.setAttribute('id', `${contentID}_${i}_submit`);
+      const buttonTooltipText = document.createElement('span');
+      buttonTooltipText.classList.add('tooltiptext');
+      buttonTooltipText.innerText = 'Submit'; // TODO: get localized text from semantics
+      // enterButton.appendChild(buttonTooltipText);
       enterButton.addEventListener("click", function (e) {
         const answer = document.getElementById(`${contentID}_input_${i}`).textContent;
         const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer);
@@ -118,29 +125,31 @@ export default class ISAACContent {
       infoButton.addEventListener("click", function (e) {
         const target = document.getElementById(`${contentID}_mark_${i + 1}`);
         if (target !== null) {
-          target.scrollIntoView({ // may not be supported by Safari and iOS (?)
+          target.scrollIntoView({ // not supported by Safari and iOS
             behavior: 'smooth',
             block: 'center'
           });
         }
       });
-
       const infoTooltipText = document.createElement('span');
       infoTooltipText.classList.add('tooltiptext');
       infoTooltipText.innerText = 'Show context'; // TODO: get localized text from semantics
-      infoButton.appendChild(infoTooltipText);
+      // infoButton.appendChild(infoTooltipText);
 
       // pop-up feedback
       const popup = document.createElement('div');
       popup.setAttribute('class', 'h5p-isaac-feedback');
       popup.setAttribute("id", contentID + "_" + i + "_popup");
+      const popupText = document.createElement('div');
+      popupText.setAttribute('class', 'h5p-isaac-feedback-text');
+      popup.appendChild(popupText);
 
       // add question, input field, buttons, and popup
       wrapper.appendChild(userInput);
       wrapper.appendChild(enterButton);
-      wrapper.appendChild(infoButton);
-      wrapper.appendChild(popup);
       nodeQA.appendChild(wrapper);
+      nodeQA.appendChild(infoButton);
+      nodeQA.appendChild(popup);
       ol.appendChild(nodeQA);
     }
 

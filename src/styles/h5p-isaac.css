@@ -21,8 +21,13 @@
   font-size: 12pt;
   margin: 5% 10%;
 }
+.h5p-isaac-questions {
+  padding: 0 0 0 35px !important;
+  margin: 0 !important;
+}
 .h5p-isaac-question {
-  margin-bottom: 0;
+  width: 90%;
+  margin-bottom: 10px;
 }
 .h5p-isaac-question-wrapper {
   font-family: 'Source Sans Pro', 'Noto Sans', serif;

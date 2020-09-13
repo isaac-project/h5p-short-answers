@@ -1,11 +1,14 @@
 .h5p-isaac-feedback {
-    font-size: 10pt;
     border: none;
     position: relative;
-    width: 75%;
+    width: 90%;
     margin: 0;
     max-height: 0;
     overflow: hidden;
+}
+.h5p-isaac-feedback-text {
+    padding-left: 7px;
+    padding-right: 30px;
 }
 .h5p-isaac-feedback-correct {
     background-color: #ACEFC7;
@@ -14,21 +17,21 @@
     background-color: #ffc0cb;
 }
 .h5p-isaac-feedback-expand {
-    max-height: 200px;
-    transition: max-height 1.5s cubic-bezier(.75,.25,.25,.75);
+    max-height: 999px; /* TODO adapt to feedback size (feedback text div height) */
+    transition: max-height 1.5s ease-in;
 }
 .h5p-isaac-feedback-shrink {
     max-height: 0;
-    transition: max-height 1.5s cubic-bezier(.75,.25,.25,.75);
+    transition: max-height 1.5s ease-in;
 }
 .h5p-isaac-feedback-close {
     color: #000;
-    font-size: 30px;
-    line-height: 12pt;
+    font-size: 2em;
+    line-height: 0;
     font-weight: bold;
     position: absolute;
-    right: 1px;
-    top: 1px;
+    right: 5px;
+    top: 12px;
 }
 .h5p-isaac-feedback-close:hover,
 .h5p-isaac-feedback-close:focus {

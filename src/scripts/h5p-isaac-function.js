@@ -1,6 +1,6 @@
 export function displayIncorrect(contentID, fieldID, feedback) {
     "use strict";
-    const input = document.getElementById(contentID + "_" + fieldID).firstElementChild;
+    const input = document.getElementById(contentID + "_" + fieldID);
     input.classList.add("h5p-isaac-input-incorrect");
     input.classList.remove("h5p-isaac-input-correct");
 
@@ -11,19 +11,30 @@ export function displayIncorrect(contentID, fieldID, feedback) {
 
 export function displayCorrect(contentID, fieldID) {
     "use strict";
-    const input = document.getElementById(contentID + "_" + fieldID).firstElementChild;
+    const input = document.getElementById(contentID + "_" + fieldID);
     input.classList.add("h5p-isaac-input-correct");
     input.classList.remove("h5p-isaac-input-incorrect");
 
     // hide info bubble
     const info = document.getElementById(`${contentID}_${fieldID}_info`);
     info.classList.remove('h5p-isaac-info-show');
-    info.classList.add('h5p-isaac-info-hidden');
+    info.classList.add('h5p-isaac-info-hide');
+    setTimeout(function() {
+        // wait until animation finishes
+        info.classList.add('h5p-isaac-info-hidden');
+    }, 2000); // ms; 2 seconds
 
     // hide feedback pop-up
     const popup = document.getElementById(contentID + "_" + fieldID + "_popup");
     popup.classList.remove('h5p-isaac-feedback-expand', 'h5p-isaac-feedback-incorrect');
     popup.classList.add('h5p-isaac-feedback-shrink', 'h5p-isaac-feedback-correct');
+    setTimeout(function() {
+        // wait until animation finishes
+        popup.firstElementChild.innerText = ""; // reset feedback text
+        if (popup.lastElementChild.classList.contains('h5p-isaac-feedback-close')) {
+            popup.lastElementChild.remove(); // remove close button
+        }
+    }, 1500); // ms; 1.5 seconds
 
     // remove question highlight
     resetQuestionHighlights(contentID, fieldID);
@@ -42,6 +53,7 @@ export function resetPassageHighlights(contentID, targets) {
 }
 
 export function resetQuestionHighlights(contentID, fieldID) {
+    "use strict";
     const questionHighlights = document.getElementById(`${contentID}_prompt_${fieldID + 1}`);
     if (questionHighlights !== null) {
         const highlightPattern = /<span class="h5p-isaac-highlight">|<\/span>/gi;
@@ -53,19 +65,21 @@ function displayPopup(contentID, fieldID, feedback) {
     "use strict";
     // retrieve and populate pop-up container
     const popup = document.getElementById(contentID + "_" + fieldID + "_popup");
-    popup.innerText = feedback.feedbackString;
+    popup.firstElementChild.innerText = feedback.feedbackString;
 
-    // create upper-right close button
-    const x = document.createElement('span');
-    x.setAttribute('class', 'h5p-isaac-feedback-close');
-    x.innerHTML = '&times;';
-    popup.appendChild(x);
+    // create upper-right close button if not present
+    if (!popup.lastElementChild.classList.contains('h5p-isaac-feedback-close')) {
+        const x = document.createElement('div');
+        x.setAttribute('class', 'h5p-isaac-feedback-close');
+        x.innerHTML = '&times;';
+        popup.appendChild(x);
 
-    // close when user clicks x
-    x.onclick = () => {
-        popup.classList.add('h5p-isaac-feedback-shrink');
-        popup.classList.remove('h5p-isaac-feedback-expand');
-    };
+        // close when user clicks x
+        x.onclick = () => {
+            popup.classList.add('h5p-isaac-feedback-shrink');
+            popup.classList.remove('h5p-isaac-feedback-expand');
+        };
+    }
 
     // display pop-up
     popup.classList.remove('h5p-isaac-feedback-shrink', 'h5p-isaac-feedback-correct');
@@ -101,8 +115,8 @@ function displayHighlight(contentID, fieldID, feedback) {
 
 function displayInfoButton(contentID, fieldID) {
     "use strict";
-    // display info bubble // TODO only show if there is passage highlighting
+    // display info bubble // TODO only show if there are passage highlighting indices returned by feedback
     const info = document.getElementById(`${contentID}_${fieldID}_info`);
     info.classList.add('h5p-isaac-info-show');
-    info.classList.remove('h5p-isaac-info-hidden');
+    info.classList.remove('h5p-isaac-info-hidden', 'h5p-isaac-info-hide');
 }
