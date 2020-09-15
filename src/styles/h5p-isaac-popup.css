@@ -1,7 +1,7 @@
 .h5p-isaac-feedback {
     border: none;
     position: relative;
-    width: 90%;
+    width: 85%;
     margin: 0;
     max-height: 0;
     overflow: hidden;
@@ -17,12 +17,12 @@
     background-color: #ffc0cb;
 }
 .h5p-isaac-feedback-expand {
-    max-height: 999px; /* TODO adapt to feedback size (feedback text div height) */
-    transition: max-height 1.5s ease-in;
+    max-height: 100px; /* approx. 4 lines max TODO adapt to feedback size (feedback-text div height) */
+    transition: max-height 1.5s linear;
 }
-.h5p-isaac-feedback-shrink {
+.h5p-isaac-feedback-collapsed {
     max-height: 0;
-    transition: max-height 1.5s ease-in;
+    transition: max-height 0.25s linear;
 }
 .h5p-isaac-feedback-close {
     color: #000;

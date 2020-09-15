@@ -1,4 +1,5 @@
 import { ISAACFieldListener } from './h5p-isaac-interaction';
+import { togglePopup } from './h5p-isaac-function.js';
 
 export default class ISAACContent {
   /**
@@ -81,6 +82,7 @@ export default class ISAACContent {
           const answer = document.getElementById(`${contentID}_input_${i}`).textContent;
           const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer);
           listener.handleEvent(answer);
+          userInput.blur(); // remove focus from text input; currently cursor is undesirably being set to index 0
         }
       });
       userInput.addEventListener("paste", function (e) {
@@ -106,22 +108,36 @@ export default class ISAACContent {
 
       // create input button
       const enterButton = document.createElement('button');
-      enterButton.classList.add('h5p-isaac-button', 'h5p-isaac-enter', 'tooltip');
+      enterButton.classList.add('h5p-isaac-button', 'h5p-isaac-input-button', 'h5p-isaac-enter', 'tooltip');
       enterButton.setAttribute('id', `${contentID}_${i}_submit`);
       const buttonTooltipText = document.createElement('span');
       buttonTooltipText.classList.add('tooltiptext');
-      buttonTooltipText.innerText = 'Submit'; // TODO: get localized text from semantics
+      buttonTooltipText.innerText = 'Get Feedback'; // TODO: get localized text from semantics
       // enterButton.appendChild(buttonTooltipText);
       enterButton.addEventListener("click", function (e) {
         const answer = document.getElementById(`${contentID}_input_${i}`).textContent;
         const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, answer);
         listener.handleEvent(answer);
+        enterButton.blur();
       });
+
+      // feedback button
+      const feedbackButton = document.createElement('button');
+      feedbackButton.setAttribute('id', contentID + "_" + i + "_feedback_button");
+      feedbackButton.classList.add('h5p-isaac-button', 'h5p-isaac-feedback-button', 'h5p-isaac-button-hidden', 'tooltip');
+      feedbackButton.addEventListener("click", function (e) {
+        togglePopup(contentID, i, false);
+        feedbackButton.blur();
+      });
+      const feedbackTooltipText = document.createElement('span');
+      feedbackTooltipText.classList.add('tooltiptext');
+      feedbackTooltipText.innerText = 'Show Feedback'; // TODO: get localized text from semantics
+      // feedbackButton.appendChild(feedbackTooltipText);
 
       // information bubble
       const infoButton = document.createElement('button');
       infoButton.setAttribute('id', contentID + "_" + i + "_info");
-      infoButton.classList.add('h5p-isaac-button', 'h5p-isaac-info', 'h5p-isaac-info-hidden', 'tooltip');
+      infoButton.classList.add('h5p-isaac-button', 'h5p-isaac-info', 'h5p-isaac-button-hidden', 'tooltip');
       infoButton.addEventListener("click", function (e) {
         const target = document.getElementById(`${contentID}_mark_${i + 1}`);
         if (target !== null) {
@@ -130,6 +146,7 @@ export default class ISAACContent {
             block: 'center'
           });
         }
+        infoButton.blur();
       });
       const infoTooltipText = document.createElement('span');
       infoTooltipText.classList.add('tooltiptext');
@@ -139,6 +156,7 @@ export default class ISAACContent {
       // pop-up feedback
       const popup = document.createElement('div');
       popup.setAttribute('class', 'h5p-isaac-feedback');
+      popup.classList.add('h5p-isaac-feedback-collapsed');
       popup.setAttribute("id", contentID + "_" + i + "_popup");
       const popupText = document.createElement('div');
       popupText.setAttribute('class', 'h5p-isaac-feedback-text');
@@ -148,6 +166,7 @@ export default class ISAACContent {
       wrapper.appendChild(userInput);
       wrapper.appendChild(enterButton);
       nodeQA.appendChild(wrapper);
+      nodeQA.appendChild(feedbackButton);
       nodeQA.appendChild(infoButton);
       nodeQA.appendChild(popup);
       ol.appendChild(nodeQA);

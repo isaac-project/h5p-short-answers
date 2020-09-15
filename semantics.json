@@ -163,11 +163,11 @@
     "importance": "low",
     "fields": [
       {
-        "name": "checkAnswer",
+        "name": "submitAnswer",
         "type": "text",
-        "label": "Text for \"Check\" button",
+        "label": "Text for \"Submit\" button",
         "importance": "low",
-        "default": "Check"
+        "default": "Submit"
       },
       {
         "name": "tryAgain",
@@ -179,9 +179,9 @@
       {
         "name": "showSolution",
         "type": "text",
-        "label": "Text for \"Show solution\" button",
+        "label": "Text for \"Show Solution\" button",
         "importance": "low",
-        "default": "Show solution"
+        "default": "Show Solution"
       }
     ]
   },

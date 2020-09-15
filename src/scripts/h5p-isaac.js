@@ -1,6 +1,7 @@
 import ISAACContent from './h5p-isaac-content';
 import { ISAACTask, uploadTask } from './h5p-isaac-interaction';
-import { resetPassageHighlights, resetQuestionHighlights } from "./h5p-isaac-function";
+import { resetPassageHighlights, resetQuestionHighlights,
+  toggleCheckmark, toggleFeedbackButton, toggleInfoButton } from "./h5p-isaac-function";
 
 const UPLOAD_TASK_DATA = true;
 
@@ -45,8 +46,8 @@ export default class ISAAC extends H5P.Question {
         enableRetry: true
       },
       l10n: {
-        checkAnswer: 'Check answer',
-        showSolution: 'Show solution',
+        submitAnswer: 'Submit',
+        showSolution: 'Show Solution',
         tryAgain: 'Retry'
       }
     }, this.params);
@@ -94,7 +95,7 @@ export default class ISAAC extends H5P.Question {
      * Add all the buttons that shall be passed to H5P.Question.
      */
     this.addButtons = () => {
-      this.addButton('check-answer', this.params.l10n.checkAnswer, () => this.showEvaluation(), true, {}, {});
+      this.addButton('check-answer', this.params.l10n.submitAnswer, () => this.showEvaluation(), true, {}, {});
       this.addButton('show-solution', this.params.l10n.showSolution, () => this.showSolutions(), false, {}, {});
       this.addButton('try-again', this.params.l10n.tryAgain, () => this.resetTask(), false, {}, {});
     };
@@ -153,19 +154,17 @@ export default class ISAAC extends H5P.Question {
       let num_correct = 0;
 
       // iterate over all questions
-      const questions = this.params.questions;
-      for (let i = 0; i < questions.length; i++) {
-        const input = document.getElementById(contentID + "_" + i);
-        if (input !== null && input.classList.contains("h5p-input-correct"))
+      for (let i = 0; i < this.params.questions.length; i++) {
+        const input = document.getElementById(contentID + "_input_" + i);
+        if (input.parentElement.classList.contains("h5p-isaac-input-correct"))
           num_correct++;
       }
 
-      if (num_correct !== this.getMaxScore()) {
-        if (this.params.behaviour.enableSolutionsButton) this.showButton('show-solution');
-        if (this.params.behaviour.enableRetry) this.showButton('try-again');
-      } else { // don't display buttons if score = 100%
-        this.hideButton('show-solution');
-        this.hideButton('try-again');
+      if (num_correct !== this.getMaxScore() && this.params.behaviour.enableSolutionsButton) {
+        this.showButton('show-solution');
+      }
+      if (this.params.behaviour.enableRetry) {
+        this.showButton('try-again');
       }
       return num_correct;
     };
@@ -188,21 +187,13 @@ export default class ISAAC extends H5P.Question {
         const answer = document.createElement("textarea");
         answer.innerHTML = this.params.questions[i].targets[0];
 
-        const inputField = document.getElementById(contentID + "_" + i).firstElementChild;
-        inputField.value = answer.value;
-
-        // reject further changes since answers have been revealed
-        H5P.jQuery(inputField).attr('disabled', true);
-
-        // hide any popups
-        const modals = document.getElementsByClassName("modal");
-        for (let j = 0; j < modals.length; j++)
-          modals[j].style.display = "none";
+        const inputField = document.getElementById(contentID + "_input_" + i);
+        if (!inputField.parentElement.classList.contains("h5p-isaac-input-correct")) {
+          // only replace answers that have not already been marked correct
+          inputField.textContent = answer.value;
+        }
       }
-
-      // disable buttons since answers have been revealed
       this.hideButton('show-solution');
-      this.hideButton('try-again');
       this.trigger('resize');
     };
 
@@ -214,25 +205,21 @@ export default class ISAAC extends H5P.Question {
       resetPassageHighlights(contentID, this.params.questions);
       for (let i = 0; i < this.params.questions.length; i++) {
         const input = document.getElementById(contentID + "_input_" + i);
-        input.value = '';
-        input.classList.remove("h5p-isaac-input-incorrect");
-        const infoButton = document.getElementById(contentID + "_" + i + "_info");
-        infoButton.classList.remove('h5p-isaac-info-show');
-        infoButton.classList.add('h5p-isaac-info-hidden');
+        input.textContent = '';
+        input.parentElement.setAttribute("class", "h5p-isaac-input-wrapper");
+
+        toggleCheckmark(contentID, i, false);
+        toggleFeedbackButton(contentID, i, false);
+        toggleInfoButton(contentID, i, false);
+
         const popup = document.getElementById(contentID + "_" + i + "_popup");
         popup.classList.remove("h5p-isaac-feedback-incorrect", "h5p-isaac-feedback-expand");
         resetQuestionHighlights(contentID, i);
       }
-
       this.showButton('check-answer');
       this.hideButton('show-solution');
       this.hideButton('try-again');
-      this.removeFeedback();  // remove score bar
-
-      const modals = document.getElementsByClassName("modal");
-      for (let j = 0; j < modals.length; j++)
-        modals[j].style.display = "none";
-
+      this.removeFeedback(); // remove score bar
       this.trigger('resize');
     };
 

@@ -4,9 +4,14 @@ export function displayIncorrect(contentID, fieldID, feedback) {
     input.classList.add("h5p-isaac-input-incorrect");
     input.classList.remove("h5p-isaac-input-correct");
 
-    displayPopup(contentID, fieldID, feedback);
+    // populate feedback popup
+    const popup = document.getElementById(contentID + "_" + fieldID + "_popup").firstElementChild;
+    popup.innerText = feedback.feedbackString;
+
     displayHighlight(contentID, fieldID, feedback);
-    displayInfoButton(contentID, fieldID);
+    toggleCheckmark(contentID, fieldID, false);
+    toggleFeedbackButton(contentID, fieldID, true);
+    toggleInfoButton(contentID, fieldID, true);
 }
 
 export function displayCorrect(contentID, fieldID) {
@@ -15,32 +20,13 @@ export function displayCorrect(contentID, fieldID) {
     input.classList.add("h5p-isaac-input-correct");
     input.classList.remove("h5p-isaac-input-incorrect");
 
-    // hide info bubble
-    const info = document.getElementById(`${contentID}_${fieldID}_info`);
-    info.classList.remove('h5p-isaac-info-show');
-    info.classList.add('h5p-isaac-info-hide');
-    setTimeout(function() {
-        // wait until animation finishes
-        info.classList.add('h5p-isaac-info-hidden');
-    }, 2000); // ms; 2 seconds
-
-    // hide feedback pop-up
-    const popup = document.getElementById(contentID + "_" + fieldID + "_popup");
-    popup.classList.remove('h5p-isaac-feedback-expand', 'h5p-isaac-feedback-incorrect');
-    popup.classList.add('h5p-isaac-feedback-shrink', 'h5p-isaac-feedback-correct');
-    setTimeout(function() {
-        // wait until animation finishes
-        popup.firstElementChild.innerText = ""; // reset feedback text
-        if (popup.lastElementChild.classList.contains('h5p-isaac-feedback-close')) {
-            popup.lastElementChild.remove(); // remove close button
-        }
-    }, 1500); // ms; 1.5 seconds
+    toggleCheckmark(contentID, fieldID, true);
+    toggleFeedbackButton(contentID, fieldID, false);
+    toggleInfoButton(contentID, fieldID, false);
+    togglePopup(contentID, fieldID, true);
 
     // remove question highlight
     resetQuestionHighlights(contentID, fieldID);
-
-    // disable input field when answer is correct
-    // H5P.jQuery(input).attr('disabled', true);
 }
 
 export function resetPassageHighlights(contentID, targets) {
@@ -61,29 +47,20 @@ export function resetQuestionHighlights(contentID, fieldID) {
     }
 }
 
-function displayPopup(contentID, fieldID, feedback) {
+export function togglePopup(contentID, fieldID, isCorrect) {
     "use strict";
-    // retrieve and populate pop-up container
     const popup = document.getElementById(contentID + "_" + fieldID + "_popup");
-    popup.firstElementChild.innerText = feedback.feedbackString;
-
-    // create upper-right close button if not present
-    if (!popup.lastElementChild.classList.contains('h5p-isaac-feedback-close')) {
-        const x = document.createElement('div');
-        x.setAttribute('class', 'h5p-isaac-feedback-close');
-        x.innerHTML = '&times;';
-        popup.appendChild(x);
-
-        // close when user clicks x
-        x.onclick = () => {
-            popup.classList.add('h5p-isaac-feedback-shrink');
-            popup.classList.remove('h5p-isaac-feedback-expand');
-        };
+    if (popup.classList.contains('h5p-isaac-feedback-collapsed') && !isCorrect) {
+        popup.classList.remove('h5p-isaac-feedback-collapsed', 'h5p-isaac-feedback-correct');
+        popup.classList.add('h5p-isaac-feedback-incorrect', 'h5p-isaac-feedback-expand');
+    } else if (popup.classList.contains('h5p-isaac-feedback-expand')) {
+        if (isCorrect) {
+            popup.classList.add('h5p-isaac-feedback-correct');
+            popup.classList.remove('h5p-isaac-feedback-incorrect');
+        }
+        popup.classList.add('h5p-isaac-feedback-collapsed');
+        popup.classList.remove('h5p-isaac-feedback-expand');
     }
-
-    // display pop-up
-    popup.classList.remove('h5p-isaac-feedback-shrink', 'h5p-isaac-feedback-correct');
-    popup.classList.add('h5p-isaac-feedback-incorrect', 'h5p-isaac-feedback-expand');
 }
 
 function displayHighlight(contentID, fieldID, feedback) {
@@ -113,10 +90,49 @@ function displayHighlight(contentID, fieldID, feedback) {
     }
 }
 
-function displayInfoButton(contentID, fieldID) {
+export function toggleCheckmark(contentID, fieldID, showCheckmark) {
     "use strict";
-    // display info bubble // TODO only show if there are passage highlighting indices returned by feedback
+    const userInputButton = document.getElementById(`${contentID}_${fieldID}_submit`);
+    if (showCheckmark) {
+        userInputButton.classList.remove('h5p-isaac-enter');
+        userInputButton.classList.add('h5p-isaac-check');
+        // enterButton.firstElementChild.classList.add('h5p-isaac-button-hidden'); // hide "Get Feedback" tooltip
+    } else {
+        userInputButton.classList.remove('h5p-isaac-check');
+        userInputButton.classList.add('h5p-isaac-enter');
+        // enterButton.firstElementChild.classList.remove('h5p-isaac-button-hidden'); // show "Get Feedback" tooltip
+    }
+}
+
+export function toggleFeedbackButton(contentID, fieldID, showButton) {
+    "use strict";
+    const feedback = document.getElementById(`${contentID}_${fieldID}_feedback_button`);
+    if (showButton) {
+        feedback.classList.add('h5p-isaac-button-show');
+        feedback.classList.remove('h5p-isaac-button-hidden', 'h5p-isaac-button-hide');
+    } else {
+        feedback.classList.remove('h5p-isaac-button-show');
+        feedback.classList.add('h5p-isaac-button-hide');
+        setTimeout(function() {
+            // wait until animation finishes
+            feedback.classList.add('h5p-isaac-button-hidden');
+        }, 1500); // ms; 1.5 seconds
+    }
+}
+
+export function toggleInfoButton(contentID, fieldID, showButton) {
+    "use strict";
     const info = document.getElementById(`${contentID}_${fieldID}_info`);
-    info.classList.add('h5p-isaac-info-show');
-    info.classList.remove('h5p-isaac-info-hidden', 'h5p-isaac-info-hide');
+    if (showButton) {
+        // TODO only show if there are passage highlighting indices defined by content author
+        info.classList.add('h5p-isaac-button-show');
+        info.classList.remove('h5p-isaac-button-hidden', 'h5p-isaac-button-hide');
+    } else {
+        info.classList.remove('h5p-isaac-button-show');
+        info.classList.add('h5p-isaac-button-hide');
+        setTimeout(function () {
+            // wait until animation finishes
+            info.classList.add('h5p-isaac-button-hidden');
+        }, 1500); // ms; 1.5 seconds
+    }
 }
