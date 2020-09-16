@@ -6,12 +6,10 @@
     display: inline-block;
     padding: 0;
 }
-.h5p-isaac-button:hover {
-    color: darkgray;
-    cursor: pointer;
-}
+.h5p-isaac-button:hover,
 .h5p-isaac-button:focus {
     color: darkgray;
+    cursor: pointer;
     outline: none;
 }
 .h5p-isaac-button:active {
@@ -21,11 +19,11 @@
 }
 .h5p-isaac-button-show {
     animation-name: fadein;
-    animation-duration: 1.5s;
+    animation-duration: 0.5s;
 }
 .h5p-isaac-button-hide {
     animation-name: fadeout;
-    animation-duration: 1.5s;
+    animation-duration: 0.5s;
 }
 .h5p-isaac-button-hidden {
     display: none !important;

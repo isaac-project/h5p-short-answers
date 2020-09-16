@@ -1,4 +1,4 @@
-import { resetPassageHighlights, displayCorrect, displayIncorrect } from "./h5p-isaac-function";
+import { displayCorrect, displayIncorrect, displaySuggestion } from "./h5p-isaac-function";
 
 export class ISAACFeedbackRequest {
     constructor(host, taskID, fieldID, learnerAnswer) {
@@ -11,8 +11,8 @@ export class ISAACFeedbackRequest {
 
 export class ISAACFeedbackResponse {
     constructor(request, feedbackCode, feedbackString,
-                questionHighlightStart, questionHighlightEnd,   // TODO update return values in backend
-                inputHighlightStart, inputHighlightEnd) {       // TODO update return values in backend
+                questionHighlightStart, questionHighlightEnd,
+                inputHighlightStart, inputHighlightEnd) {
         this.request = request;
         this.feedbackCode = feedbackCode;
         this.feedbackString = feedbackString;
@@ -44,14 +44,10 @@ export class ISAACFieldListener {
         .then((response) => response.json())
         .then((feedbackResp) => {
 
-            // TODO behavior for different feedback, when feedback is already on screen
-            resetPassageHighlights(this.taskID, this.solutions);
-
             if (feedbackResp.feedbackCode.localeCompare(1) === 0) {
                 displayCorrect(this.taskID, this.fieldID);
             } else {
                 displayIncorrect(this.taskID, this.fieldID, feedbackResp);
-                // TODO behavior for incorrect answer when no feedback is available? (should there always be a pop-up?)
             }
 
         })
@@ -87,4 +83,29 @@ export function uploadTask(isaacTask, backend) {
         .catch((error) => {
             console.error('Error:', error);
         });
+}
+
+export class ISAACErrorCorrection { // TODO combine with ISAACFieldListener
+    constructor(taskID, fieldID, solutions, backend) {
+        this.taskID = taskID;
+        this.fieldID = fieldID;
+        this.solutions = solutions;
+        this.backend = backend;
+    }
+
+    handleEvent(e) {
+
+        // TODO calculate error correction
+        // e = student answer
+
+        // dummy
+        const suggestion = { text: "Did you mean...?" }
+
+        if (suggestion) {
+            displaySuggestion(this.taskID, this.fieldID, suggestion);
+        } else {
+            const listener = new ISAACFieldListener(this.taskID, this.fieldID, this.solutions, this.backend);
+            listener.handleEvent(e);
+        }
+    }
 }

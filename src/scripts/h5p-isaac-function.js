@@ -1,40 +1,67 @@
+export function displaySuggestion(contentID, fieldID, suggestion) {
+    "use strict";
+    const input = document.getElementById(contentID + "_" + fieldID);
+    input.classList.remove('h5p-isaac-input-correct', 'h5p-isaac-input-incorrect');
+    input.classList.add("h5p-isaac-input-suggestion");
+
+    // populate suggestion popup
+    const popup = document.getElementById(contentID + "_" + fieldID + "_popup");
+    popup.firstElementChild.innerText = suggestion.text;
+    popup.classList.remove("h5p-isaac-popup-collapsed", "h5p-isaac-feedback-correct", "h5p-isaac-feedback-incorrect");
+    popup.classList.add("h5p-isaac-popup-expand", "h5p-isaac-suggestion");
+
+    resetPassageHighlights(contentID, -1);
+    resetQuestionHighlights(contentID, fieldID);
+    toggleCheckmark(contentID, fieldID, false);
+    toggleFeedbackButton(contentID, fieldID, "hide");
+    toggleInfoButton(contentID, fieldID, "hide");
+}
+
 export function displayIncorrect(contentID, fieldID, feedback) {
     "use strict";
     const input = document.getElementById(contentID + "_" + fieldID);
     input.classList.add("h5p-isaac-input-incorrect");
-    input.classList.remove("h5p-isaac-input-correct");
+    input.classList.remove("h5p-isaac-input-correct", "h5p-isaac-input-suggestion");
 
     // populate feedback popup
-    const popup = document.getElementById(contentID + "_" + fieldID + "_popup").firstElementChild;
-    popup.innerText = feedback.feedbackString;
+    const popup = document.getElementById(contentID + "_" + fieldID + "_popup");
+    popup.firstElementChild.innerText = feedback.feedbackString;
+    popup.classList.remove('h5p-isaac-suggestion', 'h5p-isaac-input-correct');
+    popup.classList.add('h5p-isaac-feedback-incorrect');
 
+    resetPassageHighlights(contentID, -1);
     displayHighlight(contentID, fieldID, feedback);
     toggleCheckmark(contentID, fieldID, false);
-    toggleFeedbackButton(contentID, fieldID, true);
-    toggleInfoButton(contentID, fieldID, true);
+    toggleFeedbackButton(contentID, fieldID, "show");
+    toggleInfoButton(contentID, fieldID, "show");
 }
 
 export function displayCorrect(contentID, fieldID) {
     "use strict";
     const input = document.getElementById(contentID + "_" + fieldID);
     input.classList.add("h5p-isaac-input-correct");
-    input.classList.remove("h5p-isaac-input-incorrect");
+    input.classList.remove("h5p-isaac-input-incorrect", "h5p-isaac-input-suggestion");
 
-    toggleCheckmark(contentID, fieldID, true);
-    toggleFeedbackButton(contentID, fieldID, false);
-    toggleInfoButton(contentID, fieldID, false);
-    togglePopup(contentID, fieldID, true);
-
-    // remove question highlight
+    resetPassageHighlights(contentID, -1);
     resetQuestionHighlights(contentID, fieldID);
+    toggleCheckmark(contentID, fieldID, true);
+    toggleFeedbackButton(contentID, fieldID, "hide");
+    toggleInfoButton(contentID, fieldID, "hide");
+    togglePopup(contentID, fieldID, "green", "collapse");
 }
 
-export function resetPassageHighlights(contentID, targets) {
+export function resetPassageHighlights(contentID, fieldID) {
     "use strict";
-    // remove existing highlight (if present)
-    for (let i = 0; i < targets.length; i++) {
-        const passageHighlights = document.getElementById(`${contentID}_mark_${i + 1}`);
+    // remove existing highlights (if present)
+    if (fieldID > 0) {
+        const passageHighlights = document.getElementById(`${contentID}_mark_${fieldID}`);
         if (passageHighlights !== null) { passageHighlights.classList.add("h5p-isaac-hidden"); }
+    } else {
+        // loop over all, because user may answer questions out of order
+        for (let i = 0; i < document.getElementById(`${contentID}_questions`).childElementCount; i++) {
+            const passageHighlights = document.getElementById(`${contentID}_mark_${i + 1}`);
+            if (passageHighlights !== null) { passageHighlights.classList.add("h5p-isaac-hidden"); }
+        }
     }
 }
 
@@ -47,19 +74,23 @@ export function resetQuestionHighlights(contentID, fieldID) {
     }
 }
 
-export function togglePopup(contentID, fieldID, isCorrect) {
+export function togglePopup(contentID, fieldID, color, action) {
     "use strict";
     const popup = document.getElementById(contentID + "_" + fieldID + "_popup");
-    if (popup.classList.contains('h5p-isaac-feedback-collapsed') && !isCorrect) {
-        popup.classList.remove('h5p-isaac-feedback-collapsed', 'h5p-isaac-feedback-correct');
-        popup.classList.add('h5p-isaac-feedback-incorrect', 'h5p-isaac-feedback-expand');
-    } else if (popup.classList.contains('h5p-isaac-feedback-expand')) {
-        if (isCorrect) {
+    if ((action === "expand") || ((action === "toggle") && (popup.classList.contains('h5p-isaac-popup-collapsed')))){
+        if (color === "green") {
+            popup.classList.remove('h5p-isaac-suggestion', 'h5p-isaac-feedback-incorrect');
             popup.classList.add('h5p-isaac-feedback-correct');
-            popup.classList.remove('h5p-isaac-feedback-incorrect');
         }
-        popup.classList.add('h5p-isaac-feedback-collapsed');
-        popup.classList.remove('h5p-isaac-feedback-expand');
+        popup.classList.remove('h5p-isaac-popup-collapsed');
+        popup.classList.add('h5p-isaac-popup-expand');
+    } else if ((action === "collapse") || ((action === "toggle") && (popup.classList.contains('h5p-isaac-popup-expand')))) {
+        if (color === "green") {
+            popup.classList.add('h5p-isaac-feedback-correct');
+            popup.classList.remove('h5p-isaac-feedback-incorrect', 'h5p-isaac-suggestion');
+        }
+        popup.classList.add('h5p-isaac-popup-collapsed');
+        popup.classList.remove('h5p-isaac-popup-expand');
     }
 }
 
@@ -104,35 +135,35 @@ export function toggleCheckmark(contentID, fieldID, showCheckmark) {
     }
 }
 
-export function toggleFeedbackButton(contentID, fieldID, showButton) {
+export function toggleFeedbackButton(contentID, fieldID, action) {
     "use strict";
     const feedback = document.getElementById(`${contentID}_${fieldID}_feedback_button`);
-    if (showButton) {
+    if (action === "show") {
         feedback.classList.add('h5p-isaac-button-show');
         feedback.classList.remove('h5p-isaac-button-hidden', 'h5p-isaac-button-hide');
-    } else {
+    } else if (action === "hide") {
         feedback.classList.remove('h5p-isaac-button-show');
         feedback.classList.add('h5p-isaac-button-hide');
         setTimeout(function() {
             // wait until animation finishes
             feedback.classList.add('h5p-isaac-button-hidden');
-        }, 1500); // ms; 1.5 seconds
+        }, 250); // ms; 0.25 seconds
     }
 }
 
-export function toggleInfoButton(contentID, fieldID, showButton) {
+export function toggleInfoButton(contentID, fieldID, action) {
     "use strict";
     const info = document.getElementById(`${contentID}_${fieldID}_info`);
-    if (showButton) {
+    if (action === "show") {
         // TODO only show if there are passage highlighting indices defined by content author
         info.classList.add('h5p-isaac-button-show');
         info.classList.remove('h5p-isaac-button-hidden', 'h5p-isaac-button-hide');
-    } else {
+    } else if (action === "hide") {
         info.classList.remove('h5p-isaac-button-show');
         info.classList.add('h5p-isaac-button-hide');
         setTimeout(function () {
             // wait until animation finishes
             info.classList.add('h5p-isaac-button-hidden');
-        }, 1500); // ms; 1.5 seconds
+        }, 250); // ms; 0.25 seconds
     }
 }

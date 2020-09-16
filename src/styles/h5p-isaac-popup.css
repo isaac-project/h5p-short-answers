@@ -1,4 +1,4 @@
-.h5p-isaac-feedback {
+.h5p-isaac-popup {
     border: none;
     position: relative;
     width: 85%;
@@ -6,9 +6,20 @@
     max-height: 0;
     overflow: hidden;
 }
-.h5p-isaac-feedback-text {
+.h5p-isaac-popup-expand {
+    max-height: 100px; /* approx. 4 lines max TODO adapt to feedback size (feedback-text div height) */
+    transition: max-height 0.25s linear;
+}
+.h5p-isaac-popup-collapsed {
+    max-height: 0;
+    transition: max-height 0.25s linear;
+}
+.h5p-isaac-popup-text {
     padding-left: 7px;
     padding-right: 30px;
+}
+.h5p-isaac-suggestion {
+    background-color: #fed8b1;
 }
 .h5p-isaac-feedback-correct {
     background-color: #ACEFC7;
@@ -16,25 +27,36 @@
 .h5p-isaac-feedback-incorrect {
     background-color: #ffc0cb;
 }
-.h5p-isaac-feedback-expand {
-    max-height: 100px; /* approx. 4 lines max TODO adapt to feedback size (feedback-text div height) */
-    transition: max-height 1.5s linear;
-}
-.h5p-isaac-feedback-collapsed {
-    max-height: 0;
-    transition: max-height 0.25s linear;
-}
-.h5p-isaac-feedback-close {
-    color: #000;
-    font-size: 2em;
+.h5p-isaac-popup-button {
+    color: dimgray;
+    font-size: 1em;
     line-height: 0;
     font-weight: bold;
     position: absolute;
     right: 5px;
     top: 12px;
 }
-.h5p-isaac-feedback-close:hover,
-.h5p-isaac-feedback-close:focus {
+.h5p-isaac-popup-button:hover,
+.h5p-isaac-popup-button:focus {
+    color: gray;
     text-decoration: none;
     cursor: pointer;
+}
+.h5p-isaac-popup-button-yes:before {
+    font-family: H5PFontAwesome4;
+    content: '\f087'; /* hollow thumbs-up */
+}
+.h5p-isaac-popup-button-yes:hover:before,
+.h5p-isaac-popup-button-yes:focus:before {
+    font-family: H5PFontAwesome4;
+    content: '\f164'; /* solid thumbs-up */
+}
+.h5p-isaac-popup-button-no:before {
+    font-family: H5PFontAwesome4;
+    content: '\f088'; /* hollow thumbs-down */
+}
+.h5p-isaac-popup-button-no:hover:before,
+.h5p-isaac-popup-button-no:focus:before {
+    font-family: H5PFontAwesome4;
+    content: '\f165'; /* solid thumbs-down */
 }

@@ -36,6 +36,9 @@
 .h5p-isaac-input-incorrect {
     border-bottom: 2px solid #dc143c !important;
 }
+.h5p-isaac-input-suggestion {
+    border-bottom: 2px solid #ff8c00 !important;
+}
 [contenteditable] {
     -webkit-user-select: text;
     user-select: text;

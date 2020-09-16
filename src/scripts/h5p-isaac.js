@@ -1,7 +1,7 @@
 import ISAACContent from './h5p-isaac-content';
 import { ISAACTask, uploadTask } from './h5p-isaac-interaction';
 import { resetPassageHighlights, resetQuestionHighlights,
-  toggleCheckmark, toggleFeedbackButton, toggleInfoButton } from "./h5p-isaac-function";
+  toggleCheckmark, toggleFeedbackButton, toggleInfoButton, togglePopup } from "./h5p-isaac-function";
 
 const UPLOAD_TASK_DATA = true;
 
@@ -192,6 +192,12 @@ export default class ISAAC extends H5P.Question {
           // only replace answers that have not already been marked correct
           inputField.textContent = answer.value;
         }
+
+        toggleFeedbackButton(contentID, i, "hide");
+        toggleInfoButton(contentID, i, "hide");
+        togglePopup(contentID, i, "", "collapse");
+        resetPassageHighlights(contentID, i);
+        resetQuestionHighlights(contentID, i);
       }
       this.hideButton('show-solution');
       this.trigger('resize');
@@ -202,18 +208,17 @@ export default class ISAAC extends H5P.Question {
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
      */
     this.resetTask = () => {
-      resetPassageHighlights(contentID, this.params.questions);
+
       for (let i = 0; i < this.params.questions.length; i++) {
         const input = document.getElementById(contentID + "_input_" + i);
         input.textContent = '';
         input.parentElement.setAttribute("class", "h5p-isaac-input-wrapper");
 
         toggleCheckmark(contentID, i, false);
-        toggleFeedbackButton(contentID, i, false);
-        toggleInfoButton(contentID, i, false);
-
-        const popup = document.getElementById(contentID + "_" + i + "_popup");
-        popup.classList.remove("h5p-isaac-feedback-incorrect", "h5p-isaac-feedback-expand");
+        toggleFeedbackButton(contentID, i, "hide");
+        toggleInfoButton(contentID, i, "hide");
+        togglePopup(contentID, i, "", "collapse")
+        resetPassageHighlights(contentID, i);
         resetQuestionHighlights(contentID, i);
       }
       this.showButton('check-answer');
