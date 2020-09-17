@@ -39,8 +39,11 @@
 .h5p-isaac-highlight {
   background-color: #fff2a8;
 }
-.h5p-isaac-hidden {
+.h5p-isaac-highlight-hidden {
   background-color: transparent !important;
+}
+.h5p-isaac-hidden {
+  display: none !important;
 }
 hr {
   border: 0;

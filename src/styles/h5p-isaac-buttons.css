@@ -25,10 +25,6 @@
     animation-name: fadeout;
     animation-duration: 0.5s;
 }
-.h5p-isaac-button-hidden {
-    display: none !important;
-}
-
 .h5p-isaac-input-button {
     display: inline-block;
     position: absolute !important;

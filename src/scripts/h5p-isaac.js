@@ -189,7 +189,7 @@ export default class ISAAC extends H5P.Question {
 
         const inputField = document.getElementById(contentID + "_input_" + i);
         if (!inputField.parentElement.classList.contains("h5p-isaac-input-correct")) {
-          // only replace answers that have not already been marked correct
+          // only replace answers that have not already been marked correct (?)
           inputField.textContent = answer.value;
         }
 
@@ -217,7 +217,7 @@ export default class ISAAC extends H5P.Question {
         toggleCheckmark(contentID, i, false);
         toggleFeedbackButton(contentID, i, "hide");
         toggleInfoButton(contentID, i, "hide");
-        togglePopup(contentID, i, "", "collapse")
+        togglePopup(contentID, i, "", "collapse");
         resetPassageHighlights(contentID, i);
         resetQuestionHighlights(contentID, i);
       }

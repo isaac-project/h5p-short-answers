@@ -34,13 +34,20 @@ export class ISAACFieldListener {
 
     handleEvent(e) {
 
+        const suggestion = {};
+
         if (this.action === "intermediate") {
 
             // TODO calculate error correction
-            const suggestion = { text: "Did you mean...?" }
-            displaySuggestion(this.taskID, this.fieldID, suggestion);
+            suggestion.text = "42";
 
-        } else if (this.action === "final") {
+        }
+
+        if (suggestion.text) {
+
+            displaySuggestion(this.taskID, this.fieldID, this.solutions, this.backend, suggestion);
+
+        } else if (!suggestion.text || (this.action === "final")) {
 
             const feedbackReq = new ISAACFeedbackRequest(location.hostname, this.taskID, this.fieldID, e);
 

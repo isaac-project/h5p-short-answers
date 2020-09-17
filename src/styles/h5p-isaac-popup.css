@@ -16,15 +16,15 @@
 }
 .h5p-isaac-popup-text {
     padding-left: 7px;
-    padding-right: 30px;
+    padding-right: 45px;
 }
-.h5p-isaac-suggestion {
+.h5p-isaac-popup-suggestion {
     background-color: #fed8b1;
 }
-.h5p-isaac-feedback-correct {
+.h5p-isaac-popup-correct {
     background-color: #ACEFC7;
 }
-.h5p-isaac-feedback-incorrect {
+.h5p-isaac-popup-incorrect {
     background-color: #ffc0cb;
 }
 .h5p-isaac-popup-button {
@@ -32,6 +32,15 @@
     font-size: 1em;
     line-height: 0;
     font-weight: bold;
+    border: 0;
+    padding: 0;
+}
+.h5p-isaac-popup-button-yes {
+    position: absolute;
+    right: 25px;
+    top: 12px;
+}
+.h5p-isaac-popup-button-no {
     position: absolute;
     right: 5px;
     top: 12px;
