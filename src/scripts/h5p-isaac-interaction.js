@@ -24,37 +24,48 @@ export class ISAACFeedbackResponse {
 }
 
 export class ISAACFieldListener {
-    constructor(taskID, fieldID, solutions, backend) {
+    constructor(taskID, fieldID, solutions, backend, action) {
         this.taskID = taskID;
         this.fieldID = fieldID;
         this.solutions = solutions;
         this.backend = backend;
+        this.action = action;
     }
 
     handleEvent(e) {
-        const feedbackReq = new ISAACFeedbackRequest(location.hostname, this.taskID, this.fieldID, e);
 
-        fetch(this.backend + "feedback/get", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(feedbackReq),
-        })
-        .then((response) => response.json())
-        .then((feedbackResp) => {
+        if (this.action === "intermediate") {
 
-            if (feedbackResp.feedbackCode.localeCompare(1) === 0) {
-                displayCorrect(this.taskID, this.fieldID);
-            } else {
-                displayIncorrect(this.taskID, this.fieldID, feedbackResp);
-            }
+            // TODO calculate error correction
+            const suggestion = { text: "Did you mean...?" }
+            displaySuggestion(this.taskID, this.fieldID, suggestion);
 
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            // TODO display error
-        });
+        } else if (this.action === "final") {
+
+            const feedbackReq = new ISAACFeedbackRequest(location.hostname, this.taskID, this.fieldID, e);
+
+            fetch(this.backend + "feedback/get", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(feedbackReq),
+            })
+                .then((response) => response.json())
+                .then((feedbackResp) => {
+
+                    if (feedbackResp.feedbackCode.localeCompare(1) === 0) {
+                        displayCorrect(this.taskID, this.fieldID);
+                    } else {
+                        displayIncorrect(this.taskID, this.fieldID, feedbackResp);
+                    }
+
+            })
+                .catch((error) => {
+                console.error('Error:', error);
+                // TODO display error
+            });
+        }
     }
 }
 
@@ -83,29 +94,4 @@ export function uploadTask(isaacTask, backend) {
         .catch((error) => {
             console.error('Error:', error);
         });
-}
-
-export class ISAACErrorCorrection { // TODO combine with ISAACFieldListener
-    constructor(taskID, fieldID, solutions, backend) {
-        this.taskID = taskID;
-        this.fieldID = fieldID;
-        this.solutions = solutions;
-        this.backend = backend;
-    }
-
-    handleEvent(e) {
-
-        // TODO calculate error correction
-        // e = student answer
-
-        // dummy
-        const suggestion = { text: "Did you mean...?" }
-
-        if (suggestion) {
-            displaySuggestion(this.taskID, this.fieldID, suggestion);
-        } else {
-            const listener = new ISAACFieldListener(this.taskID, this.fieldID, this.solutions, this.backend);
-            listener.handleEvent(e);
-        }
-    }
 }

@@ -1,4 +1,4 @@
-import { ISAACFieldListener, ISAACErrorCorrection } from './h5p-isaac-interaction';
+import { ISAACFieldListener } from './h5p-isaac-interaction';
 import { togglePopup } from './h5p-isaac-function.js';
 
 export default class ISAACContent {
@@ -81,7 +81,7 @@ export default class ISAACContent {
         if (e.key === 'Enter') {
           e.preventDefault();
           const answer = document.getElementById(`${contentID}_input_${i}`).textContent;
-          const listener = new ISAACErrorCorrection(contentID, i, questions[i].targets, backend);
+          const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, "intermediate");
           listener.handleEvent(answer);
           userInput.blur(); // remove focus from text input; currently cursor is undesirably being set to index 0
         }
@@ -117,9 +117,9 @@ export default class ISAACContent {
       // enterButton.appendChild(buttonTooltipText);
       enterButton.addEventListener("click", function (e) {
         const answer = document.getElementById(`${contentID}_input_${i}`).textContent;
-        const listener = new ISAACErrorCorrection(contentID, i, questions[i].targets, backend);
+        const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, "intermediate");
         listener.handleEvent(answer);
-        enterButton.blur();
+        enterButton.blur(); // remove focus from button
       });
 
       // feedback button
@@ -128,7 +128,7 @@ export default class ISAACContent {
       feedbackButton.classList.add('h5p-isaac-button', 'h5p-isaac-feedback-button', 'h5p-isaac-button-hidden', 'tooltip');
       feedbackButton.addEventListener("click", function (e) {
         togglePopup(contentID, i, "", "toggle");
-        feedbackButton.blur();
+        feedbackButton.blur(); // remove focus from button
       });
       const feedbackTooltipText = document.createElement('span');
       feedbackTooltipText.classList.add('tooltiptext');
@@ -142,12 +142,12 @@ export default class ISAACContent {
       infoButton.addEventListener("click", function (e) {
         const target = document.getElementById(`${contentID}_mark_${i + 1}`);
         if (target !== null) {
-          target.scrollIntoView({ // not supported by Safari and iOS
-            behavior: 'smooth',
+          target.scrollIntoView({
+            behavior: 'smooth', // not supported by Safari and iOS
             block: 'center'
           });
         }
-        infoButton.blur();
+        infoButton.blur(); // remove focus from button
       });
       const infoTooltipText = document.createElement('span');
       infoTooltipText.classList.add('tooltiptext');
@@ -168,14 +168,14 @@ export default class ISAACContent {
       yes.onclick = () => {
         // TODO replace user answer with suggestion
         const answer = document.getElementById(`${contentID}_input_${i}`).textContent;
-        const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend);
+        const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, "final");
         listener.handleEvent(answer);
       };
       // const no = document.createElement('div'); // TODO change to button
       // no.classList.add('h5p-isaac-popup-button', 'h5p-isaac-popup-button-no');
       // no.onclick = () => {
       //   const answer = document.getElementById(`${contentID}_input_${i}`).textContent;
-      //   const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend);
+      //   const listener = new ISAACFieldListener(contentID, i, questions[i].targets, backend, "final");
       //   listener.handleEvent(answer);
       // }
 
