@@ -46,5 +46,5 @@
 [contenteditable]:before {
  /* unicode fixed-width whitespace
     preserves div height when empty */
-    content: "\feff";
+    content: '\feff';
 }

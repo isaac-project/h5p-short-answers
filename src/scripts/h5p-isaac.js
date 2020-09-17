@@ -1,7 +1,7 @@
 import ISAACContent from './h5p-isaac-content';
 import { ISAACTask, uploadTask } from './h5p-isaac-interaction';
 import { resetPassageHighlights, resetQuestionHighlights,
-  toggleCheckmark, toggleFeedbackButton, toggleInfoButton, togglePopup } from "./h5p-isaac-function";
+  toggleCheckmark, toggleFeedbackButton, toggleInfoButton, togglePopup } from './h5p-isaac-function';
 
 const UPLOAD_TASK_DATA = true;
 
@@ -24,7 +24,7 @@ export default class ISAAC extends H5P.Question {
 
     // upload task to server
     if (UPLOAD_TASK_DATA) {
-      const serverTaskContent = H5PIntegration.contents["cid-" + contentID];
+      const serverTaskContent = H5PIntegration.contents[`cid-${contentID}`];
       const isaacTask = new ISAACTask(location.hostname,
         contentID,
         serverTaskContent.metadata.title,
@@ -124,18 +124,18 @@ export default class ISAAC extends H5P.Question {
 
       let answered = true;
       for (let i = 0; i < this.params.questions.length; i++) {
-        const input = document.getElementById(contentID + "_" + i);
-        if (input.value.trim() === "") {
+        const input = document.getElementById(`${contentID}_${i}`);
+        if (input.value.trim() === '') {
 
-          // TODO: pop-up/text box - "must attempt all questions" (?)
+          // TODO: pop-up/text box - 'must attempt all questions' (?)
 
           // highlight empty blanks
           if (input.className === 'h5p-isaac-input')
-            input.classList.toggle("h5p-isaac-incorrect");
+            input.classList.toggle('h5p-isaac-incorrect');
 
           // remove highlight when user has returned to blank
           input.addEventListener('focus',
-              () => input.classList.remove("h5p-isaac-incorrect"), false);
+              () => input.classList.remove('h5p-isaac-incorrect'), false);
 
           answered = false;
         }
@@ -155,8 +155,8 @@ export default class ISAAC extends H5P.Question {
 
       // iterate over all questions
       for (let i = 0; i < this.params.questions.length; i++) {
-        const input = document.getElementById(contentID + "_input_" + i);
-        if (input.parentElement.classList.contains("h5p-isaac-input-correct"))
+        const input = document.getElementById(`${contentID}_${i}_input`);
+        if (input.parentElement.classList.contains('h5p-isaac-input-correct'))
           num_correct++;
       }
 
@@ -184,18 +184,18 @@ export default class ISAAC extends H5P.Question {
 
       for (let i = 0; i < this.params.questions.length; i++) {
         // certain characters are escaped (Character Entity References)
-        const answer = document.createElement("textarea");
+        const answer = document.createElement('textarea');
         answer.innerHTML = this.params.questions[i].targets[0];
 
-        const inputField = document.getElementById(contentID + "_input_" + i);
-        if (!inputField.parentElement.classList.contains("h5p-isaac-input-correct")) {
+        const inputField = document.getElementById(`${contentID}_${i}_input`);
+        if (!inputField.parentElement.classList.contains('h5p-isaac-input-correct')) {
           // only replace answers that have not already been marked correct (?)
           inputField.textContent = answer.value;
         }
 
-        toggleFeedbackButton(contentID, i, "hide");
-        toggleInfoButton(contentID, i, "hide");
-        togglePopup(contentID, i, "", "collapse");
+        toggleFeedbackButton(contentID, i, 'hide');
+        toggleInfoButton(contentID, i, 'hide');
+        togglePopup(contentID, i, '', 'collapse');
         resetPassageHighlights(contentID, i);
         resetQuestionHighlights(contentID, i);
       }
@@ -210,14 +210,14 @@ export default class ISAAC extends H5P.Question {
     this.resetTask = () => {
 
       for (let i = 0; i < this.params.questions.length; i++) {
-        const input = document.getElementById(contentID + "_input_" + i);
+        const input = document.getElementById(`${contentID}_${i}_input`);
         input.textContent = '';
-        input.parentElement.setAttribute("class", "h5p-isaac-input-wrapper");
+        input.parentElement.setAttribute('class', 'h5p-isaac-input-wrapper');
 
         toggleCheckmark(contentID, i, false);
-        toggleFeedbackButton(contentID, i, "hide");
-        toggleInfoButton(contentID, i, "hide");
-        togglePopup(contentID, i, "", "collapse");
+        toggleFeedbackButton(contentID, i, 'hide');
+        toggleInfoButton(contentID, i, 'hide');
+        togglePopup(contentID, i, '', 'collapse');
         resetPassageHighlights(contentID, i);
         resetQuestionHighlights(contentID, i);
       }
@@ -360,7 +360,7 @@ export default class ISAAC extends H5P.Question {
     this.getCurrentState = () => {
       const responses = [];
       for (let i = 0; i < this.params.questions.length; i++) {
-        responses.push(document.getElementById(contentID + "_" + i).firstElementChild.textContent);
+        responses.push(document.getElementById(`${contentID}_${i}`).firstElementChild.textContent);
         // TODO also include underline color, text/prompt highlight, feedback popup if open?
       }
       return { responses: responses };

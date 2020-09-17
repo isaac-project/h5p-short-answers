@@ -32,28 +32,28 @@
     bottom: 4px; /* match input-wrapper padding */
 }
 .h5p-isaac-enter:before {
-    font-family: "H5PFontAwesome4";
+    font-family: 'H5PFontAwesome4';
     font-size: 3em;
-    content: "\f149";
+    content: '\f149';
     display: inline-block;
     transform: rotate(90deg);
 }
 .h5p-isaac-check:before {
-    font-family: "H5PFontAwesome4";
+    font-family: 'H5PFontAwesome4';
     font-size: 2em;
-    content: "\f00c";
+    content: '\f00c';
     color: #48b57e;
     display: inline-block;
 }
 .h5p-isaac-info:before {
-    font-family: "H5PFontAwesome4";
+    font-family: 'H5PFontAwesome4';
     content: '\f05a';
     font-size: 2em;
     display: inline-block;
     padding: 0 0 0 10px;
 }
 .h5p-isaac-feedback-button:before {
-    font-family: "H5PFontAwesome4";
+    font-family: 'H5PFontAwesome4';
     content: '\f0e5';
     font-size: 2em;
     display: inline-block;
