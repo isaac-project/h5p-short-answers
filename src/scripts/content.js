@@ -109,7 +109,7 @@ export default class ISAACContent {
       enterTooltipText.innerText = 'Get Feedback'; // TODO: get localized text (from semantics?)
       // enterButton.appendChild(enterTooltipText);
       enterButton.addEventListener('click', () => {
-        handleInput(contentID, i, userInput, listener);
+        handleInput(contentID, i, enterButton, listener);
       });
 
       // feedback toggle button

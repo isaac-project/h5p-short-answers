@@ -23,8 +23,8 @@ export function displaySuggestion(contentID, fieldID, targets, backend, suggesti
     toggleCheckmark(contentID, fieldID, 'hide');
     toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_feedback_button`));
     toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_info`));
-    togglePopup(contentID, fieldID, 'orange', 'expand');
     toggleYN(contentID, fieldID, suggestion, targets, backend, 'show');
+    togglePopup(contentID, fieldID, 'orange', 'expand');
 }
 
 export function displayIncorrect(contentID, fieldID, feedback) {
@@ -177,30 +177,26 @@ export function toggleYN(contentID, fieldID, suggestion, targets, backend, actio
     if (action === 'show' || (action === 'toggle'
         && thumbsUp.classList.contains('h5p-isaac-hidden') && thumbsDown.classList.contains('h5p-isaac-hidden'))) {
         thumbsUp.classList.remove('h5p-isaac-hidden');
-        if (type === 'suggestion') {
-            thumbsUp.onclick = () => {
-                // replace input field with updated suggestion
-                const answer = document.getElementById(`${contentID}_${fieldID}_input`);
-                answer.textContent = suggestion.text;
-                togglePopup(contentID, fieldID, '', 'collapse');
-                setTimeout(() => {
-                    const listener = new ISAACFieldListener(contentID, fieldID, targets, backend, 'final');
-                    listener.handleEvent(answer.textContent);
-                }, 250); // ms; 0.25 seconds
-                thumbsUp.blur();
-            };
-            thumbsDown.classList.remove('h5p-isaac-hidden');
-            thumbsDown.onclick = () => {
-                togglePopup(contentID, fieldID, '', 'collapse');
-                setTimeout(() => {
-                    const listener = new ISAACFieldListener(contentID, fieldID, targets, backend, 'final');
-                    listener.handleEvent(document.getElementById(`${contentID}_${fieldID}_input`).textContent);
-                }, 250); // ms; 0.25 seconds
-                thumbsDown.blur();
-            };
-        } else if (type === 'feedback') {
-            // red popup
-        }
+        thumbsUp.onclick = () => {
+            // replace input field with updated suggestion
+            const answer = document.getElementById(`${contentID}_${fieldID}_input`);
+            answer.textContent = suggestion.text;
+            togglePopup(contentID, fieldID, '', 'collapse');
+            setTimeout(() => {
+                const listener = new ISAACFieldListener(contentID, fieldID, targets, backend, 'final');
+                listener.handleEvent(answer.textContent);
+            }, 250); // ms; 0.25 seconds
+            thumbsUp.blur();
+        };
+        thumbsDown.classList.remove('h5p-isaac-hidden');
+        thumbsDown.onclick = () => {
+            togglePopup(contentID, fieldID, '', 'collapse');
+            setTimeout(() => {
+                const listener = new ISAACFieldListener(contentID, fieldID, targets, backend, 'final');
+                listener.handleEvent(document.getElementById(`${contentID}_${fieldID}_input`).textContent);
+            }, 250); // ms; 0.25 seconds
+            thumbsDown.blur();
+        };
     } else if (action === 'hide' || (action === 'toggle'
         && !thumbsUp.classList.contains('h5p-isaac-hidden') && !thumbsDown.classList.contains('h5p-isaac-hidden'))) {
         document.getElementById(`${contentID}_${fieldID}_yes`).classList.add('h5p-isaac-hidden');
