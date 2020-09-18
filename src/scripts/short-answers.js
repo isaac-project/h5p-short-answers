@@ -1,7 +1,7 @@
-import ISAACContent from './h5p-isaac-content';
-import { ISAACTask, uploadTask } from './h5p-isaac-interaction';
+import ISAACContent from './content';
+import { ISAACTask, uploadTask } from './interaction';
 import { resetPassageHighlights, resetQuestionHighlights,
-  toggleCheckmark, toggleFeedbackButton, toggleInfoButton, togglePopup } from './h5p-isaac-function';
+  toggleCheckmark, toggleFeedbackButton, toggleInfoButton, togglePopup } from './function';
 
 const UPLOAD_TASK_DATA = true;
 
@@ -15,12 +15,12 @@ const UPLOAD_TASK_DATA = true;
 export default class ISAAC extends H5P.Question {
   /**
    * @constructor
-   * @param {object} params Parameters passed by the editor.
-   * @param {number} contentID Content's id.
-   * @param {object} [extras] Saved state, metadata, etc.
+   * @param semantics {object} Parameters defined in semantics.json, with "name" as key
+   * @param contentID {number} Integer representing the content ID
+   * @param [extras] {object} Saved state, metadata, etc.
    */
-  constructor(params, contentID, extras = {}) {
-    super('isaac');
+  constructor(semantics, contentID, extras = {}) {
+    super('short-answers');
 
     // upload task to server
     if (UPLOAD_TASK_DATA) {
@@ -29,16 +29,16 @@ export default class ISAAC extends H5P.Question {
         contentID,
         serverTaskContent.metadata.title,
         serverTaskContent.library,
-        params);
-      uploadTask(isaacTask, params.backend);
+        semantics);
+      uploadTask(isaacTask, semantics.backend);
     }
 
-    this.params = params;
+    this.semantics = semantics;
     this.contentID = contentID;
     this.extras = extras;
 
-    // make sure all variables are set (used by H5P's question type)
-    this.params = extend({
+    // make sure all variables are set (used by H5P's question type) // TODO make sure this is complete and correct
+    this.semantics = extend({
       overallFeedback: [],
       scoreBarLabel: 'You got :num out of :total points',
       behaviour: {
@@ -50,7 +50,7 @@ export default class ISAAC extends H5P.Question {
         showSolution: 'Show Solution',
         tryAgain: 'Retry'
       }
-    }, this.params);
+    }, this.semantics);
 
     // this.previousState now holds the saved content state of the previous session
     this.previousState = this.extras.previousState || {};
@@ -60,31 +60,29 @@ export default class ISAAC extends H5P.Question {
      */
     this.registerDomElements = () => {
 
-      // setImage and setVideo are H5P functions that seem to put media before all other content
-      if (this.params.media) { //  && media.type && media.type.library
-        const media = this.params.media;
+      if (this.semantics.media) { // && media.type && media.type.library
+        // TODO add support for more than one media instance?
+        // TODO figure out how to position image before/after/within passage if desired by content author
+        const media = this.semantics.media;
         const type = media.library.split(' ')[0];
-        if ((type === 'H5P.Image') && (media.params.file)) {
-          this.setImage(media.params.file.path, {
-            disableImageZooming: this.params.media.disableImageZooming || true,
-            alt: media.params.alt,
-            title: media.params.title
+        if ((type === 'H5P.Image') && (media.semantics.file)) {
+          this.setImage(media.semantics.file.path, {
+            disableImageZooming: this.semantics.media.disableImageZooming || true,
+            alt: media.semantics.alt,
+            title: media.semantics.title
           });
         }
-        else if ((type === 'H5P.Video') && (media.params.sources)) {
+        else if ((type === 'H5P.Video') && (media.semantics.sources)) {
           this.setVideo(media);
         }
       }
-      const content = new ISAACContent(
-        this.params.task,
-        this.params.passage,
-        this.params.questions,
-        this.contentID,
-        this.params.backend,
-        this.previousState
-      );
 
       // Register content with H5P.Question
+      const content = new ISAACContent(
+        this.semantics,
+        this.contentID,
+        this.previousState
+      );
       this.setContent(content.getDOM());
 
       // Register Buttons
@@ -95,9 +93,9 @@ export default class ISAAC extends H5P.Question {
      * Add all the buttons that shall be passed to H5P.Question.
      */
     this.addButtons = () => {
-      this.addButton('check-answer', this.params.l10n.submitAnswer, () => this.showEvaluation(), true, {}, {});
-      this.addButton('show-solution', this.params.l10n.showSolution, () => this.showSolutions(), false, {}, {});
-      this.addButton('try-again', this.params.l10n.tryAgain, () => this.resetTask(), false, {}, {});
+      this.addButton('check-answer', this.semantics.l10n.submitAnswer, () => this.showEvaluation(), true, {}, {});
+      this.addButton('show-solution', this.semantics.l10n.showSolution, () => this.showSolutions(), false, {}, {});
+      this.addButton('try-again', this.semantics.l10n.tryAgain, () => this.resetTask(), false, {}, {});
     };
 
     /**
@@ -105,14 +103,14 @@ export default class ISAAC extends H5P.Question {
      */
     this.showEvaluation = () => {
 
-      // require all blanks to be filled
+      // TODO add boolean flag in semantics, whether all questions must be attempted
       // if (!this.getAnswerGiven()) return;
 
       const maxScore = this.getMaxScore();
       const score = this.getScore();
-      const scoreText = H5P.Question.determineOverallFeedback(this.params.overallFeedback, score / maxScore)
+      const scoreText = H5P.Question.determineOverallFeedback(this.semantics.overallFeedback, score / maxScore)
           .replace('@score', score).replace('@total', maxScore);
-      this.setFeedback(scoreText, score, maxScore, this.params.scoreBarLabel);
+      this.setFeedback(scoreText, score, maxScore, this.semantics.scoreBarLabel);
     };
 
     /**
@@ -120,28 +118,7 @@ export default class ISAAC extends H5P.Question {
      * @return {boolean} True, if answer was given.
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-1}
      */
-    this.getAnswerGiven = () => {
-
-      let answered = true;
-      for (let i = 0; i < this.params.questions.length; i++) {
-        const input = document.getElementById(`${contentID}_${i}`);
-        if (input.value.trim() === '') {
-
-          // TODO: pop-up/text box - 'must attempt all questions' (?)
-
-          // highlight empty blanks
-          if (input.className === 'h5p-isaac-input')
-            input.classList.toggle('h5p-isaac-incorrect');
-
-          // remove highlight when user has returned to blank
-          input.addEventListener('focus',
-              () => input.classList.remove('h5p-isaac-incorrect'), false);
-
-          answered = false;
-        }
-      }
-      return answered;
-    };
+    this.getAnswerGiven = () => { return true; }
 
     /**
      * Get latest score.
@@ -151,19 +128,18 @@ export default class ISAAC extends H5P.Question {
     this.getScore = () => {
 
       this.hideButton('check-answer');
-      let num_correct = 0;
 
-      // iterate over all questions
-      for (let i = 0; i < this.params.questions.length; i++) {
+      // TODO define actual scoring mechanism
+      let num_correct = 0;
+      for (let i = 0; i < this.semantics.questions.length; i++) {
         const input = document.getElementById(`${contentID}_${i}_input`);
         if (input.parentElement.classList.contains('h5p-isaac-input-correct'))
           num_correct++;
       }
-
-      if (num_correct !== this.getMaxScore() && this.params.behaviour.enableSolutionsButton) {
+      if (num_correct !== this.getMaxScore() && this.semantics.behaviour.enableSolutionsButton) {
         this.showButton('show-solution');
       }
-      if (this.params.behaviour.enableRetry) {
+      if (this.semantics.behaviour.enableRetry) {
         this.showButton('try-again');
       }
       return num_correct;
@@ -174,7 +150,7 @@ export default class ISAAC extends H5P.Question {
      * @return {number} Score necessary for mastering.
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-3}
      */
-    this.getMaxScore = () => this.params.questions.length; // TODO: define question values in semantics?
+    this.getMaxScore = () => this.semantics.questions.length; // TODO: define question values in semantics?
 
     /**
      * Show solutions.
@@ -182,14 +158,14 @@ export default class ISAAC extends H5P.Question {
      */
     this.showSolutions = () => {
 
-      for (let i = 0; i < this.params.questions.length; i++) {
+      for (let i = 0; i < this.semantics.questions.length; i++) {
         // certain characters are escaped (Character Entity References)
         const answer = document.createElement('textarea');
-        answer.innerHTML = this.params.questions[i].targets[0];
+        answer.innerHTML = this.semantics.questions[i].targets[0];
 
         const inputField = document.getElementById(`${contentID}_${i}_input`);
         if (!inputField.parentElement.classList.contains('h5p-isaac-input-correct')) {
-          // only replace answers that have not already been marked correct (?)
+          // only replace answers that have not already been marked correct
           inputField.textContent = answer.value;
         }
 
@@ -209,7 +185,7 @@ export default class ISAAC extends H5P.Question {
      */
     this.resetTask = () => {
 
-      for (let i = 0; i < this.params.questions.length; i++) {
+      for (let i = 0; i < this.semantics.questions.length; i++) {
         const input = document.getElementById(`${contentID}_${i}_input`);
         input.textContent = '';
         input.parentElement.setAttribute('class', 'h5p-isaac-input-wrapper');
@@ -224,7 +200,7 @@ export default class ISAAC extends H5P.Question {
       this.showButton('check-answer');
       this.hideButton('show-solution');
       this.hideButton('try-again');
-      this.removeFeedback(); // remove score bar
+      this.removeFeedback(); // score bar
       this.trigger('resize');
     };
 
@@ -328,7 +304,7 @@ export default class ISAAC extends H5P.Question {
      * @return {string} Description.
      */
     // TODO: Have a field for a task description in the editor if you need one.
-    this.getDescription = () => this.params.taskDescription || ISAAC.DEFAULT_DESCRIPTION;
+    this.getDescription = () => this.semantics.taskDescription || ISAAC.DEFAULT_DESCRIPTION;
 
     /**
      * Extend an array just like JQuery's extend.
@@ -359,9 +335,9 @@ export default class ISAAC extends H5P.Question {
      */
     this.getCurrentState = () => {
       const responses = [];
-      for (let i = 0; i < this.params.questions.length; i++) {
+      for (let i = 0; i < this.semantics.questions.length; i++) {
         responses.push(document.getElementById(`${contentID}_${i}`).firstElementChild.textContent);
-        // TODO also include underline color, text/prompt highlight, feedback popup if open?
+        // TODO also include underline color, text/prompt highlight, feedback popup if expanded, etc.?
       }
       return { responses: responses };
     };
@@ -369,4 +345,4 @@ export default class ISAAC extends H5P.Question {
 }
 
 /** @constant {string} */
-ISAAC.DEFAULT_DESCRIPTION = 'Hello World';
+ISAAC.DEFAULT_DESCRIPTION = 'H5P Short Answers';

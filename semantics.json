@@ -122,6 +122,29 @@
     }
   },
   {
+    "name": "feedbackPreference",
+    "type": "select",
+    "label": "Display feedback:",
+    "options": [
+      {
+        "value": "onRequest",
+        "label": "on request"
+      },
+      {
+        "value": "immediately",
+        "label": "immediately [not yet implemented]"
+      }
+    ],
+    "default": "onRequest"
+  },
+  {
+    "name": "feedbackHelpful",
+    "type": "boolean",
+    "label": "Display 'Feedback Helpful'?",
+    "description": "Prompt students when feedback is delivered, for development purposes [not yet implemented]",
+    "default": false
+  },
+  {
     "label": "Backend server",
     "name": "backend",
     "type": "text",

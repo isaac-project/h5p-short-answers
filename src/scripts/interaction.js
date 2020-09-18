@@ -1,4 +1,4 @@
-import { displayCorrect, displayIncorrect, displaySuggestion } from "./h5p-isaac-function";
+import { displayCorrect, displayIncorrect, displaySuggestion } from "./function";
 
 export class ISAACFeedbackRequest {
     constructor(host, taskID, fieldID, learnerAnswer) {

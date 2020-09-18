@@ -1,24 +1,24 @@
 {
-  "title": "ISAAC",
-  "description": "Example H5P content type for getting started",
+  "title": "Short Answers",
+  "description": "Create a set of reading or listening comprehension questions with interactive feedback",
   "machineName": "H5P.ISAAC",
   "majorVersion": 1,
   "minorVersion": 0,
   "patchVersion": 0,
   "runnable": 1,
-  "author": "Joubel",
+  "author": "University of Tübingen",
   "license": "MIT",
   "embedTypes": [
     "div"
   ],
   "preloadedJs": [
     {
-      "path": "dist/h5p-isaac.js"
+      "path": "dist/short-answers.js"
     }
   ],
   "preloadedCss": [
     {
-      "path": "dist/h5p-isaac.css"
+      "path": "dist/short-answers.css"
     }
   ],
   "preloadedDependencies": [

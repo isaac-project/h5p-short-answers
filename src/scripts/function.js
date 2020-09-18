@@ -1,4 +1,4 @@
-import { ISAACFieldListener } from './h5p-isaac-interaction';
+import { ISAACFieldListener } from './interaction';
 
 export function displaySuggestion(contentID, fieldID, targets, backend, suggestion) {
     'use strict';
@@ -12,7 +12,7 @@ export function displaySuggestion(contentID, fieldID, targets, backend, suggesti
         const answer = document.getElementById(`${contentID}_${fieldID}_input`);
         answer.textContent = suggestion.text;
         togglePopup(contentID, fieldID, '', 'collapse');
-        setTimeout(function() {
+        setTimeout(() => {
             const listener = new ISAACFieldListener(contentID, fieldID, targets, backend, 'final');
             listener.handleEvent(answer.textContent);
         }, 250); // ms; 0.25 seconds
@@ -23,7 +23,7 @@ export function displaySuggestion(contentID, fieldID, targets, backend, suggesti
     thumbsDown.classList.remove('h5p-isaac-hidden');
     thumbsDown.onclick = () => {
         togglePopup(contentID, fieldID, '', 'collapse');
-        setTimeout(function() {
+        setTimeout(() => {
             const listener = new ISAACFieldListener(contentID, fieldID, targets, backend, 'final');
             listener.handleEvent(document.getElementById(`${contentID}_${fieldID}_input`).textContent);
         }, 250); // ms; 0.25 seconds
@@ -56,7 +56,8 @@ export function displayIncorrect(contentID, fieldID, feedback) {
     if (passageHighlight !== null) {
         const infoButton = document.getElementById(`${contentID}_${fieldID}_info`);
         infoButton.onclick = () => {
-            showPassageHighlight(contentID, fieldID); // TODO toggle instead?
+            resetPassageHighlights(contentID, -1);
+            showPassageHighlight(contentID, fieldID);
             passageHighlight.scrollIntoView({
                 behavior: 'smooth', // not supported by Safari and iOS
                 block: 'center'
@@ -66,9 +67,12 @@ export function displayIncorrect(contentID, fieldID, feedback) {
         toggleInfoButton(contentID, fieldID, 'show');
     }
 
+    resetPassageHighlights(contentID, -1);
+    resetQuestionHighlights(contentID, fieldID);
     changeColor('red', 'input', document.getElementById(`${contentID}_${fieldID}`));
     toggleCheckmark(contentID, fieldID, false);
     toggleFeedbackButton(contentID, fieldID, 'show');
+    togglePopup(contentID, fieldID, '', 'collapse');
 }
 
 export function displayCorrect(contentID, fieldID) {
@@ -99,10 +103,10 @@ export function resetPassageHighlights(contentID, fieldID) {
 
 export function resetQuestionHighlights(contentID, fieldID) {
     'use strict';
-    const questionHighlights = document.getElementById(`${contentID}_${fieldID + 1}_prompt`);
+    const questionHighlights = document.getElementById(`${contentID}_${fieldID + 1}_question`);
     if (questionHighlights !== null) {
         // double quotes required for regex to work!
-        const highlightPattern = /<span id="\d+_\d+_prompt_highlight" class="h5p-isaac-highlight">|<\/span>/gi;
+        const highlightPattern = /<span id="\d+_\d+_question_highlight" class="h5p-isaac-highlight">|<\/span>/gi;
         questionHighlights.innerHTML = `${questionHighlights.innerHTML.replace(highlightPattern, '')}`;
     }
 }
@@ -129,7 +133,7 @@ export function togglePopup(contentID, fieldID, color, action) {
     } else if (action === 'collapse' || (action === 'toggle' && popup.classList.contains('h5p-isaac-popup-expand'))) {
         popup.classList.add('h5p-isaac-popup-collapsed');
         popup.classList.remove('h5p-isaac-popup-expand');
-        setTimeout(function() {
+        setTimeout(() => {
             popup.firstElementChild.classList.add('h5p-isaac-hidden');
             document.getElementById(`${contentID}_${fieldID}_yes`).classList.add('h5p-isaac-hidden');
             document.getElementById(`${contentID}_${fieldID}_no`).classList.add('h5p-isaac-hidden');
@@ -139,21 +143,21 @@ export function togglePopup(contentID, fieldID, color, action) {
 
 export function toggleQAHighlight(contentID, fieldID, feedback) { // TODO consolidate/modularize highlights properly
     'use strict';
-    const prompt = document.getElementById(`${contentID}_${fieldID + 1}_prompt`);
-    const promptHighlight = document.getElementById(`${contentID}_${fieldID + 1}_prompt_highlight`);
-    if (promptHighlight === null) {
+    const question = document.getElementById(`${contentID}_${fieldID + 1}_question`);
+    const questionHighlight = document.getElementById(`${contentID}_${fieldID + 1}_question_highlight`);
+    if (questionHighlight === null) {
         if (feedback.questionHighlightStart && feedback.questionHighlightEnd) {
-            const start = prompt.innerText.substring(0, feedback.questionHighlightStart);
-            const mark = prompt.innerText.substring(feedback.questionHighlightStart, feedback.questionHighlightEnd);
-            const end = prompt.innerText.substring(feedback.questionHighlightEnd, prompt.innerText.length);
-            const spanTag = `<span id= '${contentID}_${fieldID + 1}_prompt_highlight' class='h5p-isaac-highlight'>`;
-            prompt.innerHTML = `${start}${spanTag}${mark}</span>${end}`;
+            const start = question.innerText.substring(0, feedback.questionHighlightStart);
+            const mark = question.innerText.substring(feedback.questionHighlightStart, feedback.questionHighlightEnd);
+            const end = question.innerText.substring(feedback.questionHighlightEnd, question.innerText.length);
+            const spanTag = `<span id= '${contentID}_${fieldID + 1}_question_highlight' class='h5p-isaac-highlight'>`;
+            question.innerHTML = `${start}${spanTag}${mark}</span>${end}`;
             // TODO preserve existing HTML markup
         }
     } else {
         // double quotes required for regex to work!
-        const highlightPattern = /<span id="\d+_\d+_prompt_highlight" class="h5p-isaac-highlight">|<\/span>/gi;
-        prompt.innerHTML = `${prompt.innerHTML.replace(highlightPattern, '')}`;
+        const highlightPattern = /<span id="\d+_\d+_question_highlight" class="h5p-isaac-highlight">|<\/span>/gi;
+        question.innerHTML = `${question.innerHTML.replace(highlightPattern, '')}`;
     }
 
     const input = document.getElementById(`${contentID}_${fieldID}_input`);
@@ -210,7 +214,7 @@ export function toggleFeedbackButton(contentID, fieldID, action) {
     } else if (action === 'hide') {
         feedback.classList.remove('h5p-isaac-button-show');
         feedback.classList.add('h5p-isaac-button-hide');
-        setTimeout(function() {
+        setTimeout(() => {
             feedback.classList.add('h5p-isaac-hidden');
         }, 250); // ms; 0.25 seconds
     }
@@ -226,7 +230,7 @@ export function toggleInfoButton(contentID, fieldID, action) {
     } else if (action === 'hide') {
         info.classList.remove('h5p-isaac-button-show');
         info.classList.add('h5p-isaac-button-hide');
-        setTimeout(function () {
+        setTimeout(() => {
             info.classList.add('h5p-isaac-hidden');
         }, 250); // ms; 0.25 seconds
     }
@@ -253,5 +257,15 @@ function changeColor(color, type, element) {
             element.classList.remove(`h5p-isaac-${type}-correct`, `h5p-isaac-${type}-suggestion`);
             element.classList.add(`h5p-isaac-${type}-incorrect`);
             break;
+    }
+}
+
+export function handleInput(contentID, fieldID, element, listener) {
+    const inputField = document.getElementById(`${contentID}_${fieldID}_input`);
+    if (inputField.textContent.trim()) { // ignore empty input
+        // TODO only execute if answer differs from previous. store answer?
+        inputField.textContent = inputField.textContent.trim();
+        listener.handleEvent(document.getElementById(`${contentID}_${fieldID}_input`).textContent);
+        element.blur();
     }
 }
