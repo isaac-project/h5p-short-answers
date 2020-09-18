@@ -41,7 +41,8 @@ export default class ISAACContent {
 
     for (let i = 0; i < semantics.questions.length; i++) {
 
-      const listener = new ISAACFieldListener(contentID, i, semantics.questions[i].targets, semantics.backend, 'intermediate');
+      const listener = new ISAACFieldListener(
+          contentID, i, semantics.questions[i].targets, semantics.backend, 'intermediate');
 
       // question text
       let question = semantics.questions[i].question;
@@ -49,7 +50,7 @@ export default class ISAACContent {
       const questionWrapper = document.createElement('li');
       questionWrapper.classList.add('h5p-isaac-question-wrapper');
       questionWrapper.innerHTML = question.trim();
-      questionWrapper.firstElementChild.setAttribute('id', `${contentID}_${i + 1}_question`);
+      questionWrapper.firstElementChild.setAttribute('id', `${contentID}_${i}_question`);
       questionWrapper.firstElementChild.classList.add('h5p-isaac-question');
 
       // create wrapper for input field and icons
@@ -95,7 +96,8 @@ export default class ISAACContent {
         set.removeAllRanges();
         set.addRange(setpos);
         userInput.focus();
-        // TODO does not overwrite selected text;
+        // TODO does not overwrite selected text
+        // TODO preserve input highlighting (if present); toggleInputHighlight is currently inverted on paste
       });
 
       // create input button

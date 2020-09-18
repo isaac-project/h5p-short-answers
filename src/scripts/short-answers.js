@@ -1,7 +1,6 @@
 import ISAACContent from './content';
 import { ISAACTask, uploadTask } from './interaction';
-import { resetPassageHighlights, resetQuestionHighlights,
-  toggleCheckmark, toggleFeedbackButton, toggleInfoButton, togglePopup } from './function';
+import { togglePassageHighlights, toggleQAHighlights, toggleCheckmark, toggleButton, togglePopup } from './function';
 
 const UPLOAD_TASK_DATA = true;
 
@@ -118,7 +117,7 @@ export default class ISAAC extends H5P.Question {
      * @return {boolean} True, if answer was given.
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-1}
      */
-    this.getAnswerGiven = () => { return true; }
+    this.getAnswerGiven = () => { return true; };
 
     /**
      * Get latest score.
@@ -169,11 +168,11 @@ export default class ISAAC extends H5P.Question {
           inputField.textContent = answer.value;
         }
 
-        toggleFeedbackButton(contentID, i, 'hide');
-        toggleInfoButton(contentID, i, 'hide');
+        togglePassageHighlights(contentID, i, 'hide');
+        toggleQAHighlights(contentID, i, {}, 'question', 'hide');
+        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_feedback_button`));
+        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_info`));
         togglePopup(contentID, i, '', 'collapse');
-        resetPassageHighlights(contentID, i);
-        resetQuestionHighlights(contentID, i);
       }
       this.hideButton('show-solution');
       this.trigger('resize');
@@ -190,12 +189,12 @@ export default class ISAAC extends H5P.Question {
         input.textContent = '';
         input.parentElement.setAttribute('class', 'h5p-isaac-input-wrapper');
 
-        toggleCheckmark(contentID, i, false);
-        toggleFeedbackButton(contentID, i, 'hide');
-        toggleInfoButton(contentID, i, 'hide');
+        togglePassageHighlights(contentID, i, 'hide');
+        toggleQAHighlights(contentID, i, {}, 'question', 'hide');
+        toggleCheckmark(contentID, i, 'hide');
+        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_feedback_button`));
+        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_info`));
         togglePopup(contentID, i, '', 'collapse');
-        resetPassageHighlights(contentID, i);
-        resetQuestionHighlights(contentID, i);
       }
       this.showButton('check-answer');
       this.hideButton('show-solution');
