@@ -24,7 +24,7 @@ export function displaySuggestion(contentID, fieldID, targets, backend, suggesti
     toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_feedback_button`));
     toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_info`));
     togglePopup(contentID, fieldID, 'orange', 'expand');
-    toggleThumbs(contentID, fieldID, 'suggestion', suggestion, targets, backend, 'show');
+    toggleYN(contentID, fieldID, suggestion, targets, backend, 'show');
 }
 
 export function displayIncorrect(contentID, fieldID, feedback) {
@@ -170,17 +170,7 @@ export function togglePopup(contentID, fieldID, color, action) {
     }
 }
 
-/**
- *
- * @param contentID
- * @param fieldID
- * @param type {'suggestion', 'feedback'}
- * @param responseObj
- * @param targets
- * @param backend
- * @param action
- */
-export function toggleThumbs(contentID, fieldID, type, responseObj, targets, backend, action) {
+export function toggleYN(contentID, fieldID, suggestion, targets, backend, action) {
     'use strict';
     const thumbsUp = document.getElementById(`${contentID}_${fieldID}_yes`);
     const thumbsDown = document.getElementById(`${contentID}_${fieldID}_no`);
@@ -191,7 +181,7 @@ export function toggleThumbs(contentID, fieldID, type, responseObj, targets, bac
             thumbsUp.onclick = () => {
                 // replace input field with updated suggestion
                 const answer = document.getElementById(`${contentID}_${fieldID}_input`);
-                answer.textContent = responseObj.text;
+                answer.textContent = suggestion.text;
                 togglePopup(contentID, fieldID, '', 'collapse');
                 setTimeout(() => {
                     const listener = new ISAACFieldListener(contentID, fieldID, targets, backend, 'final');
