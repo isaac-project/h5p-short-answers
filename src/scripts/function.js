@@ -24,7 +24,7 @@ export function handleInput(contentID, fieldID, element, listener) {
  *
  * @param contentID
  * @param fieldID
- * @param targets Correct answers for this question/prompt as defined by content author (semantics.questions[i].targets)
+ * @param targets Correct answers for this question/prompt as defined by content author (semantics.questions[fieldID].targets)
  * @param backend
  * @param suggestion Object containing the proposed correction from the backend
  */
@@ -102,8 +102,8 @@ export function togglePassageHighlights(contentID, fieldID, action) {
         if (fieldID > 0 && highlight !== null) { // remove specific passage highlight
             highlight.classList.add('h5p-isaac-highlight-hidden');
         } else { // remove any and all passage highlights
-            for (let i = 1; i < document.getElementById(`${contentID}_questions`).childElementCount; i++) {
-                const passageHighlights = document.getElementById(`${contentID}_${i}_mark`);
+            for (let fieldID = 1; fieldID < document.getElementById(`${contentID}_questions`).childElementCount; fieldID++) {
+                const passageHighlights = document.getElementById(`${contentID}_${fieldID}_mark`);
                 if (passageHighlights !== null) { passageHighlights.classList.add('h5p-isaac-highlight-hidden'); }
             }
         }
@@ -245,7 +245,7 @@ export function togglePopup(contentID, fieldID, action, color) {
  * @param fieldID
  * @param action {'show', 'hide', 'toggle'}
  * @param suggestion Object containing the proposed correction from the backend
- * @param targets Correct answers for this question/prompt as defined by content author (semantics.questions[i].targets)
+ * @param targets Correct answers for this question/prompt as defined by content author (semantics.questions[fieldID].targets)
  * @param backend
  */
 export function toggleYN(contentID, fieldID, action, suggestion, targets, backend) {

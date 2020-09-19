@@ -62,7 +62,8 @@ export default class ShortAnswers extends H5P.Question {
     this.registerDomElements = () => {
 
       // add media to DOM
-      // TODO see if there is a way to position media (currently being placed before everything)
+      // TODO see if it's possible to do this in content.js
+      // TODO see if there is a way to provide option to position media (before/after/within passage text; dropdown in semantics?)
       if (this.semantics.media) { // && media.type && media.type.library (are these necessary?)
         // TODO add support for more than one media instance (via semantics; is this even feasible?)
         const media = this.semantics.media;
@@ -129,8 +130,8 @@ export default class ShortAnswers extends H5P.Question {
 
       // TODO define actual scoring mechanism
       let num_correct = 0;
-      for (let i = 0; i < this.semantics.questions.length; i++) {
-        const input = document.getElementById(`${contentID}_${i}_input`);
+      for (let fieldID = 0; fieldID < this.semantics.questions.length; fieldID++) {
+        const input = document.getElementById(`${contentID}_${fieldID}_input`);
         if (input.parentElement.classList.contains('h5p-isaac-input-correct'))
           num_correct++;
       }
@@ -156,22 +157,22 @@ export default class ShortAnswers extends H5P.Question {
      */
     this.showSolutions = () => {
 
-      for (let i = 0; i < this.semantics.questions.length; i++) {
+      for (let fieldID = 0; fieldID < this.semantics.questions.length; fieldID++) {
         // certain characters are escaped (Character Entity References)
         const answer = document.createElement('textarea');
-        answer.innerHTML = this.semantics.questions[i].targets[0];
+        answer.innerHTML = this.semantics.questions[fieldID].targets[0];
 
-        const inputField = document.getElementById(`${contentID}_${i}_input`);
+        const inputField = document.getElementById(`${contentID}_${fieldID}_input`);
         if (!inputField.parentElement.classList.contains('h5p-isaac-input-correct')) {
           // only replace answers that have not already been marked correct
           inputField.textContent = answer.value;
         }
 
-        togglePassageHighlights(contentID, i, 'hide');
-        toggleQAHighlights(contentID, i, 'hide', {}, 'question');
-        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_feedback_button`), {}, 'feedback');
-        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_info`), {}, 'passage');
-        togglePopup(contentID, i, 'hide', '');
+        togglePassageHighlights(contentID, fieldID, 'hide');
+        toggleQAHighlights(contentID, fieldID, 'hide', {}, 'question');
+        toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_feedback_button`), {}, 'feedback');
+        toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_info`), {}, 'passage');
+        togglePopup(contentID, fieldID, 'hide', '');
       }
       this.hideButton('show-solution');
       this.trigger('resize');
@@ -183,17 +184,17 @@ export default class ShortAnswers extends H5P.Question {
      */
     this.resetTask = () => {
 
-      for (let i = 0; i < this.semantics.questions.length; i++) {
-        const input = document.getElementById(`${contentID}_${i}_input`);
+      for (let fieldID = 0; fieldID < this.semantics.questions.length; fieldID++) {
+        const input = document.getElementById(`${contentID}_${fieldID}_input`);
         input.textContent = '';
         input.parentElement.setAttribute('class', 'h5p-isaac-input-wrapper');
 
-        togglePassageHighlights(contentID, i, 'hide');
-        toggleQAHighlights(contentID, i, 'hide', {}, 'question');
-        toggleCheckmark(contentID, i, 'hide');
-        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_feedback_button`), {}, 'feedback');
-        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_info`), {}, 'passage');
-        togglePopup(contentID, i, 'hide', '');
+        togglePassageHighlights(contentID, fieldID, 'hide');
+        toggleQAHighlights(contentID, fieldID, 'hide', {}, 'question');
+        toggleCheckmark(contentID, fieldID, 'hide');
+        toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_feedback_button`), {}, 'feedback');
+        toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_info`), {}, 'passage');
+        togglePopup(contentID, fieldID, 'hide', '');
       }
       this.showButton('check-answer');
       this.hideButton('show-solution');
@@ -216,8 +217,8 @@ export default class ShortAnswers extends H5P.Question {
      */
     this.getCurrentState = () => {
       const responses = [];
-      for (let i = 0; i < this.semantics.questions.length; i++) {
-        responses.push(document.getElementById(`${contentID}_${i}`).firstElementChild.textContent);
+      for (let fieldID = 0; fieldID < this.semantics.questions.length; fieldID++) {
+        responses.push(document.getElementById(`${contentID}_${fieldID}`).firstElementChild.textContent);
         // TODO also include underline color, text/prompt highlight, feedback popup if expanded, etc.?
       }
       return { responses: responses };

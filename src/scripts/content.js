@@ -16,19 +16,19 @@ export default class ISAACContent {
     this.content = document.createElement('div');
     this.content.classList.add('h5p-isaac');
 
-    // if defaults are used during content authoring, they won't be <p> elements
-    if (!semantics.task.startsWith('<p>')) { semantics.task = `<p>${semantics.task}</p>`; }
-    if (!semantics.passage.startsWith('<p>')) { semantics.passage = `<p>${semantics.passage}</p>`; }
+    // if defaults are used during content authoring, they won't be <div> elements
+    if (!semantics.task.startsWith('<div>')) { semantics.task = `<div>${semantics.task}</div>`; }
+    if (!semantics.passage.startsWith('<div>')) { semantics.passage = `<div>${semantics.passage}</div>`; }
 
     // add task
-    const taskNode = document.createElement('p');
+    const taskNode = document.createElement('div');
     taskNode.innerHTML = semantics.task.trim();
     taskNode.firstElementChild.classList.add('h5p-isaac-task');
     this.content.appendChild(taskNode.firstElementChild);
 
     // add passage
     if (semantics.passage.trim() !== '') {
-      const passageNode = document.createElement('p');
+      const passageNode = document.createElement('div');
       passageNode.setAttribute('id', `${contentID}_passage`);
       passageNode.classList.add('h5p-isaac-passage');
       passageNode.innerHTML = semantics.passage.trim();
@@ -43,28 +43,27 @@ export default class ISAACContent {
     ol.setAttribute('id', `${contentID}_questions`);
     ol.classList.add('h5p-isaac-questions');
 
-    for (let i = 0; i < semantics.questions.length; i++) {
+    for (let fieldID = 0; fieldID < semantics.questions.length; fieldID++) {
 
-      const listener = new ISAACFieldListener(
-          contentID, i, semantics.questions[i].targets, semantics.backend, 'intermediate');
+      const listener = new ISAACFieldListener(contentID, fieldID, semantics.questions[fieldID].targets, semantics.backend, 'intermediate');
 
       // question
-      let question = semantics.questions[i].question;
-      if (!question.startsWith('<p>')) { question = `<p>${question}</p>`; }
+      let question = semantics.questions[fieldID].question;
+      if (!question.startsWith('<div>')) { question = `<div>${question}</div>`; }
       const questionWrapper = document.createElement('li');
       questionWrapper.classList.add('h5p-isaac-question-wrapper');
       questionWrapper.innerHTML = question.trim();
-      questionWrapper.firstElementChild.setAttribute('id', `${contentID}_${i}_question`);
+      questionWrapper.firstElementChild.setAttribute('id', `${contentID}_${fieldID}_question`);
       questionWrapper.firstElementChild.classList.add('h5p-isaac-question');
 
       // wrapper for input field and toggle buttons
       const inputWrapper = document.createElement('div');
-      inputWrapper.setAttribute('id', `${contentID}_${i}`);
+      inputWrapper.setAttribute('id', `${contentID}_${fieldID}`);
       inputWrapper.classList.add('h5p-isaac-input-wrapper');
 
       // input text box
       const userInput = document.createElement('div');
-      userInput.setAttribute('id', `${contentID}_${i}_input`);
+      userInput.setAttribute('id', `${contentID}_${fieldID}_input`);
       userInput.setAttribute('autocomplete', 'disabled'); // 'off' for browsers other than Chrome?
       userInput.setAttribute('autocorrect', 'off');
       userInput.setAttribute('spellcheck', 'false');
@@ -72,7 +71,7 @@ export default class ISAACContent {
       userInput.classList.add('h5p-isaac-input');
 
       // set input text box with previously saved content state, if applicable
-      userInput.textContent = previousState.responses ? previousState.responses[i] : '';
+      userInput.textContent = previousState.responses ? previousState.responses[fieldID] : '';
 
       // behavior for input text box
       userInput.onfocus = () => userInput.parentElement.classList.add('h5p-isaac-input-wrapper-focus');
@@ -80,7 +79,7 @@ export default class ISAACContent {
       userInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
-          handleInput(contentID, i, userInput, listener);
+          handleInput(contentID, fieldID, userInput, listener);
         }
       });
       userInput.addEventListener('paste', (e) => {
@@ -107,7 +106,7 @@ export default class ISAACContent {
 
       // input button
       const enterButton = document.createElement('button');
-      enterButton.setAttribute('id', `${contentID}_${i}_submit`);
+      enterButton.setAttribute('id', `${contentID}_${fieldID}_submit`);
       enterButton.classList.add('h5p-isaac-button', 'h5p-isaac-input-button', 'h5p-isaac-enter', 'tooltip');
       const enterTooltipText = document.createElement('span');
       enterTooltipText.classList.add('tooltiptext');
@@ -115,11 +114,11 @@ export default class ISAACContent {
       // enterButton.appendChild(enterTooltipText);
 
       // behavior for input button
-      enterButton.addEventListener('click', () => { handleInput(contentID, i, enterButton, listener); });
+      enterButton.addEventListener('click', () => { handleInput(contentID, fieldID, enterButton, listener); });
 
       // feedback toggle button
       const feedbackButton = document.createElement('button');
-      feedbackButton.setAttribute('id', `${contentID}_${i}_feedback_button`);
+      feedbackButton.setAttribute('id', `${contentID}_${fieldID}_feedback_button`);
       feedbackButton.classList.add('h5p-isaac-button', 'h5p-isaac-feedback-button', 'h5p-isaac-hidden', 'tooltip');
       const feedbackTooltipText = document.createElement('span');
       feedbackTooltipText.classList.add('tooltiptext');
@@ -128,7 +127,7 @@ export default class ISAACContent {
 
       // passage highlight toggle button
       const infoButton = document.createElement('button');
-      infoButton.setAttribute('id', `${contentID}_${i}_info`);
+      infoButton.setAttribute('id', `${contentID}_${fieldID}_info`);
       infoButton.classList.add('h5p-isaac-button', 'h5p-isaac-info', 'h5p-isaac-hidden', 'tooltip');
       const infoTooltipText = document.createElement('span');
       infoTooltipText.classList.add('tooltiptext');
@@ -137,7 +136,7 @@ export default class ISAACContent {
 
       // pop-up container
       const popup = document.createElement('div');
-      popup.setAttribute('id', `${contentID}_${i}_popup`);
+      popup.setAttribute('id', `${contentID}_${fieldID}_popup`);
       popup.classList.add('h5p-isaac-popup', 'h5p-isaac-popup-collapsed');
       const popupText = document.createElement('div');
       popupText.classList.add('h5p-isaac-popup-text', 'h5p-isaac-hidden');
@@ -145,10 +144,10 @@ export default class ISAACContent {
 
       // popup yes/no buttons
       const yes = document.createElement('button');
-      yes.setAttribute('id', `${contentID}_${i}_yes`);
+      yes.setAttribute('id', `${contentID}_${fieldID}_yes`);
       yes.classList.add('h5p-isaac-popup-button', 'h5p-isaac-popup-button-yes', 'h5p-isaac-hidden');
       const no = document.createElement('button');
-      no.setAttribute('id', `${contentID}_${i}_no`);
+      no.setAttribute('id', `${contentID}_${fieldID}_no`);
       no.classList.add('h5p-isaac-popup-button', 'h5p-isaac-popup-button-no', 'h5p-isaac-hidden');
       popup.appendChild(yes);
       popup.appendChild(no);
@@ -170,8 +169,6 @@ export default class ISAACContent {
      *
      * @return {HTMLElement} DOM for this class.
      */
-    this.getDOM = () => {
-      return this.content;
-    };
+    this.getDOM = () => { return this.content; };
   }
 }
