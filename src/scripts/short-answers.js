@@ -11,8 +11,10 @@ const UPLOAD_TASK_DATA = true;
  *   Cpm. https://h5p.org/documentation/developers/contracts
  * - Implements getCurrentState to allow continuing a user's previous session
  */
-export default class ISAAC extends H5P.Question {
+export default class ShortAnswers extends H5P.Question {
   /**
+   * Interface between H5P and DOM
+   *
    * @constructor
    * @param semantics {object} Parameters defined in semantics.json, with "name" as key
    * @param contentID {number} Integer representing the content ID
@@ -51,7 +53,7 @@ export default class ISAAC extends H5P.Question {
       }
     }, this.semantics);
 
-    // this.previousState now holds the saved content state of the previous session
+    // store content state of user's previous session
     this.previousState = this.extras.previousState || {};
 
     /**
@@ -60,7 +62,7 @@ export default class ISAAC extends H5P.Question {
     this.registerDomElements = () => {
 
       if (this.semantics.media) { // && media.type && media.type.library
-        // TODO add support for more than one media instance?
+        // TODO add support for more than one media instance (?)
         // TODO figure out how to position image before/after/within passage if desired by content author
         const media = this.semantics.media;
         const type = media.library.split(' ')[0];
@@ -76,20 +78,16 @@ export default class ISAAC extends H5P.Question {
         }
       }
 
-      // Register content with H5P.Question
-      const content = new ISAACContent(
-        this.semantics,
-        this.contentID,
-        this.previousState
-      );
+      // register content with H5P.Question
+      const content = new ISAACContent(this.semantics, this.contentID, this.previousState);
       this.setContent(content.getDOM());
 
-      // Register Buttons
+      // register JoubelUI buttons
       this.addButtons();
     };
 
     /**
-     * Add all the buttons that shall be passed to H5P.Question.
+     * Add all the buttons that shall be passed to H5P.Question
      */
     this.addButtons = () => {
       this.addButton('check-answer', this.semantics.l10n.submitAnswer, () => this.showEvaluation(), true, {}, {});
@@ -102,7 +100,7 @@ export default class ISAAC extends H5P.Question {
      */
     this.showEvaluation = () => {
 
-      // TODO add boolean flag in semantics, whether all questions must be attempted
+      // TODO add boolean flag in semantics, whether all questions must be attempted (?)
       // if (!this.getAnswerGiven()) return;
 
       const maxScore = this.getMaxScore();
@@ -113,15 +111,15 @@ export default class ISAAC extends H5P.Question {
     };
 
     /**
-     * Check if result has been submitted or input has been given.
-     * @return {boolean} True, if answer was given.
+     * Check if result has been submitted or input has been given
+     * @return {boolean} True, if answer was given
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-1}
      */
     this.getAnswerGiven = () => { return true; };
 
     /**
-     * Get latest score.
-     * @return {number} latest score.
+     * Get latest score
+     * @return {number} latest score
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-2}
      */
     this.getScore = () => {
@@ -145,14 +143,14 @@ export default class ISAAC extends H5P.Question {
     };
 
     /**
-     * Get maximum possible score.
-     * @return {number} Score necessary for mastering.
+     * Get maximum possible score
+     * @return {number} Score necessary for mastering
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-3}
      */
     this.getMaxScore = () => this.semantics.questions.length; // TODO: define question values in semantics?
 
     /**
-     * Show solutions.
+     * Show solutions
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-4}
      */
     this.showSolutions = () => {
@@ -170,16 +168,16 @@ export default class ISAAC extends H5P.Question {
 
         togglePassageHighlights(contentID, i, 'hide');
         toggleQAHighlights(contentID, i, {}, 'question', 'hide');
-        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_feedback_button`));
-        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_info`));
-        togglePopup(contentID, i, '', 'collapse');
+        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_feedback_button`), {}, 'feedback');
+        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_info`), {}, 'passage');
+        togglePopup(contentID, i, '', 'hide');
       }
       this.hideButton('show-solution');
       this.trigger('resize');
     };
 
     /**
-     * Reset task.
+     * Reset task
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
      */
     this.resetTask = () => {
@@ -192,9 +190,9 @@ export default class ISAAC extends H5P.Question {
         togglePassageHighlights(contentID, i, 'hide');
         toggleQAHighlights(contentID, i, {}, 'question', 'hide');
         toggleCheckmark(contentID, i, 'hide');
-        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_feedback_button`));
-        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_info`));
-        togglePopup(contentID, i, '', 'collapse');
+        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_feedback_button`), {}, 'feedback');
+        toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_info`), {}, 'passage');
+        togglePopup(contentID, i, '', 'hide');
       }
       this.showButton('check-answer');
       this.hideButton('show-solution');
@@ -203,14 +201,35 @@ export default class ISAAC extends H5P.Question {
       this.trigger('resize');
     };
 
+    /**
+     * Determine whether the task has been passed by the user
+     *
+     * @return {boolean} True if user passed or task is not scored
+     */
+    this.isPassed = () => true; // TODO
+
+    /**
+     * Answer call to return the current state
+     *
+     * @return {object} Current state
+     */
+    this.getCurrentState = () => {
+      const responses = [];
+      for (let i = 0; i < this.semantics.questions.length; i++) {
+        responses.push(document.getElementById(`${contentID}_${i}`).firstElementChild.textContent);
+        // TODO also include underline color, text/prompt highlight, feedback popup if expanded, etc.?
+      }
+      return { responses: responses };
+    };
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Get xAPI data.
+     * Get xAPI data
      *
-     * @return {object} XAPI statement.
+     * @return {object} XAPI statement
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-6}
      */
     this.getXAPIData = () => ({
@@ -218,9 +237,9 @@ export default class ISAAC extends H5P.Question {
     });
 
     /**
-     * Build xAPI answer event.
+     * Build xAPI answer event
      *
-     * @return {H5P.XAPIEvent} XAPI answer event.
+     * @return {H5P.XAPIEvent} XAPI answer event
      */
     this.getXAPIAnswerEvent = () => {
       const xAPIEvent = this.createXAPIEvent('answered');
@@ -237,10 +256,10 @@ export default class ISAAC extends H5P.Question {
     };
 
     /**
-     * Create an xAPI event for Dictation.
+     * Create an xAPI event for Dictation
      *
-     * @param {string} verb Short id of the verb we want to trigger.
-     * @return {H5P.XAPIEvent} Event template.
+     * @param {string} verb Short id of the verb we want to trigger
+     * @return {H5P.XAPIEvent} Event template
      */
     this.createXAPIEvent = (verb) => {
       const xAPIEvent = this.createXAPIEventTemplate(verb);
@@ -251,9 +270,9 @@ export default class ISAAC extends H5P.Question {
     };
 
     /**
-     * Get the xAPI definition for the xAPI object.
+     * Get the xAPI definition for the xAPI object
      *
-     * @return {object} XAPI definition.
+     * @return {object} XAPI definition
      */
     this.getxAPIDefinition = () => {
       const definition = {};
@@ -275,23 +294,16 @@ export default class ISAAC extends H5P.Question {
     };
 
     /**
-     * Determine whether the task has been passed by the user.
+     * Get tasks title
      *
-     * @return {boolean} True if user passed or task is not scored.
-     */
-    this.isPassed = () => true;
-
-    /**
-     * Get tasks title.
-     *
-     * @return {string} Title.
+     * @return {string} Title
      */
     this.getTitle = () => {
       let raw;
       if (this.extras.metadata) {
         raw = this.extras.metadata.title;
       }
-      raw = raw || ISAAC.DEFAULT_DESCRIPTION;
+      raw = raw || ShortAnswers.DEFAULT_DESCRIPTION;
 
       // H5P Core function: createTitle
       return H5P.createTitle(raw);
@@ -303,13 +315,13 @@ export default class ISAAC extends H5P.Question {
      * @return {string} Description.
      */
     // TODO: Have a field for a task description in the editor if you need one.
-    this.getDescription = () => this.semantics.taskDescription || ISAAC.DEFAULT_DESCRIPTION;
+    this.getDescription = () => this.semantics.taskDescription || ShortAnswers.DEFAULT_DESCRIPTION;
 
     /**
-     * Extend an array just like JQuery's extend.
+     * Extend an array just like JQuery's extend
      *
-     * @param {object} arguments Objects to be merged.
-     * @return {object} Merged objects.
+     * @param {object} arguments Objects to be merged
+     * @return {object} Merged objects
      */
     function extend() {
       for (let i = 1; i < arguments.length; i++) {
@@ -326,22 +338,8 @@ export default class ISAAC extends H5P.Question {
       }
       return arguments[0];
     }
-
-    /**
-     * Answer call to return the current state.
-     *
-     * @return {object} Current state.
-     */
-    this.getCurrentState = () => {
-      const responses = [];
-      for (let i = 0; i < this.semantics.questions.length; i++) {
-        responses.push(document.getElementById(`${contentID}_${i}`).firstElementChild.textContent);
-        // TODO also include underline color, text/prompt highlight, feedback popup if expanded, etc.?
-      }
-      return { responses: responses };
-    };
   }
 }
 
 /** @constant {string} */
-ISAAC.DEFAULT_DESCRIPTION = 'H5P Short Answers';
+ShortAnswers.DEFAULT_DESCRIPTION = 'H5P Short Answers';
