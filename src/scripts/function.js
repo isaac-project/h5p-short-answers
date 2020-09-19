@@ -319,6 +319,7 @@ function changeColor(color, type, element) {
  * @param type {'suggestion', 'feedback'}
  */
 function populatePopup(contentID, fieldID, popup, responseObj, type) {
+    'use strict';
     if (type === 'suggestion') {
         popup.firstElementChild.innerHTML = `Did you mean: <b><i>${responseObj.text}</i></b>`;
     } else if (type === 'feedback') {
