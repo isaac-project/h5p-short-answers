@@ -167,10 +167,10 @@ export default class ShortAnswers extends H5P.Question {
         }
 
         togglePassageHighlights(contentID, i, 'hide');
-        toggleQAHighlights(contentID, i, {}, 'question', 'hide');
+        toggleQAHighlights(contentID, i, 'hide', {}, 'question');
         toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_feedback_button`), {}, 'feedback');
         toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_info`), {}, 'passage');
-        togglePopup(contentID, i, '', 'hide');
+        togglePopup(contentID, i, 'hide', '');
       }
       this.hideButton('show-solution');
       this.trigger('resize');
@@ -188,11 +188,11 @@ export default class ShortAnswers extends H5P.Question {
         input.parentElement.setAttribute('class', 'h5p-isaac-input-wrapper');
 
         togglePassageHighlights(contentID, i, 'hide');
-        toggleQAHighlights(contentID, i, {}, 'question', 'hide');
+        toggleQAHighlights(contentID, i, 'hide', {}, 'question');
         toggleCheckmark(contentID, i, 'hide');
         toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_feedback_button`), {}, 'feedback');
         toggleButton(contentID, i, 'hide', document.getElementById(`${contentID}_${i}_info`), {}, 'passage');
-        togglePopup(contentID, i, '', 'hide');
+        togglePopup(contentID, i, 'hide', '');
       }
       this.showButton('check-answer');
       this.hideButton('show-solution');

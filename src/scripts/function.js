@@ -33,13 +33,13 @@ export function displaySuggestion(contentID, fieldID, targets, backend, suggesti
     changeColor('orange', 'input', document.getElementById(`${contentID}_${fieldID}`));
     populatePopup(contentID, fieldID, document.getElementById(`${contentID}_${fieldID}_popup`), suggestion, 'suggestion');
     togglePassageHighlights(contentID, -1, 'hide');
-    toggleQAHighlights(contentID, fieldID, {}, 'question', 'hide');
-    toggleQAHighlights(contentID, fieldID, {}, 'input', 'hide');
+    toggleQAHighlights(contentID, fieldID, 'hide', {}, 'question');
+    toggleQAHighlights(contentID, fieldID, 'hide', {}, 'input');
     toggleCheckmark(contentID, fieldID, 'hide');
     toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_feedback_button`), {}, 'feedback');
     toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_info`), {}, 'passage');
-    toggleYN(contentID, fieldID, suggestion, targets, backend, 'show');
-    togglePopup(contentID, fieldID, 'orange', 'show');
+    toggleYN(contentID, fieldID, 'show', suggestion, targets, backend);
+    togglePopup(contentID, fieldID, 'show', 'orange');
 }
 
 /**
@@ -57,7 +57,7 @@ export function displayIncorrect(contentID, fieldID, feedback) {
     toggleQAHighlights(contentID, fieldID, {}, 'question', 'hide');
     toggleCheckmark(contentID, fieldID, 'hide');
     toggleButton(contentID, fieldID, 'show', document.getElementById(`${contentID}_${fieldID}_feedback_button`), feedback, 'feedback');
-    togglePopup(contentID, fieldID, '', 'hide');
+    togglePopup(contentID, fieldID, 'hide', '');
 
     // only show info button if there is a corresponding passage highlight
     const correspondingQuestionNumber = fieldID + 1; // passage highlights are defined by content author; indexed from 1
@@ -76,11 +76,11 @@ export function displayCorrect(contentID, fieldID) {
     'use strict';
     changeColor('green', 'input', document.getElementById(`${contentID}_${fieldID}`));
     togglePassageHighlights(contentID, fieldID, 'hide');
-    toggleQAHighlights(contentID, fieldID, {}, 'question', 'hide');
+    toggleQAHighlights(contentID, fieldID, 'hide', {}, 'question');
     toggleCheckmark(contentID, fieldID, 'show');
     toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_feedback_button`), {}, 'feedback');
     toggleButton(contentID, fieldID, 'hide', document.getElementById(`${contentID}_${fieldID}_info`), {}, 'passage');
-    togglePopup(contentID, fieldID, 'green', 'hide');
+    togglePopup(contentID, fieldID, 'hide', 'green');
 }
 
 /**
@@ -119,11 +119,11 @@ export function togglePassageHighlights(contentID, fieldID, action) {
  *
  * @param contentID
  * @param fieldID
+ * @param action {'show', 'hide', 'toggle'}
  * @param feedback
  * @param type {'input', 'question'}
- * @param action {'show', 'hide', 'toggle'}
  */
-export function toggleQAHighlights(contentID, fieldID, feedback, type, action) {
+export function toggleQAHighlights(contentID, fieldID, action, feedback, type) {
     'use strict';
     const element = document.getElementById(`${contentID}_${fieldID}_${type}`);
     const highlight = document.getElementById(`${contentID}_${fieldID}_${type}_highlight`);
@@ -190,9 +190,9 @@ export function toggleButton(contentID, fieldID, action, element, feedback, type
         element.classList.remove('h5p-isaac-hidden', 'h5p-isaac-button-hide');
         if (type === 'feedback') {
             element.onclick = () => {
-                toggleQAHighlights(contentID, fieldID, feedback, 'question', 'toggle');
-                toggleQAHighlights(contentID, fieldID, feedback, 'input', 'toggle');
-                togglePopup(contentID, fieldID, 'red', 'toggle');
+                toggleQAHighlights(contentID, fieldID, 'toggle', feedback, 'question');
+                toggleQAHighlights(contentID, fieldID, 'toggle', feedback, 'input');
+                togglePopup(contentID, fieldID, 'toggle', 'red');
                 element.blur();
             };
         } else if (type === 'passage') {
@@ -216,10 +216,10 @@ export function toggleButton(contentID, fieldID, action, element, feedback, type
  *
  * @param contentID
  * @param fieldID
- * @param color
  * @param action {'hide', 'show', 'toggle'}
+ * @param color
  */
-export function togglePopup(contentID, fieldID, color, action) {
+export function togglePopup(contentID, fieldID, action, color) {
     'use strict';
     const popup = document.getElementById(`${contentID}_${fieldID}_popup`);
     changeColor(color, 'popup', popup);
@@ -239,16 +239,16 @@ export function togglePopup(contentID, fieldID, color, action) {
 }
 
 /**
- * Show/hide the yes/no buttons in the feedback (red) popup windows
+ * Show/hide the yes/no buttons in popup
  *
  * @param contentID
  * @param fieldID
+ * @param action {'show', 'hide', 'toggle'}
  * @param suggestion Object containing the proposed correction from the backend
  * @param targets Correct answers for this question/prompt as defined by content author (semantics.questions[i].targets)
  * @param backend
- * @param action {'show', 'hide', 'toggle'}
  */
-export function toggleYN(contentID, fieldID, suggestion, targets, backend, action) {
+export function toggleYN(contentID, fieldID, action, suggestion, targets, backend) {
     'use strict';
     const thumbsUp = document.getElementById(`${contentID}_${fieldID}_yes`);
     const thumbsDown = document.getElementById(`${contentID}_${fieldID}_no`);
@@ -259,7 +259,7 @@ export function toggleYN(contentID, fieldID, suggestion, targets, backend, actio
             // replace input field with updated suggestion
             const answer = document.getElementById(`${contentID}_${fieldID}_input`);
             answer.textContent = suggestion.text;
-            togglePopup(contentID, fieldID, '', 'hide');
+            togglePopup(contentID, fieldID, 'hide','');
             setTimeout(() => {
                 const listener = new ISAACFieldListener(contentID, fieldID, targets, backend, 'final');
                 listener.handleEvent(answer.textContent);
@@ -268,7 +268,7 @@ export function toggleYN(contentID, fieldID, suggestion, targets, backend, actio
         };
         thumbsDown.classList.remove('h5p-isaac-hidden');
         thumbsDown.onclick = () => {
-            togglePopup(contentID, fieldID, '', 'hide');
+            togglePopup(contentID, fieldID, 'hide', '');
             setTimeout(() => {
                 const listener = new ISAACFieldListener(contentID, fieldID, targets, backend, 'final');
                 listener.handleEvent(document.getElementById(`${contentID}_${fieldID}_input`).textContent);
