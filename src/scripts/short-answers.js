@@ -61,16 +61,17 @@ export default class ShortAnswers extends H5P.Question {
      */
     this.registerDomElements = () => {
 
-      if (this.semantics.media) { // && media.type && media.type.library
-        // TODO add support for more than one media instance (?)
-        // TODO figure out how to position image before/after/within passage if desired by content author
+      // add media to DOM
+      // TODO see if there is a way to position media (currently being placed before everything)
+      if (this.semantics.media) { // && media.type && media.type.library (are these necessary?)
+        // TODO add support for more than one media instance (via semantics; is this even feasible?)
         const media = this.semantics.media;
         const type = media.library.split(' ')[0];
-        if ((type === 'H5P.Image') && (media.semantics.file)) {
-          this.setImage(media.semantics.file.path, {
+        if ((type === 'H5P.Image') && (media.params.file)) {
+          this.setImage(media.params.file.path, {
             disableImageZooming: this.semantics.media.disableImageZooming || true,
-            alt: media.semantics.alt,
-            title: media.semantics.title
+            alt: media.params.alt,
+            title: media.params.title
           });
         }
         else if ((type === 'H5P.Video') && (media.semantics.sources)) {
@@ -115,7 +116,7 @@ export default class ShortAnswers extends H5P.Question {
      * @return {boolean} True, if answer was given
      * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-1}
      */
-    this.getAnswerGiven = () => { return true; };
+    this.getAnswerGiven = () => true; // TODO
 
     /**
      * Get latest score
