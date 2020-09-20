@@ -15,8 +15,8 @@ export function handleInput(contentID, fieldID, element, listener) {
     if (inputField.textContent) { // ignore empty input
         // TODO only execute if answer differs from previous. store answer?
         listener.handleEvent(inputField.textContent);
+        element.blur();
     }
-    element.blur();
 }
 
 /**
