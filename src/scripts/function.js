@@ -3,27 +3,27 @@ import { ISAACFieldListener } from './interaction';
 /**
  * Pass user input from the front-end to backend using the specified event listener
  *
- * @param contentID
- * @param fieldID
+ * @param contentID Integer representing a unique content instance
+ * @param fieldID Integer representing a unique input field within a content instance
  * @param element Either: user input text box or the enter button
  * @param listener ISAACFieldListener
  */
 export function handleInput(contentID, fieldID, element, listener) {
     'use strict';
     const inputField = document.getElementById(`${contentID}_${fieldID}_input`);
-    if (inputField.textContent.trim()) { // ignore empty input
+    inputField.textContent = inputField.textContent.trim();
+    if (inputField.textContent) { // ignore empty input
         // TODO only execute if answer differs from previous. store answer?
-        inputField.textContent = inputField.textContent.trim();
-        listener.handleEvent(document.getElementById(`${contentID}_${fieldID}_input`).textContent);
-        element.blur();
+        listener.handleEvent(inputField.textContent);
     }
+    element.blur();
 }
 
 /**
  * Preliminary behavior, if applicable, for suggesting error corrections before evaluation and feedback delivery
  *
- * @param contentID
- * @param fieldID
+ * @param contentID Integer representing a unique content instance
+ * @param fieldID Integer representing a unique input field within a content instance
  * @param targets Correct answers for this question/prompt as defined by content author (semantics.questions[fieldID].targets)
  * @param backend
  * @param suggestion Object containing the proposed correction from the backend
@@ -45,8 +45,8 @@ export function displaySuggestion(contentID, fieldID, targets, backend, suggesti
 /**
  * Behavior when user input is incorrect and feedback is propagated from the backend
  *
- * @param contentID
- * @param fieldID
+ * @param contentID Integer representing a unique content instance
+ * @param fieldID Integer representing a unique input field within a content instance
  * @param feedback Object containing the feedback text, question/prompt highlight indices, and input highlight indices
  */
 export function displayIncorrect(contentID, fieldID, feedback) {
@@ -69,8 +69,8 @@ export function displayIncorrect(contentID, fieldID, feedback) {
 /**
  * Behavior when user input is correct
  *
- * @param contentID
- * @param fieldID
+ * @param contentID Integer representing a unique content instance
+ * @param fieldID Integer representing a unique input field within a content instance
  */
 export function displayCorrect(contentID, fieldID) {
     'use strict';
@@ -90,8 +90,8 @@ export function displayCorrect(contentID, fieldID) {
  *     - reset task
  *     - prepare for highlighting another passage snippet (passage should not have more than one snippet highlighted)
  *
- * @param contentID
- * @param fieldID
+ * @param contentID Integer representing a unique content instance
+ * @param fieldID Integer representing a unique input field within a content instance
  * @param action {'show', 'hide'}
  */
 export function togglePassageHighlights(contentID, fieldID, action) {
@@ -117,10 +117,10 @@ export function togglePassageHighlights(contentID, fieldID, action) {
  *     - the question (prompt) highlight
  *     - user input highlight
  *
- * @param contentID
- * @param fieldID
+ * @param contentID Integer representing a unique content instance
+ * @param fieldID Integer representing a unique input field within a content instance
  * @param action {'show', 'hide', 'toggle'}
- * @param feedback
+ * @param feedback Object containing the feedback text, question/prompt highlight indices, and input highlight indices
  * @param type {'input', 'question'}
  */
 export function toggleQAHighlights(contentID, fieldID, action, feedback, type) {
@@ -147,8 +147,8 @@ export function toggleQAHighlights(contentID, fieldID, action, feedback, type) {
 /**
  * Show/hide the green checkmark, depending on whether input state is correct
  *
- * @param contentID
- * @param fieldID
+ * @param contentID Integer representing a unique content instance
+ * @param fieldID Integer representing a unique input field within a content instance
  * @param action {'show', 'hide'}
  */
 export function toggleCheckmark(contentID, fieldID, action) {
@@ -170,8 +170,8 @@ export function toggleCheckmark(contentID, fieldID, action) {
  *     - the feedback button (speech bubble)
  *     - passage highlight button (i)
  *
- * @param contentID
- * @param fieldID
+ * @param contentID Integer representing a unique content instance
+ * @param fieldID Integer representing a unique input field within a content instance
  * @param action {'show', 'hide'}
  * @param element Button DOM element
  * @param feedback Object containing the feedback text, question/prompt highlight indices, and input highlight indices
@@ -214,8 +214,8 @@ export function toggleButton(contentID, fieldID, action, element, feedback, type
 /**
  * Show/hide the popup container
  *
- * @param contentID
- * @param fieldID
+ * @param contentID Integer representing a unique content instance
+ * @param fieldID Integer representing a unique input field within a content instance
  * @param action {'hide', 'show', 'toggle'}
  * @param color
  */
@@ -241,8 +241,8 @@ export function togglePopup(contentID, fieldID, action, color) {
 /**
  * Show/hide the yes/no buttons in popup
  *
- * @param contentID
- * @param fieldID
+ * @param contentID Integer representing a unique content instance
+ * @param fieldID Integer representing a unique input field within a content instance
  * @param action {'show', 'hide', 'toggle'}
  * @param suggestion Object containing the proposed correction from the backend
  * @param targets Correct answers for this question/prompt as defined by content author (semantics.questions[fieldID].targets)
@@ -312,8 +312,8 @@ function changeColor(color, type, element) {
 /**
  * Insert text from backend response object into popup container
  *
- * @param contentID
- * @param fieldID
+ * @param contentID Integer representing a unique content instance
+ * @param fieldID Integer representing a unique input field within a content instance
  * @param popup DOM element
  * @param responseObj Object returned by backend
  * @param type {'suggestion', 'feedback'}
