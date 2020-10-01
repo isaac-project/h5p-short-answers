@@ -16,17 +16,17 @@ const config = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'h5p-isaac.css'
+      filename: 'short-answers.css'
     }),
     new MinifyPlugin({}, {
       sourceMap: isDev
     })
   ],
   entry: {
-    dist: './src/entries/h5p-isaac.js'
+    dist: './src/entries/short-answers.js'
   },
   output: {
-    filename: 'h5p-isaac.js',
+    filename: 'short-answers.js',
     path: path.resolve(__dirname, 'dist')
   },
   module: {

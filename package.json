@@ -1,7 +1,7 @@
 {
-  "name": "h5p-boilerplate",
+  "name": "h5p-short-answers",
   "version": "1.0.0",
-  "description": "Example H5P Content Type for getting started",
+  "description": "Create a set of reading or listening comprehension questions with interactive feedback",
   "private": true,
   "scripts": {
     "lint": "jshint src/scripts/*.js",
@@ -11,13 +11,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/h5p/h5p-boilerplate.git"
+    "url": "git+https://github.com/isaac-project/h5p-short-answers.git"
   },
   "keywords": [
     "h5p",
     "library"
   ],
-  "author": "Joubel",
+  "author": "University of Tübingen",
   "license": "MIT",
   "jshintConfig": {
     "esversion": 6,

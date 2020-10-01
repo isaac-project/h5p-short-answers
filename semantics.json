@@ -8,7 +8,7 @@
     "importance": "high",
     "description": "A guide telling the user how to answer this task.",
     "default": "Read the passage and answer the questions below.",
-    "enterMode": "p",
+    "enterMode": "div",
     "tags": [
       "strong",
       "em",
@@ -34,7 +34,7 @@
     "description": "Max 10,000 characters.",
     "default": "The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two.",
     "optional": true,
-    "enterMode": "p",
+    "enterMode": "div",
     "tags": [
       "strong",
       "em",
@@ -84,7 +84,7 @@
           "importance": "high",
           "description": "",
           "placeholder": "What is the meaning of life?",
-          "enterMode": "p",
+          "enterMode": "div",
           "tags": [
             "strong",
             "em",
@@ -122,6 +122,38 @@
     }
   },
   {
+    "name": "feedbackPreference",
+    "type": "select",
+    "label": "Display feedback:",
+    "options": [
+      {
+        "value": "onRequest",
+        "label": "on request"
+      },
+      {
+        "value": "immediately",
+        "label": "immediately [not yet implemented]"
+      }
+    ],
+    "default": "onRequest"
+  },
+  {
+    "name": "feedbackHelpful",
+    "type": "boolean",
+    "label": "Display 'Feedback Helpful'?",
+    "description": "Prompt students when feedback is delivered, for development purposes [not yet implemented]",
+    "default": false
+  },
+  {
+    "label": "Backend server",
+    "name": "backend",
+    "type": "text",
+    "maxLength": 1000,
+    "importance": "low",
+    "optional": true,
+    "default": "http://localhost:9090/isaac-webapp/"
+  },
+  {
     "name": "behaviour",
     "type": "group",
     "label": "Behavioural settings",
@@ -154,11 +186,11 @@
     "importance": "low",
     "fields": [
       {
-        "name": "checkAnswer",
+        "name": "submitAnswer",
         "type": "text",
-        "label": "Text for \"Check\" button",
+        "label": "Text for \"Submit\" button",
         "importance": "low",
-        "default": "Check"
+        "default": "Submit"
       },
       {
         "name": "tryAgain",
@@ -170,9 +202,9 @@
       {
         "name": "showSolution",
         "type": "text",
-        "label": "Text for \"Show solution\" button",
+        "label": "Text for \"Show Solution\" button",
         "importance": "low",
-        "default": "Show solution"
+        "default": "Show Solution"
       }
     ]
   },

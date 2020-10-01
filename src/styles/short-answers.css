@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap');
+@import 'input.css';
+@import 'popup.css';
+@import 'button.css';
+@import 'tooltip.css';
+
+.h5p-isaac {
+  color: black;
+}
+.h5p-isaac-task {
+  font-family: 'Source Sans Pro', 'Noto Sans', serif;
+  font-weight: 400;
+  font-size: 12pt;
+}
+.h5p-isaac-passage {
+  font-family: 'Source Serif Pro', 'Noto Serif', serif;
+  font-weight: 400;
+  font-size: 12pt;
+  margin: 5% 10%;
+}
+.h5p-isaac-questions {
+  padding: 0 0 0 35px !important;
+  margin: 0 !important;
+}
+.h5p-isaac-question {
+  width: 90%;
+  margin-bottom: 10px;
+}
+.h5p-isaac-question-wrapper {
+  font-family: 'Source Sans Pro', 'Noto Sans', serif;
+  font-weight: 400;
+  font-size: 12pt;
+  position: relative;
+  margin-bottom: 50px;
+}
+.h5p-isaac-highlight {
+  background-color: #fff2a8;
+}
+.h5p-isaac-highlight-hidden {
+  background-color: transparent !important;
+}
+.h5p-isaac-hidden {
+  display: none !important;
+}
+hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
+  margin: 2em auto;
+}
+table {
+  font-family: 'Source Sans Pro', 'Noto Sans', serif !important;
+}
+tr, th, td {
+  padding: 10px !important;
+  background-color: transparent !important;
+}
+th {
+  color: #000 !important;
+  background-color: #e8e8e8 !important;
+}

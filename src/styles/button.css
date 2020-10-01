@@ -1,0 +1,66 @@
+.h5p-isaac-button {
+    color: lightgray;
+    background-color: transparent;
+    line-height: 1em;
+    border: none;
+    display: inline-block;
+    padding: 0;
+}
+.h5p-isaac-button:hover,
+.h5p-isaac-button:focus {
+    color: darkgray;
+    cursor: pointer;
+    outline: none;
+}
+.h5p-isaac-button:active {
+    border: none;
+    outline: none;
+    color: gray;
+}
+.h5p-isaac-button-show {
+    animation-name: fadein;
+    animation-duration: 0.5s;
+}
+.h5p-isaac-button-hide {
+    animation-name: fadeout;
+    animation-duration: 0.5s;
+}
+.h5p-isaac-input-button {
+    display: inline-block;
+    position: absolute !important;
+    right: 2px;  /* align with input-wrapper underline */
+    bottom: 4px; /* match input-wrapper padding */
+}
+.h5p-isaac-enter:before {
+    font-family: 'H5PFontAwesome4';
+    font-size: 3em;
+    content: '\f149';
+    display: inline-block;
+    transform: rotate(90deg);
+}
+.h5p-isaac-check:before {
+    font-family: 'H5PFontAwesome4';
+    font-size: 2em;
+    content: '\f00c';
+    color: #48b57e;
+}
+.h5p-isaac-info:before {
+    font-family: 'H5PFontAwesome4';
+    content: '\f05a';
+    font-size: 2em;
+    padding: 0 0 0 10px;
+}
+.h5p-isaac-feedback-button:before {
+    font-family: 'H5PFontAwesome4';
+    content: '\f0e5';
+    font-size: 2em;
+    margin: 0 0 0 15px;
+}
+@keyframes fadein {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+@keyframes fadeout {
+    from {opacity: 1}
+    to {opacity: 0}
+}

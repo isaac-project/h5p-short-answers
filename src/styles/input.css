@@ -1,0 +1,50 @@
+.h5p-isaac-input-wrapper {
+    width: 85%;
+    background-color: transparent;
+    border-bottom: 2px solid lightgray;
+    transition: all 0.5s ease-out;
+    display: inline-block;
+    position: relative;
+    padding-bottom: 4px;
+}
+.h5p-isaac-input-wrapper-focus {
+    border-bottom: 2px solid dimgray;
+    outline: none;
+}
+.h5p-isaac-input {
+    font-family: 'Source Sans Pro', 'Noto Sans', serif;
+    color: #000;
+    font-weight: 400;
+    font-size: 12pt;
+    width: 90%;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    margin-bottom: 0;
+    display: inline-block;
+    outline: none;
+    user-select: text;
+    /*white-space: pre-wrap;*/
+    /*overflow-wrap: break-word;*/
+}
+.h5p-isaac-input:disabled {
+    color: dimgray;
+}
+.h5p-isaac-input-correct {
+    border-bottom: 2px solid #48b57e !important;
+}
+.h5p-isaac-input-incorrect {
+    border-bottom: 2px solid #dc143c !important;
+}
+.h5p-isaac-input-suggestion {
+    border-bottom: 2px solid #ff8c00 !important;
+}
+[contenteditable] {
+    -webkit-user-select: text;
+    user-select: text;
+}
+[contenteditable]:before {
+ /* unicode fixed-width whitespace
+    preserves div height when empty */
+    content: '\feff';
+}
