@@ -45,7 +45,7 @@ export default class ISAACContent {
 
     for (let fieldID = 0; fieldID < semantics.questions.length; fieldID++) {
 
-      const listener = new ISAACFieldListener(contentID, fieldID, semantics.questions[fieldID].targets, semantics.backend, 'intermediate');
+      const listener = new ISAACFieldListener(contentID, fieldID, semantics.questions[fieldID].targets, semantics.backend, 'content');
 
       // question
       let question = semantics.questions[fieldID].question;
