@@ -38,7 +38,7 @@
     "babel-loader": "^8.0.6",
     "babel-minify-webpack-plugin": "^0.3.1",
     "cross-env": "^5.2.1",
-    "css-loader": "^1.0.1",
+    "css-loader": "^6.7.3",
     "file-loader": "^2.0.0",
     "jshint": "latest",
     "mini-css-extract-plugin": "^0.4.4",
