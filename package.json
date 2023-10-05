@@ -42,7 +42,7 @@
     "file-loader": "^2.0.0",
     "jshint": "latest",
     "mini-css-extract-plugin": "^0.4.4",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "optimize-css-assets-webpack-plugin": "^6.0.1",
     "resolve-url-loader": "^5.0.0",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.12"
