@@ -44,7 +44,7 @@
     "mini-css-extract-plugin": "^0.4.4",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "resolve-url-loader": "^5.0.0",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.12"
+    "webpack": "^5.92.0",
+    "webpack-cli": "^5.1.4"
   }
 }
